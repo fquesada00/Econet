@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "742772042866",
+    "firebase_url": "https://econet-8552d.firebaseio.com",
+    "project_id": "econet-8552d",
+    "storage_bucket": "econet-8552d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742772042866:android:e8d431160b495b7845a6eb",
+        "android_client_info": {
+          "package_name": "com.econet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742772042866-vbrcfhrth6ld1muvck2bhfcjv20jjtn7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU-TlQAPUTgE_ueEkXWhDgj2mG5HvBMFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742772042866-vbrcfhrth6ld1muvck2bhfcjv20jjtn7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
