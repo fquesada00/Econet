@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:econet/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -15,19 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
+
         primarySwatch: Colors.green,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
+
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Econet is flying high'),
@@ -37,16 +32,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -55,37 +40,33 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  List<Ecopoint> ecopoints;
+  bool ecopointAvailable = false;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      //Firestore.instance.collection("users").add({"nombre":"franQ"});
-
-      _counter++;
-    });
+  void _incrementCounter() async{
+    ecopoints = await getEcopoints(343, 343, 432);
+    if(ecopoints != null && ecopoints.length != 0){
+      setState(() {
+        ecopointAvailable=true;
+        _counter++;
+      });
+    }else{
+      setState(() {
+        ecopointAvailable=false;
+        _counter--;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -102,7 +83,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 context,
                 MaterialPageRoute(builder: (context) => MapSample()),
               );},
+            ),
+            ecopointAvailable?SafeArea(
+
+              child: ListView.builder(
+
+                  itemCount: ecopoints.length,
+                  itemBuilder: (context, index) {
+                    Ecopoint aux = ecopoints[index];
+                    return ListTile(
+                      title: Text('${aux.latitude},${aux.longitude}'),
+                    );
+                  },),
             )
+                :
+            Container(),
           ],
         ),
       ),
@@ -115,6 +110,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+Future<List<Ecopoint>> getEcopoints(double latitude,double longitude, double radius) async {
+  final response = await http.get(
+    'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?radius=1&latitude=-58.479677&longitude=-34.523644',
+    //headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
+  );
+  print("RESPONSE BODY =========================================================== "+  response.body);
+  final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+
+  return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
+
+}
+
+
 class MapSample extends StatefulWidget {
   @override
   State<MapSample> createState() => MapSampleState();
@@ -122,9 +130,13 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   Completer<GoogleMapController> _controller = Completer();
+  Set<Marker> markers = Set();
+  Future<List<Ecopoint>> ecopoints;
+
+
 
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
+    target: LatLng(-34.523644,-58.479677),
     zoom: 14.4746,
   );
 
@@ -135,13 +147,47 @@ class MapSampleState extends State<MapSample> {
       zoom: 19.151926040649414);
 
   @override
+  Future<void> initState()  {
+  ecopoints =  getEcopoints(4536456, 2345234, 5435);
+
+//    ecopoints.forEach((element) {markers.add(createMarker(element.latitude, element.longitude));});
+    markers.add(createMarker(-34.523674,-58.479617));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+      body:
+      Container(
+        padding: EdgeInsets.only(bottom: 70),
+        child: FutureBuilder<List<Ecopoint>>(
+          future: ecopoints,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              snapshot.data.forEach((element) {
+                print(element);
+                markers.add(createMarker(element.longitude, element.latitude));});
+            }
+            return GoogleMap(
+              markers: markers,
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+
+              },
+            );
+
+//            if (snapshot.hasData) {
+//              return Text(snapshot.data.title);
+//            } else if (snapshot.hasError) {
+//              return Text("${snapshot.error}");
+//            }
+//
+//            // By default, show a loading spinner.
+//            return CircularProgressIndicator();
+          },
+        )
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _goToTheLake,
@@ -149,6 +195,18 @@ class MapSampleState extends State<MapSample> {
         icon: Icon(Icons.directions_boat),
       ),
     );
+  }
+
+  Marker createMarker(double latitude,double longitude) {
+    LatLng latlng = LatLng(latitude, longitude);
+    return  Marker(
+      markerId: MarkerId("mine"),
+      position: latlng,
+      icon: BitmapDescriptor.defaultMarker,
+      draggable: false,
+      zIndex: 1,
+    );
+
   }
 
   Future<void> _goToTheLake() async {
