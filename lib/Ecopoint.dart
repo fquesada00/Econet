@@ -16,4 +16,17 @@ class Ecopoint{
   String toString() {
     return 'Ecopoint{userEmail: $userEmail, latitude: $latitude, longitude: $longitude}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Ecopoint &&
+          runtimeType == other.runtimeType &&
+          userEmail == other.userEmail &&
+          latitude == other.latitude &&
+          longitude == other.longitude;
+
+  @override
+  int get hashCode =>
+      userEmail.hashCode ^ latitude.hashCode ^ longitude.hashCode;
 }

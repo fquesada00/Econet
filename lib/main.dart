@@ -73,10 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'You have saved this many bags from the trash:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+//            Text(
+//              '$_counter',
+//              style: Theme.of(context).textTheme.headline4,
+//            ),
             RaisedButton(
               child: Text("maps"),
               onPressed: (){ Navigator.push(
@@ -101,18 +101,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: _incrementCounter,
+//        tooltip: 'Increment',
+//        child: Icon(Icons.add),
+//      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
 
 Future<List<Ecopoint>> getEcopoints(double latitude,double longitude, double radius) async {
   final response = await http.get(
-    'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?radius=1&latitude=-58.479677&longitude=-34.523644',
+    'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?radius=10&latitude=-58.479677&longitude=-34.523644',
     //headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
   );
   print("RESPONSE BODY =========================================================== "+  response.body);
@@ -130,9 +130,9 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   Completer<GoogleMapController> _controller = Completer();
-  Set<Marker> markers = Set();
+  List<Marker> markers = List();
   Future<List<Ecopoint>> ecopoints;
-
+  BitmapDescriptor markerIcon;
 
 
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -151,8 +151,13 @@ class MapSampleState extends State<MapSample> {
   ecopoints =  getEcopoints(4536456, 2345234, 5435);
 
 //    ecopoints.forEach((element) {markers.add(createMarker(element.latitude, element.longitude));});
-    markers.add(createMarker(-34.523674,-58.479617));
+    markers.add(createMarker("markerDefault",-34.523274,-58.479917));
+    _setMarkerIcon();
     super.initState();
+  }
+
+  _setMarkerIcon() async {
+    markerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(),"assets/icons/recycle2.png");
   }
 
   @override
@@ -160,17 +165,16 @@ class MapSampleState extends State<MapSample> {
     return new Scaffold(
       body:
       Container(
-        padding: EdgeInsets.only(bottom: 70),
         child: FutureBuilder<List<Ecopoint>>(
           future: ecopoints,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               snapshot.data.forEach((element) {
                 print(element);
-                markers.add(createMarker(element.longitude, element.latitude));});
+                markers.add(createMarker(element.userEmail,element.longitude, element.latitude));});
             }
             return GoogleMap(
-              markers: markers,
+              markers: markers.toSet(),
               initialCameraPosition: _kGooglePlex,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
@@ -189,20 +193,20 @@ class MapSampleState extends State<MapSample> {
           },
         )
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
-      ),
+//      floatingActionButton: FloatingActionButton.extended(
+//        onPressed: _goToTheLake,
+//        label: Text('To the lake!'),
+//        icon: Icon(Icons.directions_boat),
+//      ),
     );
   }
 
-  Marker createMarker(double latitude,double longitude) {
+  Marker createMarker(String id,double latitude,double longitude) {
     LatLng latlng = LatLng(latitude, longitude);
     return  Marker(
-      markerId: MarkerId("mine"),
+      markerId: MarkerId(id),
       position: latlng,
-      icon: BitmapDescriptor.defaultMarker,
+      icon: BitmapDescriptor.defaultMarker,//markerIcon!=null? markerIcon:BitmapDescriptor.defaultMarker,
       draggable: false,
       zIndex: 1,
     );
