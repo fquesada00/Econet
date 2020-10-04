@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -43,16 +44,16 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Ecopoint> ecopoints;
   bool ecopointAvailable = false;
 
-  void _incrementCounter() async{
+  void _incrementCounter() async {
     ecopoints = await getEcopoints(343, 343, 432);
-    if(ecopoints != null && ecopoints.length != 0){
+    if (ecopoints != null && ecopoints.length != 0) {
       setState(() {
-        ecopointAvailable=true;
+        ecopointAvailable = true;
         _counter++;
       });
-    }else{
+    } else {
       setState(() {
-        ecopointAvailable=false;
+        ecopointAvailable = false;
         _counter--;
       });
     }
@@ -79,22 +80,24 @@ class _MyHomePageState extends State<MyHomePage> {
 //            ),
             RaisedButton(
               child: Text("maps"),
-              onPressed: (){ Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MapSample()),
-              );},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapSample()),
+                );
+              },
             ),
-            ecopointAvailable?SafeArea(
+            ecopointAvailable ? SafeArea(
 
               child: ListView.builder(
 
-                  itemCount: ecopoints.length,
-                  itemBuilder: (context, index) {
-                    Ecopoint aux = ecopoints[index];
-                    return ListTile(
-                      title: Text('${aux.latitude},${aux.longitude}'),
-                    );
-                  },),
+                itemCount: ecopoints.length,
+                itemBuilder: (context, index) {
+                  Ecopoint aux = ecopoints[index];
+                  return ListTile(
+                    title: Text('${aux.latitude},${aux.longitude}'),
+                  );
+                },),
             )
                 :
             Container(),
@@ -110,16 +113,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-Future<List<Ecopoint>> getEcopoints(double latitude,double longitude, double radius) async {
+Future<List<Ecopoint>> getEcopoints(double latitude, double longitude,
+    double radius) async {
   final response = await http.get(
     'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?radius=10&latitude=-58.479677&longitude=-34.523644',
     //headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
   );
-  print("RESPONSE BODY =========================================================== "+  response.body);
+  print(
+      "RESPONSE BODY =========================================================== " +
+          response.body);
   final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
 
   return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
-
 }
 
 
@@ -134,9 +139,8 @@ class MapSampleState extends State<MapSample> {
   Future<List<Ecopoint>> ecopoints;
   BitmapDescriptor markerIcon;
 
-
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(-34.523644,-58.479677),
+    target: LatLng(-34.523644, -58.479677),
     zoom: 14.4746,
   );
 
@@ -147,52 +151,99 @@ class MapSampleState extends State<MapSample> {
       zoom: 19.151926040649414);
 
   @override
-  Future<void> initState()  {
-  ecopoints =  getEcopoints(4536456, 2345234, 5435);
+  Future<void> initState() {
+    ecopoints = getEcopoints(4536456, 2345234, 5435);
 
 //    ecopoints.forEach((element) {markers.add(createMarker(element.latitude, element.longitude));});
-    markers.add(createMarker("markerDefault",-34.523274,-58.479917));
+    markers.add(createMarker("markerDefault", -34.523274, -58.479917));
     _setMarkerIcon();
     super.initState();
   }
 
   _setMarkerIcon() async {
-    markerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(),"assets/icons/recycle2.png");
+    markerIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), "assets/icons/recycle2.png");
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body:
-      Container(
-        child: FutureBuilder<List<Ecopoint>>(
-          future: ecopoints,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              snapshot.data.forEach((element) {
-                print(element);
-                markers.add(createMarker(element.userEmail,element.longitude, element.latitude));});
-            }
-            return GoogleMap(
-              markers: markers.toSet(),
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
+        appBar: AppBar(
+          title: Text("no se como poner la appbar default"),
+        ),
+        body: Stack(
+            children: <Widget>[
 
-              },
-            );
+              Container(
+                  child: FutureBuilder<List<Ecopoint>>(
+                    future: ecopoints,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        snapshot.data.forEach((element) {
+                          print(element);
+                          markers.add(createMarker(
+                              element.userEmail, element.longitude,
+                              element.latitude));
+                        });
+                      }
 
-//            if (snapshot.hasData) {
-//              return Text(snapshot.data.title);
-//            } else if (snapshot.hasError) {
-//              return Text("${snapshot.error}");
-//            }
-//
-//            // By default, show a loading spinner.
-//            return CircularProgressIndicator();
-          },
-        )
-      ),
+                      return GoogleMap(
+                        markers: markers.toSet(),
+                        initialCameraPosition: _kGooglePlex,
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                      );
+
+                      //            if (snapshot.hasData) {
+                      //              return Text(snapshot.data.title);
+                      //            } else if (snapshot.hasError) {
+                      //              return Text("${snapshot.error}");
+                      //            }
+                      //
+                      //            // By default, show a loading spinner.
+                      //            return CircularProgressIndicator();
+                    },
+                  )
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(200, 0, 15, 10),
+
+                child: RaisedButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 33,
+                        width: 33,
+                        child: Image.asset(
+                          'assets/icons/econet-circle-logo-white.png',
+                        ),
+                      ),
+                      Text(
+                          "RECYCLE",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontFamily: 'SFProDisplay'
+                          ),
+                          softWrap: false),
+                    ],
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+
+                  color: Color(0xFFA3CB8F),
+                  onPressed: () {
+                    print("asd");
+                  },
+                ),
+
+                alignment: Alignment.bottomRight,
+              ),
+            ])
+
 //      floatingActionButton: FloatingActionButton.extended(
 //        onPressed: _goToTheLake,
 //        label: Text('To the lake!'),
@@ -201,16 +252,16 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  Marker createMarker(String id,double latitude,double longitude) {
+  Marker createMarker(String id, double latitude, double longitude) {
     LatLng latlng = LatLng(latitude, longitude);
-    return  Marker(
+    return Marker(
       markerId: MarkerId(id),
       position: latlng,
-      icon: BitmapDescriptor.defaultMarker,//markerIcon!=null? markerIcon:BitmapDescriptor.defaultMarker,
+      icon: BitmapDescriptor.defaultMarker,
+      //markerIcon!=null? markerIcon:BitmapDescriptor.defaultMarker,
       draggable: false,
       zIndex: 1,
     );
-
   }
 
   Future<void> _goToTheLake() async {
