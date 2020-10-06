@@ -162,7 +162,7 @@ class MapSampleState extends State<MapSample> {
 
   _setMarkerIcon() async {
     markerIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(), "assets/icons/recycle2.png");
+        ImageConfiguration(devicePixelRatio: 1), 'assets/icons/recycle_icon.png'); // por alguna razon no puedo modificar el tamanio, tuve que cambiar el de la imagen manualmente
   }
 
   @override
@@ -189,6 +189,7 @@ class MapSampleState extends State<MapSample> {
 
                       return GoogleMap(
                         markers: markers.toSet(),
+                        zoomControlsEnabled: false,
                         initialCameraPosition: _kGooglePlex,
                         onMapCreated: (GoogleMapController controller) {
                           _controller.complete(controller);
@@ -210,6 +211,7 @@ class MapSampleState extends State<MapSample> {
                 margin: EdgeInsets.fromLTRB(200, 0, 15, 10),
 
                 child: RaisedButton(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -224,14 +226,14 @@ class MapSampleState extends State<MapSample> {
                           "RECYCLE",
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 28,
+                              fontSize: 22,
                               fontFamily: 'SFProDisplay'
                           ),
                           softWrap: false),
                     ],
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
 
                   color: Color(0xFFA3CB8F),
@@ -257,7 +259,7 @@ class MapSampleState extends State<MapSample> {
     return Marker(
       markerId: MarkerId(id),
       position: latlng,
-      icon: BitmapDescriptor.defaultMarker,
+      icon: markerIcon,
       //markerIcon!=null? markerIcon:BitmapDescriptor.defaultMarker,
       draggable: false,
       zIndex: 1,
