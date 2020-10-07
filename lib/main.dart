@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:econet/login.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -84,20 +85,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 MaterialPageRoute(builder: (context) => MapSample()),
               );},
             ),
-            ecopointAvailable?SafeArea(
-
-              child: ListView.builder(
-
-                  itemCount: ecopoints.length,
-                  itemBuilder: (context, index) {
-                    Ecopoint aux = ecopoints[index];
-                    return ListTile(
-                      title: Text('${aux.latitude},${aux.longitude}'),
-                    );
-                  },),
+            RaisedButton(
+              child: Text('LOGIN'),
+              onPressed: (){ Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
+              );},
             )
-                :
-            Container(),
           ],
         ),
       ),
@@ -120,6 +114,14 @@ Future<List<Ecopoint>> getEcopoints(double latitude,double longitude, double rad
 
   return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
 
+}
+
+Future<void> getUserProfile(String email,String token) async {
+  final response = await http.get(
+      "https://us-central1-econet-8552d.cloudfunctions.net/user?email=agustormakh@gmail.com",
+    headers: {'Authorization': 'Bearer $token',}
+
+  );
 }
 
 
