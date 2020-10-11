@@ -78,6 +78,13 @@ flutter:
     - family: SFProDisplay
       fonts:
         - asset: assets/fonts/SFPro/TrueType/SFProDisplay-Regular.ttf
+    - family: SFProDisplayBold
+      fonts:
+        - asset: assets/fonts/SFPro/TrueType/SFProDisplay-Bold.ttf
+
+    - family: SFProDisplaySemiBold
+      fonts:
+        - asset: assets/fonts/SFPro/TrueType/SFProDisplay-SemiBold.ttf
    #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
