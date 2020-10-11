@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -65,13 +66,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MyHomePage(title: 'Econet is flying high'),
+        '/loginsignup': (context) => LoginOrSignup(),
+      },
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: MaterialColor(0xFFA3CB8F, color),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         canvasColor: MaterialColor(0xFFA3CB8F, color), // el navigation drawer toma este color de fondo
       ),
-      home: MyHomePage(title: 'Econet is flying high'),
     );
   }
 }
@@ -128,6 +133,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   context,
                   MaterialPageRoute(builder: (context) => MapSample()),
                 );
+              },
+            ),
+            RaisedButton(
+              child: Text('Login screen'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/loginsignup');
               },
             ),
             ecopointAvailable
