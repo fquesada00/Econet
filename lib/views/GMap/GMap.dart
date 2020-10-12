@@ -47,8 +47,9 @@ class GMapState extends State<GMap> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: GMapNavBar(
-          height: 120,
+          height: 150,
           text: 'Search',
           withBack: true,
           backgroundColor: Colors.transparent,

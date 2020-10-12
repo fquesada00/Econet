@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:econet/views/widgets/drawer.dart';
+import 'package:flutter/painting.dart';
 
 
 class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,92 +15,61 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
     @required this.height,
     this.text, this.withBack,this.backgroundColor, this.textColor, this.context
   }) : super(key: key);
-  //GMapNavBar({this.text, this.withBack,this.backgroundColor, this.textColor, this.height,this.context});
 
- /*@override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
-    return Container(
-        color: backgroundColor,
-        height: height,
-        width: size.width,
-        child: SafeArea(
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                if (withBack)
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment(-0.7, 1),
-                      child: CupertinoButton(
-                        child: Icon(
-                          CupertinoIcons.list_bullet,
-                          color: Colors.black,
-                        ),
-                          onPressed: () {
-                            print("######HELLO FROM DRAWER########");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => AppDrawer()),
-                            );
-                          },
-                          ),
-                    ),
-                  )
-                else
-                  (Spacer()),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(7.0),
-                    child: Text(
-                      text,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 25,
-                        fontFamily: 'SFProDisplay',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-                Spacer(),
-              ]),
-        ));
-  }
-*/
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(
-          color: backgroundColor,
+          color: Colors.transparent,
           child: Padding(
-            padding: EdgeInsets.all(30),
-            child: AppBar(
-              title: Container(
-                color: Colors.white,
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    contentPadding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(left: 5,top: 60, right:5,bottom: 0),
+            child: Container(
+              color: Colors.transparent,
+              padding: EdgeInsets.all(5),
+              child: Row(children: [
+                IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+                Expanded(
+                  child: Container(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: backgroundColor),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: backgroundColor),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(color: backgroundColor),
+                        ),
+                        hintText: "Search",
+                        contentPadding: EdgeInsets.all(10),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.0),
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              actions: [
                 IconButton(
-                  icon: Icon(Icons.verified_user),
+                  icon: Icon(Icons.notifications),
                   onPressed: () => null,
                 ),
-              ],
-            ) ,
+              ]),
+            ),
           ),
         ),
       ],
     );
   }
-
   @override
   // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(height);
