@@ -1,7 +1,7 @@
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:flutter/cupertino.dart';
-import 'file:///C:/Users/leobj/Desktop/Econet/Econet/lib/views/GMap/Ecopoint.dart';
+import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 

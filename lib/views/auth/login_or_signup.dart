@@ -26,7 +26,7 @@ class LoginOrSignup extends StatelessWidget {
                     width: size.width,
                     height: size.height * 0.55,
                     child: CustomPaint(
-                      painter: DrawCircles(),
+                      painter: _DrawCircles(),
                     ),
                   ),
                   //Contenedor con el logo
@@ -57,7 +57,7 @@ class LoginOrSignup extends StatelessWidget {
   }
 }
 
-class DrawCircles extends CustomPainter {
+class _DrawCircles extends CustomPainter {
   var _paint = Paint()..style = PaintingStyle.fill;
 
   @override

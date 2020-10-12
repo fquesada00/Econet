@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
+import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -39,17 +41,19 @@ class GMapState extends State<GMap> {
   }
 
   _setMarkerIcon() async {
-    markerIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 1),
-        'assets/icons/recycle_icon.png'); // por alguna razon no puedo modificar el tamanio, tuve que cambiar el de la imagen manualmente
+    markerIcon = await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
+    // await BitmapDescriptor.fromAssetImage(
+    //     ImageConfiguration(devicePixelRatio: 1),
+    //     'assets/icons/recycle_icon.png'); // por alguna razon no puedo modificar el tamanio, tuve que cambiar el de la imagen manualmente
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return new Scaffold(
         extendBodyBehindAppBar: true,
         appBar: GMapNavBar(
-          height: 150,
           text: 'Search',
           withBack: true,
           backgroundColor: Colors.transparent,
@@ -70,9 +74,15 @@ class GMapState extends State<GMap> {
                   }
 
                   return GoogleMap(
+                    //Con esto sacamos el logo de Google: Cuidado que si
+                    //queremos subir esto al Play Store nos hacen quilombo
+                    padding: EdgeInsets.symmetric(horizontal: 500),
+
                     markers: markers.toSet(),
                     zoomControlsEnabled: false,
                     initialCameraPosition: _kGooglePlex,
+                    mapToolbarEnabled: false,
+                    compassEnabled: false,
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);
                     },
@@ -80,7 +90,7 @@ class GMapState extends State<GMap> {
                 },
               )),
           Container(
-            margin: EdgeInsets.fromLTRB(200, 0, 15, 10),
+            margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
             child: EconetButton(onPressed: () {
               print("HOLA");
             }),
@@ -160,4 +170,29 @@ Future<List<Ecopoint>> getEcopoints(
   final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
 
   return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
+}
+
+Future<BitmapDescriptor> _iconToMarker(IconData icon, double size, Color color) async {
+  final pictureRecorder = PictureRecorder();
+  final canvas = Canvas(pictureRecorder);
+  final textPainter = TextPainter(textDirection: TextDirection.ltr);
+  final iconStr = String.fromCharCode(icon.codePoint);
+
+  textPainter.text = TextSpan(
+      text: iconStr,
+      style: TextStyle(
+        letterSpacing: 0.0,
+        fontSize: size,
+        fontFamily: icon.fontFamily,
+        color: color,
+      )
+  );
+  textPainter.layout();
+  textPainter.paint(canvas, Offset(0.0, 0.0));
+
+  final picture = pictureRecorder.endRecording();
+  final image = await picture.toImage(size.floor(), size.floor());
+  final bytes = await image.toByteData(format: ImageByteFormat.png);
+
+  return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
 }
