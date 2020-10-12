@@ -1,13 +1,10 @@
+import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
-
-
-
-// Para convertir el color de la app en un Material Color y poder definirlo como default
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -23,10 +20,12 @@ class MyApp extends StatelessWidget {
       },
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: MaterialColor(0xFFA3CB8F, color),
+        primarySwatch: MaterialColor(0xFFA3CB8F, _color),
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        canvasColor: MaterialColor(
-            0xFFA3CB8F, color), // el navigation drawer toma este color de fondo
+        canvasColor: MaterialColor(0xFFA3CB8F,
+            _color), // el navigation drawer toma este color de fondo
+        splashColor: Colors.white.withOpacity(0.4),
+        highlightColor: Colors.white.withOpacity(0.1),
       ),
     );
   }
@@ -88,16 +87,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ecopointAvailable
                 ? SafeArea(
-              child: ListView.builder(
-                itemCount: ecopoints.length,
-                itemBuilder: (context, index) {
-                  Ecopoint aux = ecopoints[index];
-                  return ListTile(
-                    title: Text('${aux.latitude},${aux.longitude}'),
-                  );
-                },
-              ),
-            )
+                    child: ListView.builder(
+                      itemCount: ecopoints.length,
+                      itemBuilder: (context, index) {
+                        Ecopoint aux = ecopoints[index];
+                        return ListTile(
+                          title: Text('${aux.latitude},${aux.longitude}'),
+                        );
+                      },
+                    ),
+                  )
                 : Container(),
           ],
         ),
@@ -106,4 +105,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
+// Para convertir el color de la app en un Material Color y poder definirlo como default
+Map<int, Color> _color = {
+  50: Color(0xFFC0DEA9), //GREEN_LIGHT
+  100: Color(0xFFA3CB8F), //GREEN_MEDIUM
+  200: Color(0xFF73A858),
+  300: Color(0xFF649A3B), //GREEN_DARK
+  400: Color(0xFF467523),
+  500: Color(0xFF2F5711),
+  600: Color(0xFF25480A),
+  700: Color(0xFF23430B),
+  800: Color(0xFF1B3607),
+  900: Color(0xFF173005),
+};
