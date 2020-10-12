@@ -2,9 +2,7 @@ import 'package:econet/views/widgets/button_data.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:econet/presentation/constants.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 
@@ -42,6 +40,7 @@ class SignUpMethod extends StatelessWidget {
           NavBar(
               text: 'Sign Up',
               withBack: true,
+              backgroundColor: Colors.white,
               textColor: GREEN_MEDIUM,
               height: 120),
           SizedBox(height: size.height * 0.03),

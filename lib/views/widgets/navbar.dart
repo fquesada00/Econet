@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 class NavBar extends StatelessWidget {
   final String text;
   final bool withBack;
+  final Color backgroundColor;
   final Color textColor;
   final double height;
 
-  NavBar({this.text, this.withBack, this.textColor, this.height});
+  NavBar({this.text, this.withBack,this.backgroundColor, this.textColor, this.height});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-        color: Colors.white,
+        color: backgroundColor,
         height: height,
         width: size.width,
         child: SafeArea(
