@@ -18,5 +18,3 @@ const Color METAL_COLOR = Color(0xFFA8A8A8);
 const Color ELECTRONICS_COLOR = Color(0xFF4EA77D);
 const Color WOOD_COLOR = Color(0xFFB3816E);
 const Color TEXTILE_COLOR = Color(0xFFC76BC7);
-
-

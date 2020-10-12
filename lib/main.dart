@@ -1,14 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:econet/views/auth/login_or_signup.dart';
+import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:econet/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // transparent status bar
+  ));
   runApp(MyApp());
 }
 
@@ -19,30 +24,30 @@ class EconetButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            SizedBox(
-              height: 33,
-              width: 33,
-              child: Image.asset(
-                'assets/icons/econet-circle-logo-white.png',
-              ),
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          SizedBox(
+            height: 33,
+            width: 33,
+            child: Image.asset(
+              'assets/icons/econet-circle-logo-white.png',
             ),
-            Text("RECYCLE",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontFamily: 'SFProDisplay'),
-                softWrap: false),
-          ],
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Color(0xFFA3CB8F),
-        onPressed: onPressed,
+          ),
+          Text("RECYCLE",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontFamily: 'SFProDisplay'),
+              softWrap: false),
+        ],
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      color: Color(0xFFA3CB8F),
+      onPressed: onPressed,
     );
   }
 }
@@ -70,12 +75,14 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => MyHomePage(title: 'Econet is flying high'),
         '/loginsignup': (context) => LoginOrSignup(),
+        '/signup_method': (context) => SignUpMethod(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: MaterialColor(0xFFA3CB8F, color),
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        canvasColor: MaterialColor(0xFFA3CB8F, color), // el navigation drawer toma este color de fondo
+        canvasColor: MaterialColor(
+            0xFFA3CB8F, color), // el navigation drawer toma este color de fondo
       ),
     );
   }
@@ -111,6 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //Widget para variar las configuraciones del status bar entre las views
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -143,16 +151,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ecopointAvailable
                 ? SafeArea(
-              child: ListView.builder(
-                itemCount: ecopoints.length,
-                itemBuilder: (context, index) {
-                  Ecopoint aux = ecopoints[index];
-                  return ListTile(
-                    title: Text('${aux.latitude},${aux.longitude}'),
-                  );
-                },
-              ),
-            )
+                    child: ListView.builder(
+                      itemCount: ecopoints.length,
+                      itemBuilder: (context, index) {
+                        Ecopoint aux = ecopoints[index];
+                        return ListTile(
+                          title: Text('${aux.latitude},${aux.longitude}'),
+                        );
+                      },
+                    ),
+                  )
                 : Container(),
           ],
         ),
@@ -166,8 +174,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-Future<List<Ecopoint>> getEcopoints(double latitude, double longitude,
-    double radius) async {
+Future<List<Ecopoint>> getEcopoints(
+    double latitude, double longitude, double radius) async {
   final response = await http.get(
     'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?radius=10&latitude=-58.479677&longitude=-34.523644',
     //headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
@@ -229,36 +237,35 @@ class MapSampleState extends State<MapSample> {
         body: Stack(children: <Widget>[
           Container(
               child: FutureBuilder<List<Ecopoint>>(
-                future: ecopoints,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    snapshot.data.forEach((element) {
-                      print(element);
-                      markers.add(
-                          createMarker(element.userEmail, element.longitude,
-                              element.latitude, element.adress));
-                    });
-                  }
+            future: ecopoints,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                snapshot.data.forEach((element) {
+                  print(element);
+                  markers.add(createMarker(element.userEmail, element.longitude,
+                      element.latitude, element.adress));
+                });
+              }
 
-                  return GoogleMap(
-                    markers: markers.toSet(),
-                    zoomControlsEnabled: false,
-                    initialCameraPosition: _kGooglePlex,
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                  );
-
-                  //            if (snapshot.hasData) {
-                  //              return Text(snapshot.data.title);
-                  //            } else if (snapshot.hasError) {
-                  //              return Text("${snapshot.error}");
-                  //            }
-                  //
-                  //            // By default, show a loading spinner.
-                  //            return CircularProgressIndicator();
+              return GoogleMap(
+                markers: markers.toSet(),
+                zoomControlsEnabled: false,
+                initialCameraPosition: _kGooglePlex,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
                 },
-              )),
+              );
+
+              //            if (snapshot.hasData) {
+              //              return Text(snapshot.data.title);
+              //            } else if (snapshot.hasError) {
+              //              return Text("${snapshot.error}");
+              //            }
+              //
+              //            // By default, show a loading spinner.
+              //            return CircularProgressIndicator();
+            },
+          )),
           Container(
             margin: EdgeInsets.fromLTRB(200, 0, 15, 10),
             child: EconetButton(onPressed: () {
@@ -273,11 +280,11 @@ class MapSampleState extends State<MapSample> {
 //        label: Text('To the lake!'),
 //        icon: Icon(Icons.directions_boat),
 //      ),
-    );
+        );
   }
 
-  Marker createMarker(String id, double latitude, double longitude,
-      String Adress) {
+  Marker createMarker(
+      String id, double latitude, double longitude, String Adress) {
     LatLng latlng = LatLng(latitude, longitude);
     return Marker(
         markerId: MarkerId(id),

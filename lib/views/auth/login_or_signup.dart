@@ -1,9 +1,10 @@
 import 'dart:math';
 
+import 'package:econet/views/widgets/button_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:econet/constants.dart';
+import 'package:econet/presentation/constants.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:econet/views/widgets/button1.dart';
 
@@ -12,11 +13,6 @@ class LoginOrSignup extends StatelessWidget {
   Widget build(BuildContext context) {
     //Nos da datos sobre la resolucion de la pantalla
     Size size = MediaQuery.of(context).size;
-
-    //Cambia el color del status bar a transparente
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-      statusBarColor: Colors.transparent,
-    ));
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -45,9 +41,17 @@ class LoginOrSignup extends StatelessWidget {
                 ],
               ),
               SizedBox(height: size.height * 0.1),
-              Button1(text: 'sign up', color: GREEN_MEDIUM, onPressed: () {}),
+              Button1(
+                  btnData: ButtonData(
+                      text: 'SIGN UP',
+                      color: GREEN_MEDIUM,
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/signup_method');
+                      })),
               SizedBox(height: size.height * 0.03),
-              Button1(text: 'log in', color: BROWN_MEDIUM, onPressed: () {}),
+              Button1(
+                  btnData: ButtonData(
+                      text: 'LOG IN', color: BROWN_MEDIUM, onPressed: () {})),
             ],
           ),
         ));
