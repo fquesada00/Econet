@@ -91,7 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 context,
                 MaterialPageRoute(builder: (context) => Login()),
               );},
-            )
+            ),
+
           ],
         ),
       ),
@@ -116,13 +117,7 @@ Future<List<Ecopoint>> getEcopoints(double latitude,double longitude, double rad
 
 }
 
-Future<void> getUserProfile(String email,String token) async {
-  final response = await http.get(
-      "https://us-central1-econet-8552d.cloudfunctions.net/user?email=agustormakh@gmail.com",
-    headers: {'Authorization': 'Bearer $token',}
 
-  );
-}
 
 
 class MapSample extends StatefulWidget {

@@ -1,7 +1,9 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   @override
@@ -11,6 +13,14 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String email,password;
   TextEditingController emailTextController = TextEditingController(),passwordTextController=TextEditingController();
+  bool isLoggedIn = false;
+  String token;
+
+  @override
+  void initState() {
+    super.initState();
+    Firebase.initializeApp();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +41,22 @@ class _LoginState extends State<Login> {
                 onPressed: (){
                   firebaseEmailLogin(emailTextController.text,passwordTextController.text);
                 },
+              ),
+              RaisedButton(
+                child: Text('LOGOUT'),
+                onPressed: (){
+                  firebaseLogout();
+                },
+              ),
+              isLoggedIn && token!= null? RaisedButton(
+                child: Text('Get USER PROFILE'),
+                onPressed: (){
+                  getUserProfile(email, token);
+                },
               )
+                  :
+              Container(),
+
             ],
           ),
         ),
@@ -49,7 +74,11 @@ class _LoginState extends State<Login> {
           email: email,
           password: password
       );
-      String token = await userCredential.user.getIdToken();
+      token = await userCredential.user.getIdToken();
+      setState(() {
+        isLoggedIn=true;
+      });
+
       print("TOKEN ====" + token);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -62,5 +91,14 @@ class _LoginState extends State<Login> {
 
   Future<void> firebaseLogout() async {
     await FirebaseAuth.instance.signOut();
+    isLoggedIn=false;
   }
+}
+
+Future<void> getUserProfile(String email,String token) async {
+  final response = await http.get(
+      "https://us-central1-econet-8552d.cloudfunctions.net/user?email=agustormakh@gmail.com",
+      headers: {'Authorization': 'Bearer $token',}
+  );
+  print("HTTPS RESPONSE = " + response.body);
 }
