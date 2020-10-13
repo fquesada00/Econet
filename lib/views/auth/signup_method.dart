@@ -11,7 +11,7 @@ class SignUpMethod extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    List<ButtonData> buttonData = [
+    List<ButtonData> _buttonData = [
       ButtonData(
           text: 'Continue with Apple',
           icon: Icon(CustomIcons.apple),
@@ -45,7 +45,7 @@ class SignUpMethod extends StatelessWidget {
               height: 120),
           SizedBox(height: size.height * 0.03),
           Column(
-              children: buttonData
+              children: _buttonData
                   .map((btn) => Padding(
                         padding: const EdgeInsets.all(25.0),
                         child: Button1(

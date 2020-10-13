@@ -1,76 +1,125 @@
+import 'package:econet/presentation/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-
 
 class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
   final bool withBack;
   final Color backgroundColor;
   final Color textColor;
-  final double height;
   final BuildContext context;
-  const GMapNavBar({
-    Key key,
-    @required this.height,
-    this.text, this.withBack,this.backgroundColor, this.textColor, this.context
-  }) : super(key: key);
-
+  const GMapNavBar(
+      {Key key,
+      @required this.text,
+      this.withBack,
+      this.backgroundColor,
+      this.textColor,
+      this.context})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Border radius de la search bar
+    final BorderRadius _BORDER_RADIUS = BorderRadius.circular(60);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
+      children: <Widget>[
         Container(
           color: Colors.transparent,
           child: Padding(
-            padding: EdgeInsets.only(left: 5,top: 60, right:5,bottom: 0),
+            padding: EdgeInsets.only(top: 40),
             child: Container(
               color: Colors.transparent,
-              padding: EdgeInsets.all(5),
-              child: Row(children: [
-                IconButton(
-                  icon: Icon(Icons.menu),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                ),
-                Expanded(
-                  child: Container(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: backgroundColor),
+              child: Row(
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: MaterialButton(
+                          elevation: 5,
+                          color: GREEN_MEDIUM,
+                          textColor: Colors.white,
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                          child: Icon(
+                            Icons.menu,
+                          ),
+                          padding: EdgeInsets.all(10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(30),
+                              bottomRight: Radius.circular(30),
+                            ),
+                          ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: backgroundColor),
-                        ),
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(color: backgroundColor),
-                        ),
-                        hintText: "Search",
-                        contentPadding: EdgeInsets.all(10),
                       ),
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: Colors.white,
+                    Expanded(
+                      flex: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Material(
+                          color: Colors.transparent,
+                          elevation: 5,
+                          borderRadius: _BORDER_RADIUS,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(vertical: 0),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: _BORDER_RADIUS,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent),
+                                borderRadius: _BORDER_RADIUS,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.transparent),
+                                borderRadius: _BORDER_RADIUS,
+                              ),
+                              hintText: "Search locations, filters",
+                              hintStyle: TextStyle(
+                                fontFamily: 'SFProDisplay',
+                                fontSize: 17,
+                                color: Colors.grey,
+                              ),
+                              prefixIcon: Icon(Icons.search),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.notifications),
-                  onPressed: () => null,
-                ),
-              ]),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: MaterialButton(
+                          elevation: 5,
+                          color: BROWN_MEDIUM,
+                          textColor: Colors.white,
+                          onPressed: () => null,
+                          child: Icon(
+                            Icons.notifications,
+                          ),
+                          padding: EdgeInsets.all(10),
+                          shape: CircleBorder(),
+                        ),
+                      ),
+                    ),
+                  ]),
             ),
           ),
         ),
       ],
     );
   }
+
   @override
   // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(height);
+  Size get preferredSize => Size.fromHeight(75);
 }

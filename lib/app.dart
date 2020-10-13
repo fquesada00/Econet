@@ -1,8 +1,7 @@
-import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_method.dart';
-import 'package:econet/views/profile/ecollector.dart';
 import 'package:flutter/cupertino.dart';
+import 'file:///C:/Users/leobj/Desktop/Econet/Econet/lib/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 
@@ -21,7 +20,6 @@ class MyApp extends StatelessWidget {
         '/loginsignup': (context) => LoginOrSignup(),
         '/signup_method': (context) => SignUpMethod(),
         '/GMap': (context) => GMap(),
-        '/Ecollector': (context) => Ecollector(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -86,12 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Login screen'),
               onPressed: () {
                 Navigator.pushNamed(context, '/loginsignup');
-              },
-            ),
-            RaisedButton(
-              child: Text('profile'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/Ecollector');
               },
             ),
             ecopointAvailable

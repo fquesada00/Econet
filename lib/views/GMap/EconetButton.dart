@@ -7,14 +7,15 @@ class EconetButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+    return MaterialButton(
+
+      padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           SizedBox(
-            height: 33,
-            width: 33,
+            height: 40,
+            width: 40,
             child: Image.asset(
               'assets/icons/econet-circle-logo-white.png',
             ),
@@ -28,7 +29,7 @@ class EconetButton extends StatelessWidget {
         ],
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(62.0),
       ),
       color: Color(0xFFA3CB8F),
       onPressed: onPressed,
