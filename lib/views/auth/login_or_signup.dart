@@ -49,8 +49,13 @@ class LoginOrSignup extends StatelessWidget {
                       })),
               SizedBox(height: size.height * 0.03),
               Button1(
-                  btnData: ButtonData(
-                      text: 'LOG IN', color: BROWN_MEDIUM, onPressed: () {})),
+                btnData: ButtonData(
+                    text: 'LOG IN',
+                    color: BROWN_MEDIUM,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/Ecollector');
+                    }),
+              ),
             ],
           ),
         ));

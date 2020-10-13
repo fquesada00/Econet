@@ -35,6 +35,7 @@ class AppDrawer extends StatefulWidget {
 class DrawerState extends State<AppDrawer> {
   var states = [true, false, false, false, false, false];  // Home es el que corre primero
 
+
   void changeState(index){
     for(int i = 0; i < states.length; i++)
       states[i] = false;
@@ -54,7 +55,8 @@ class DrawerState extends State<AppDrawer> {
           _createDrawerItem(text: 'News', active: states[2], onTap: (){setState((){changeState(2);});}),
           _createDrawerItem(text: 'Tutorials', active: states[3], onTap: (){setState((){changeState(3);});}),
           _createDrawerItem(text: 'FAQs', active: states[4], onTap: (){setState((){changeState(4);});}),
-          _createDrawerItem(text: 'Profile', active: states[5], onTap: (){setState((){changeState(5);});}),
+          _createDrawerItem(text: 'Profile', active: states[5], onTap: (){setState((){changeState(5);
+          Navigator.pushNamed(context, '/Ecollector');});}),
 
           // No lo pude mandar con la funcion por que tiene icono, distinto tamanio, color y font
           ListTile(
