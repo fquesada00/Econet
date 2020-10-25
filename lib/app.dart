@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
+import 'file:///C:/Users/Octavio%20Serpe/Desktop/PC%20Octavio/Octavio%20-%202020/ITBA/Ing_de_soft_1/Econet/lib/views/auth/Tutorial.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
         '/loginsignup': (context) => LoginOrSignup(),
         '/signup_method': (context) => SignUpMethod(),
         '/GMap': (context) => GMap(),
+        '/Tutorial':(context) => Tutorial(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -83,6 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Login screen'),
               onPressed: () {
                 Navigator.pushNamed(context, '/loginsignup');
+              },
+            ),
+            RaisedButton(
+              child: Text("Tutorial"),
+              onPressed: (){
+                Navigator.pushNamed(context, '/Tutorial');
               },
             ),
             ecopointAvailable
