@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
-import 'package:econet/lib/views/auth/Tutorial.dart';
+import 'package:econet/views/auth/Tutorial.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
