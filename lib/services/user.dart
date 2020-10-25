@@ -2,8 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 class UserApi{
-  String token;
-
+  static String token;
 
   Future<void> firebaseEmailLogin(String email, String password) async {
     if(email == null || password == null){
@@ -30,7 +29,7 @@ class UserApi{
     return await FirebaseAuth.instance.signOut();
   }
 
-  Future<void> getUserProfile(String email) async {
+  Future<void> getUserProfile(String email,String token) async {
     final response = await http.get(
         "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
         headers: {'Authorization': 'Bearer $token',}
@@ -38,16 +37,17 @@ class UserApi{
     print("HTTPS RESPONSE = " + response.body);
   }
 
-  Future<void> updateUserProfile(String email) async {
+  Future<void> updateUserProfile(String email,String token,User user) async {
     final response = await http.put(
       "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
       headers: {'Authorization': 'Bearer $token',},
-      body: {'userType':"ecollector",'lastName':"TERMEKH"},
+      body:user.toJSON();
+      //body: {'userType':"ecollector",'lastName':"TERMEKH"},
     );
     print("HTTPS RESPONSE = " + response.body);
   }
 
-  Future<void> deleteUserProfile(String email) async {
+  Future<void> deleteUserProfile(String email,String token) async {
     final response = await http.delete(
         "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
         headers: {'Authorization': 'Bearer $token',}
@@ -55,4 +55,12 @@ class UserApi{
     print("HTTPS RESPONSE = " + response.body);
   }
 
+}
+
+class User{
+  String email;
+
+  toJSON() {
+    return {'userType':"ecollector",'lastName':"TERMEKH"};
+  }
 }
