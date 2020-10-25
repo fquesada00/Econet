@@ -1,6 +1,7 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_method.dart';
+import 'package:econet/views/Gmap/EcopointInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
         '/loginsignup': (context) => LoginOrSignup(),
         '/signup_method': (context) => SignUpMethod(),
         '/GMap': (context) => GMap(),
+        '/EcopointInfo': (context) => EcopointInfo(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -83,6 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Login screen'),
               onPressed: () {
                 Navigator.pushNamed(context, '/loginsignup');
+              },
+            ),
+            RaisedButton(
+              child: Text('EcopointInfo'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/EcopointInfo');
               },
             ),
             ecopointAvailable

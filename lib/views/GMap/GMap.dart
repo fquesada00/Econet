@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/views/GMap/EcopointInfo.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +37,7 @@ class GMapState extends State<GMap> {
 
 //   This is just for testing, replace user position or last cashed position
     markers.add(
-        createMarker("markerDefault", -34.523274, -58.479917, "TesterCalle"));
+        createMarker("markerDefault", -34.523274, -58.479917, "TesterCalle",null));
     _setMarkerIcon();
     super.initState();
   }
@@ -69,7 +71,7 @@ class GMapState extends State<GMap> {
                     snapshot.data.forEach((element) {
                       print(element);
                       markers.add(createMarker(element.userEmail, element.longitude,
-                          element.latitude, element.adress));
+                          element.latitude, element.adress,context));
                     });
                   }
 
@@ -107,7 +109,7 @@ class GMapState extends State<GMap> {
   }
 
   Marker createMarker(
-      String id, double latitude, double longitude, String Adress) {
+      String id, double latitude, double longitude, String adress, context) {
     LatLng latlng = LatLng(latitude, longitude);
     return Marker(
         markerId: MarkerId(id),
@@ -117,32 +119,15 @@ class GMapState extends State<GMap> {
         draggable: false,
         zIndex: 1,
         //Calling the function that does the popup
-        onTap: _showPopupMenu);
-  }
-
-  _showPopupMenu() {
-    showMenu<String>(
-      context: context,
-      position: RelativeRect.fromLTRB(50.0, 200.0, 60.0, 0),
-      //position where you want to show the menu on screen
-      items: [
-        PopupMenuItem<String>(child: const Text("Calle test 000"), value: '1'),
-        PopupMenuItem<String>(
-            child: const Text('Para poner reciclaje'), value: '2'),
-        PopupMenuItem<String>(child: const Text('menu option 3'), value: '3'),
-      ],
-      elevation: 8.0,
-    ).then<void>((String itemSelected) {
-      if (itemSelected == null) return;
-
-      if (itemSelected == "1") {
-        //code here
-      } else if (itemSelected == "2") {
-        //code here
-      } else {
-        //code here
-      }
-    });
+        onTap: (){
+          showModalBottomSheet(
+            context: context,
+            builder:(builder){
+              return EcopointInfo();
+            }
+          );
+        }
+    );
   }
 }
 
@@ -185,3 +170,5 @@ Future<BitmapDescriptor> _iconToMarker(IconData icon, double size, Color color) 
 
   return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
 }
+
+//From guide here https://www.abhishekduhoon.com/2020/06/how-to-create-widget-based-google-maps.html

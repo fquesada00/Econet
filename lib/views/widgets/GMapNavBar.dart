@@ -43,6 +43,8 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                           color: GREEN_MEDIUM,
                           textColor: Colors.white,
                           onPressed: () {
+                            print("aösldjfsöaldjflösaj");
+                            print(Scaffold.of(context).isDrawerOpen);
                             Scaffold.of(context).openDrawer();
                           },
                           child: Icon(
@@ -100,7 +102,9 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                         padding: const EdgeInsets.only(right: 10),
                         child: MaterialButton(
                           elevation: 5,
-                          color: BROWN_MEDIUM,
+                          //color: (Scaffold.of(context).isDrawerOpen) ? Colors.white : BROWN_MEDIUM,
+                          //textColor: (Scaffold.of(context).isDrawerOpen) ? BROWN_MEDIUM : Colors.white,
+                          color : BROWN_MEDIUM,
                           textColor: Colors.white,
                           onPressed: () => null,
                           child: Icon(
