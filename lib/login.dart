@@ -51,12 +51,21 @@ class _LoginState extends State<Login> {
               isLoggedIn && token!= null? RaisedButton(
                 child: Text('Get USER PROFILE'),
                 onPressed: (){
+                  email = emailTextController.text;
                   getUserProfile(email, token);
                 },
               )
                   :
               Container(),
-
+              isLoggedIn && token!= null? RaisedButton(
+                child: Text('UPDATE USER PROFILE'),
+                onPressed: (){
+                  email = emailTextController.text;
+                  updateUserProfile(email, token);
+                },
+              )
+                  :
+              Container(),
             ],
           ),
         ),
@@ -91,14 +100,25 @@ class _LoginState extends State<Login> {
 
   Future<void> firebaseLogout() async {
     await FirebaseAuth.instance.signOut();
-    isLoggedIn=false;
+    setState(() {
+      isLoggedIn=false;
+    });
   }
 }
 
 Future<void> getUserProfile(String email,String token) async {
   final response = await http.get(
-      "https://us-central1-econet-8552d.cloudfunctions.net/user?email=agustormakh@gmail.com",
+      "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
       headers: {'Authorization': 'Bearer $token',}
+  );
+  print("HTTPS RESPONSE = " + response.body);
+}
+
+Future<void> updateUserProfile(String email,String token) async {
+  final response = await http.put(
+      "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
+      headers: {'Authorization': 'Bearer $token',},
+      body: {'userType':"ecollector",'lastName':"TERMEKH"},
   );
   print("HTTPS RESPONSE = " + response.body);
 }
