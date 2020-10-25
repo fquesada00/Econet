@@ -1,5 +1,6 @@
 import 'package:econet/views/widgets/button_data.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class Button1 extends StatelessWidget {
   final ButtonData btnData;
@@ -27,18 +28,21 @@ class Button1 extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (btnData.icon != null) (btnData.icon),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
+              if (btnData.icon != null) Expanded(flex: 1, child: (btnData.icon)),
+              Expanded(
+                flex: 6,
+                child: AutoSizeText(
                   btnData.text,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 22,
                     fontFamily: 'SFProDisplay',
                     fontWeight: FontWeight.w500,
+                    fontSize: 20,
                   ),
                 ),
               ),
+
             ],
           ),
         ));

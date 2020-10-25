@@ -18,11 +18,6 @@ class SignUpMethod extends StatelessWidget {
           color: Colors.black,
           onPressed: () {}),
       ButtonData(
-          text: 'Continue with Facebook',
-          icon: Icon(CustomIcons.facebook),
-          color: Color(0xFF3B5998),
-          onPressed: () {}),
-      ButtonData(
           text: 'Continue with Google',
           icon: Icon(CustomIcons.google),
           color: Color(0xFF4285F4),
@@ -31,7 +26,9 @@ class SignUpMethod extends StatelessWidget {
           text: 'Continue with Email',
           icon: Icon(Icons.email),
           color: GREEN_MEDIUM,
-          onPressed: () {}),
+          onPressed: () {
+            Navigator.pushNamed(context, '/signup_email');
+          }),
     ];
 
     return Scaffold(
@@ -45,6 +42,7 @@ class SignUpMethod extends StatelessWidget {
               height: 120),
           SizedBox(height: size.height * 0.03),
           Column(
+
               children: _buttonData
                   .map((btn) => Padding(
                         padding: const EdgeInsets.all(25.0),

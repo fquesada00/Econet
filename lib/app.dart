@@ -1,5 +1,6 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
+import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/Gmap/EcopointInfo.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +8,7 @@ import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/Tutorial.dart';
+import 'package:econet/views/auth/Login.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -20,6 +22,8 @@ class MyApp extends StatelessWidget {
         '/signup_method': (context) => SignUpMethod(),
         '/GMap': (context) => GMap(),
         '/Tutorial':(context) => Tutorial(),
+        '/signup_email': (context) => SignupEmail(),
+        '/login': (context) => Login(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -29,6 +33,7 @@ class MyApp extends StatelessWidget {
             _color), // el navigation drawer toma este color de fondo
         splashColor: Colors.white.withOpacity(0.4),
         highlightColor: Colors.white.withOpacity(0.1),
+        fontFamily: 'SFProDisplay',
       ),
     );
   }
