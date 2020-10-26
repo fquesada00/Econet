@@ -1,4 +1,5 @@
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/auth/ecollector_or_regular.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
@@ -7,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
-import 'package:econet/views/auth/Tutorial.dart';
-import 'package:econet/views/auth/Login.dart';
+import 'package:econet/views/auth/tutorial.dart';
+import 'package:econet/views/auth/login.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -21,9 +22,10 @@ class MyApp extends StatelessWidget {
         '/loginsignup': (context) => LoginOrSignup(),
         '/signup_method': (context) => SignUpMethod(),
         '/GMap': (context) => GMap(),
-        '/Tutorial':(context) => Tutorial(),
+        '/tutorial': (context) => Tutorial(),
         '/signup_email': (context) => SignupEmail(),
         '/login': (context) => Login(),
+        '/ecollector_or_regular': (context) => EcollectorOrRegular(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -95,22 +97,22 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             RaisedButton(
               child: Text("Tutorial"),
-              onPressed: (){
+              onPressed: () {
                 Navigator.pushNamed(context, '/Tutorial');
               },
             ),
             ecopointAvailable
                 ? SafeArea(
-              child: ListView.builder(
-                itemCount: ecopoints.length,
-                itemBuilder: (context, index) {
-                  Ecopoint aux = ecopoints[index];
-                  return ListTile(
-                    title: Text('${aux.latitude},${aux.longitude}'),
-                  );
-                },
-              ),
-            )
+                    child: ListView.builder(
+                      itemCount: ecopoints.length,
+                      itemBuilder: (context, index) {
+                        Ecopoint aux = ecopoints[index];
+                        return ListTile(
+                          title: Text('${aux.latitude},${aux.longitude}'),
+                        );
+                      },
+                    ),
+                  )
                 : Container(),
           ],
         ),
