@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class UserApi{
   static String token;
@@ -55,12 +57,4 @@ class UserApi{
     print("HTTPS RESPONSE = " + response.body);
   }
 
-}
-
-class User{
-  String email;
-
-  toJSON() {
-    return {'userType':"ecollector",'lastName':"TERMEKH"};
-  }
 }
