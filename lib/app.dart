@@ -11,37 +11,41 @@ import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
+import 'package:provider/provider.dart';
+import 'package:econet/services/user.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => MyHomePage(title: 'Econet is flying high'),
-        '/loginsignup': (context) => LoginOrSignup(),
-        '/signup_method': (context) => SignUpMethod(),
-        '/GMap': (context) => GMap(),
-        '/tutorial': (context) => Tutorial(),
-        '/signup_email': (context) => SignupEmail(),
-        '/login': (context) => Login(),
-        '/ecollector_or_regular': (context) => EcollectorOrRegular(),
-        '/filter_testing': (context) => FilterTesting(),
-      },
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: MaterialColor(0xFFA3CB8F, _color),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        canvasColor: MaterialColor(0xFFA3CB8F,
-            _color), // el navigation drawer toma este color de fondo
-        splashColor: Colors.white.withOpacity(0.4),
-        highlightColor: Colors.white.withOpacity(0.1),
-        bottomSheetTheme:
-            BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
-        fontFamily: 'SFProDisplay',
-      ),
-    );
+    return MultiProvider(
+        providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+        child: MaterialApp(
+          initialRoute: '/',
+          routes: {
+            '/': (context) => MyHomePage(title: 'Econet is flying high'),
+            '/loginsignup': (context) => LoginOrSignup(),
+            '/signup_method': (context) => SignUpMethod(),
+            '/GMap': (context) => GMap(),
+            '/tutorial': (context) => Tutorial(),
+            '/signup_email': (context) => SignupEmail(),
+            '/login': (context) => Login(),
+            '/ecollector_or_regular': (context) => EcollectorOrRegular(),
+            '/filter_testing': (context) => FilterTesting(),
+          },
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: MaterialColor(0xFFA3CB8F, _color),
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            canvasColor: MaterialColor(0xFFA3CB8F,
+                _color), // el navigation drawer toma este color de fondo
+            splashColor: Colors.white.withOpacity(0.4),
+            highlightColor: Colors.white.withOpacity(0.1),
+            bottomSheetTheme: BottomSheetThemeData(
+                backgroundColor: Colors.black.withOpacity(0)),
+            fontFamily: 'SFProDisplay',
+          ),
+        ));
   }
 }
 

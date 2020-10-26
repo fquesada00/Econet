@@ -4,6 +4,8 @@ import 'package:econet/views/widgets/button_data.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:econet/services/user.dart';
 
 class SignupEmail extends StatefulWidget {
   @override
@@ -52,6 +54,9 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
     _FieldTemplateData(labelText: 'Password', icon: Icon(Icons.lock)),
   ];
 
+  TextEditingController emailController = TextEditingController(),
+      passwordController = TextEditingController();
+  String errorMessage = "";
   bool _passwordVisible = false;
 
   @override
@@ -64,6 +69,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     return ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -134,7 +140,8 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                       ]))),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
+          padding:
+              const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
           child: Button1(
               btnData: ButtonData(
                   text: 'SIGN UP',
@@ -142,6 +149,13 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
                       print('FORM: OK');
+                      setState(() async {
+                        errorMessage =
+                            await auth.firebaseRegisterWithEmailAndPassword(
+                                emailController.text,
+                                passwordController.text) as String;
+                      });
+
                       Navigator.pushNamed(context, '/ecollector_or_regular');
                     }
                   })),

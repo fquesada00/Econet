@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/services/user.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -37,6 +39,9 @@ class _LoginForm extends StatefulWidget {
 
 class __LoginFormState extends State<_LoginForm> {
   bool _passwordVisible = false;
+  TextEditingController emailController = TextEditingController(),
+      passwordController = TextEditingController();
+  String errorMessage = "";
 
   @override
   void initState() {
@@ -53,6 +58,8 @@ class __LoginFormState extends State<_LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
+
     return Column(
       children: [
         Form(
@@ -63,6 +70,7 @@ class __LoginFormState extends State<_LoginForm> {
                 padding: const EdgeInsets.only(
                     left: 35, right: 35, bottom: 20, top: 50),
                 child: TextFormField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     labelStyle: TextStyle(
@@ -82,6 +90,7 @@ class __LoginFormState extends State<_LoginForm> {
               Padding(
                 padding: const EdgeInsets.only(left: 35, right: 35, top: 8.0),
                 child: TextFormField(
+                  controller: passwordController,
                   obscureText: !_passwordVisible,
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -133,18 +142,26 @@ class __LoginFormState extends State<_LoginForm> {
                 .toList(),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Button1(
-              btnData: ButtonData(
-                  text: 'LOG IN',
-                  color: BROWN_MEDIUM,
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      print('FORM: OK');
-                    }
-                  })),
-        ),
+        auth.loggedInStatus != AuthStatus.Authenticating
+            ? Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Button1(
+                    btnData: ButtonData(
+                        text: 'LOG IN',
+                        color: BROWN_MEDIUM,
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            setState(() async {
+                              errorMessage = await auth.firebaseEmailLogin(
+                                  emailController.text,
+                                  passwordController.text) as String;
+                            });
+                            print('FORM: OK');
+                            Navigator.pushNamed(context, '/GMap');
+                          }
+                        })),
+              )
+            : CircularProgressIndicator(),
       ],
     );
   }
