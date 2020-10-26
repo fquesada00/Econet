@@ -86,7 +86,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
               child: TextFormField(
                 obscureText:
                 (field.labelText.toLowerCase() == 'password')
-                    ? _passwordVisible
+                    ? !_passwordVisible
                     : false,
                 decoration: InputDecoration(
                   labelText: field.labelText,
