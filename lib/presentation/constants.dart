@@ -18,3 +18,15 @@ const Color METAL_COLOR = Color(0xFFA8A8A8);
 const Color ELECTRONICS_COLOR = Color(0xFF4EA77D);
 const Color WOOD_COLOR = Color(0xFFB3816E);
 const Color TEXTILE_COLOR = Color(0xFFC76BC7);
+
+const Map<String, Color> CHIP_DATA = {
+  'Paper': PAPER_COLOR,
+  'Plastic': PLASTIC_COLOR,
+  'Glass': GLASS_COLOR,
+  'Metal': METAL_COLOR,
+  'Electronics': ELECTRONICS_COLOR,
+  'Wood': WOOD_COLOR,
+  'Textile': TEXTILE_COLOR,
+  'Ecopoints Only': GREEN_DARK,
+  'Recycling Plants Only': Colors.black,
+};

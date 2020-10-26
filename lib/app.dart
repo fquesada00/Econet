@@ -1,4 +1,5 @@
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/GMap/filter_testing.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/signup_email': (context) => SignupEmail(),
         '/login': (context) => Login(),
         '/ecollector_or_regular': (context) => EcollectorOrRegular(),
+        '/filter_testing': (context) => FilterTesting(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
             _color), // el navigation drawer toma este color de fondo
         splashColor: Colors.white.withOpacity(0.4),
         highlightColor: Colors.white.withOpacity(0.1),
+        bottomSheetTheme:
+            BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
         fontFamily: 'SFProDisplay',
       ),
     );
@@ -96,9 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             RaisedButton(
-              child: Text("Tutorial"),
+              child: Text("filters"),
               onPressed: () {
-                Navigator.pushNamed(context, '/Tutorial');
+                Navigator.pushNamed(context, '/filter_testing');
               },
             ),
             ecopointAvailable

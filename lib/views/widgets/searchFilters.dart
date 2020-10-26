@@ -1,29 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-Widget _createCustomChip({String text, Color color}) {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3.5),
-      child: Chip(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        backgroundColor: color,
-        //necesario por que sino deja una sombra
-        label: Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontFamily: 'SFProDisplayBold',
-          ),
-        ),
-      ),
-    ),
-  );
-}
+import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/widgets/econet_chip.dart';
 
 class AlwaysVisibleScrollbarPainter extends ScrollbarPainter {
   AlwaysVisibleScrollbarPainter()
@@ -56,36 +34,51 @@ class AlwaysVisibleScrollbarPainter extends ScrollbarPainter {
   }
 }
 
-class SearchFilters extends StatelessWidget {
+class SearchFilters extends StatefulWidget {
+  @override
+  _SearchFiltersState createState() => _SearchFiltersState();
+}
+
+class _SearchFiltersState extends State<SearchFilters> {
   ScrollController _controller = new ScrollController();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 120,
+        padding: EdgeInsets.all(5),
+        height: 150,
         width: 340,
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            )
+          ],
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
         ),
-        child: Column(children: <Widget>[
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(top: 20, left: 15),
-            child: Text(
-              'Filters',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontFamily: 'SFProDisplayBold',
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 20),
+                child: Text(
+                  'Filters',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontFamily: 'SFProDisplay',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: 310,
+              SizedBox(height: 10),
+              Container(
+                width: 290,
                 height: 60,
                 decoration: BoxDecoration(
                   color: Color(0xFFE5E2E2),
@@ -97,45 +90,17 @@ class SearchFilters extends StatelessWidget {
                   child: ListView(
                     controller: _controller,
                     scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      _createCustomChip(
-                        text: 'Paper',
-                        color: Color(0xFFC7A26B),
-                      ),
-                      _createCustomChip(
-                        text: 'Plastic',
-                        color: Color(0xFF6B7AC7),
-                      ),
-                      _createCustomChip(
-                        text: 'Ecopoints Only',
-                        color: Color(0xFF649A3B),
-                      ),
-                      _createCustomChip(
-                        text: 'Metal',
-                        color: Color(0xFFA8A8A8),
-                      ),
-                      _createCustomChip(
-                        text: 'Glass',
-                        color: Color(0xFF6BB7C7),
-                      ),
-                      _createCustomChip(
-                        text: 'Recycling Plants Only',
-                        color: Color(0xFF313131),
-                      ),
-                      _createCustomChip(
-                        text: 'Electronics',
-                        color: Color(0xFF4EA77D),
-                      ),
-                      _createCustomChip(
-                        text: 'Textile',
-                        color: Color(0xFF313131),
-                      ),
-                    ],
+                    children: List.from(CHIP_DATA.keys)
+                        .map(
+                          (k) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 3),
+                            child: EconetChip(k, CHIP_DATA[k], true),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ),
-            ),
-          ),
-        ]));
+            ]));
   }
 }

@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
 import 'package:econet/views/widgets/drawer.dart';
-import 'package:econet/views/widgets/searchFilters.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'Ecopoint.dart';
@@ -91,16 +90,6 @@ class GMapState extends State<GMap> {
               );
             },
           )),
-
-
-
-          Container(
-            alignment: Alignment.center,
-            child: SearchFilters(),
-          ),
-
-
-
           Container(
             margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
             child: EconetButton(onPressed: () {

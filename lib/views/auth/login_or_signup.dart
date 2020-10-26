@@ -15,46 +15,46 @@ class LoginOrSignup extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Stack(
-                alignment: AlignmentDirectional.center,
-                children: <Widget>[
-                  //Contenedor con los circulos
-                  Container(
-                    width: size.width,
-                    height: size.height * 0.55,
-                    child: CustomPaint(
-                      painter: _DrawCircles(),
-                    ),
+        body: Column(
+          children: <Widget>[
+            Stack(
+              alignment: AlignmentDirectional.center,
+              children: <Widget>[
+                //Contenedor con los circulos
+                Container(
+                  width: size.width,
+                  height: size.height * 0.55,
+                  child: CustomPaint(
+                    painter: _DrawCircles(),
                   ),
-                  //Contenedor con el logo
-                  Container(
-                    width: size.width * 0.65,
-                    child: SvgPicture.asset(
-                      'assets/icons/econet-white-logo.svg',
-                      semanticsLabel: 'Econet Logo',
-                    ),
+                ),
+                //Contenedor con el logo
+                Container(
+                  width: size.width * 0.65,
+                  child: SvgPicture.asset(
+                    'assets/icons/econet-white-logo.svg',
+                    semanticsLabel: 'Econet Logo',
                   ),
-                ],
-              ),
-              SizedBox(height: size.height * 0.1),
-              Button1(
-                  btnData: ButtonData(
-                      text: 'SIGN UP',
-                      color: GREEN_MEDIUM,
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/signup_method');
-                      })),
-              SizedBox(height: size.height * 0.03),
-              Button1(
-                  btnData: ButtonData(
-                      text: 'LOG IN', color: BROWN_MEDIUM, onPressed: () {
-                    Navigator.pushNamed(context, '/login');
-                  })),
-            ],
-          ),
+                ),
+              ],
+            ),
+            SizedBox(height: size.height * 0.1),
+            Button1(
+                btnData: ButtonData(
+                    text: 'SIGN UP',
+                    color: GREEN_MEDIUM,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/signup_method');
+                    })),
+            SizedBox(height: size.height * 0.03),
+            Button1(
+                btnData: ButtonData(
+                    text: 'LOG IN',
+                    color: BROWN_MEDIUM,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/login');
+                    })),
+          ],
         ));
   }
 }
