@@ -11,29 +11,22 @@ class SignupEmail extends StatefulWidget {
 }
 
 class _SignupEmailState extends State<SignupEmail> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            NavBar(
-              text: 'Sign Up',
-              withBack: true,
-              backgroundColor: Colors.white,
-              textColor: GREEN_MEDIUM,
-              height: 120,
-            ),
-            SafeArea(
-              child: _EmailRegisterForm(),
-            ),
-
-          ],
-        ),
+      body: Column(
+        children: <Widget>[
+          NavBar(
+            text: 'Sign Up',
+            withBack: true,
+            backgroundColor: Colors.white,
+            textColor: GREEN_MEDIUM,
+            height: 120,
+          ),
+          Expanded(child: _EmailRegisterForm()),
+        ],
       ),
     );
   }
@@ -52,13 +45,11 @@ class _EmailRegisterForm extends StatefulWidget {
 }
 
 class __EmailRegisterFormState extends State<_EmailRegisterForm> {
-
   List<_FieldTemplateData> fieldData = [
     _FieldTemplateData(labelText: 'First Name', icon: Icon(Icons.person)),
     _FieldTemplateData(labelText: 'Last Name', icon: Icon(Icons.person)),
     _FieldTemplateData(labelText: 'Email Address', icon: Icon(Icons.email)),
     _FieldTemplateData(labelText: 'Password', icon: Icon(Icons.lock)),
-
   ];
 
   bool _passwordVisible = false;
@@ -73,58 +64,58 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-
+    return ListView(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      children: <Widget>[
         Form(
           key: _formKey,
           child: Column(
             children: fieldData
                 .map((field) => Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 35, vertical: 8.0),
-              child: TextFormField(
-                obscureText:
-                (field.labelText.toLowerCase() == 'password')
-                    ? _passwordVisible
-                    : false,
-                decoration: InputDecoration(
-                  labelText: field.labelText,
-                  labelStyle: TextStyle(
-                    fontFamily: 'SFProDisplay',
-                    fontSize: 20,
-                  ),
-                  suffixIcon:
-                  field.labelText.toLowerCase() == 'password'
-                      ? IconButton(
-                      icon: Icon(
-                        _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 35, vertical: 10.0),
+                      child: TextFormField(
+                        obscureText:
+                            (field.labelText.toLowerCase() == 'password')
+                                ? !_passwordVisible
+                                : false,
+                        decoration: InputDecoration(
+                          labelText: field.labelText,
+                          labelStyle: TextStyle(
+                            fontFamily: 'SFProDisplay',
+                            fontSize: 20,
+                          ),
+                          suffixIcon:
+                              field.labelText.toLowerCase() == 'password'
+                                  ? IconButton(
+                                      icon: Icon(
+                                        _passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _passwordVisible = !_passwordVisible;
+                                        });
+                                      })
+                                  : null,
+                          icon: field.icon,
+                        ),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Field is required';
+                          }
+                          return null;
+                        },
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _passwordVisible =
-                          !_passwordVisible;
-                        });
-                      })
-                      : null,
-                  icon: field.icon,
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Field is required';
-                  }
-                  return null;
-                },
-              ),
-            ))
+                    ))
                 .toList(),
           ),
         ),
         SafeArea(
           child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
               child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
@@ -143,19 +134,19 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                       ]))),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 30.0),
+          padding: const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
           child: Button1(
               btnData: ButtonData(
-                  text: 'SIGN UP', color: GREEN_MEDIUM, onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  print('FORM: OK');
+                  text: 'SIGN UP',
+                  color: GREEN_MEDIUM,
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      print('FORM: OK');
+                      Navigator.pushNamed(context, '/ecollector_or_regular');
                     }
-              })),
+                  })),
         ),
       ],
     );
   }
 }
-
-
-

@@ -14,8 +14,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:econet/views/widgets/GMapNavBar.dart';
 import 'package:econet/presentation/constants.dart';
 
-
-
 class GMap extends StatefulWidget {
   @override
   State<GMap> createState() => GMapState();
@@ -31,13 +29,14 @@ class GMapState extends State<GMap> {
     target: LatLng(-34.523644, -58.479677),
     zoom: 15.4746,
   );
+
   @override
   Future<void> initState() {
     ecopoints = getEcopoints(4536456, 2345234, 5435);
 
 //   This is just for testing, replace user position or last cashed position
-    markers.add(
-        createMarker("markerDefault", -34.523274, -58.479917, "TesterCalle",null));
+    markers.add(createMarker(
+        "markerDefault", -34.523274, -58.479917, "TesterCalle", null));
     _setMarkerIcon();
     super.initState();
   }
@@ -65,32 +64,32 @@ class GMapState extends State<GMap> {
         body: Stack(children: <Widget>[
           Container(
               child: FutureBuilder<List<Ecopoint>>(
-                future: ecopoints,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    snapshot.data.forEach((element) {
-                      print(element);
-                      markers.add(createMarker(element.userEmail, element.longitude,
-                          element.latitude, element.adress,context));
-                    });
-                  }
+            future: ecopoints,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                snapshot.data.forEach((element) {
+                  print(element);
+                  markers.add(createMarker(element.userEmail, element.longitude,
+                      element.latitude, element.adress, context));
+                });
+              }
 
-                  return GoogleMap(
-                    //Con esto sacamos el logo de Google: Cuidado que si
-                    //queremos subir esto al Play Store nos hacen quilombo
-                    padding: EdgeInsets.symmetric(horizontal: 500),
+              return GoogleMap(
+                //Con esto sacamos el logo de Google: Cuidado que si
+                //queremos subir esto al Play Store nos hacen quilombo
+                padding: EdgeInsets.symmetric(horizontal: 500),
 
-                    markers: markers.toSet(),
-                    zoomControlsEnabled: false,
-                    initialCameraPosition: _kGooglePlex,
-                    mapToolbarEnabled: false,
-                    compassEnabled: false,
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                  );
+                markers: markers.toSet(),
+                zoomControlsEnabled: false,
+                initialCameraPosition: _kGooglePlex,
+                mapToolbarEnabled: false,
+                compassEnabled: false,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
                 },
-              )),
+              );
+            },
+          )),
           Container(
             margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
             child: EconetButton(onPressed: () {
@@ -104,8 +103,7 @@ class GMapState extends State<GMap> {
               backgroundColor: Colors.transparent,
               textColor: GREEN_MEDIUM,
               height: 120),*/
-        ])
-    );
+        ]));
   }
 
   Marker createMarker(
@@ -119,18 +117,15 @@ class GMapState extends State<GMap> {
         draggable: false,
         zIndex: 1,
         //Calling the function that does the popup
-        onTap: (){
+        onTap: () {
           showModalBottomSheet(
-            context: context,
-            builder:(builder){
-              return EcopointInfo();
-            }
-          );
-        }
-    );
+              context: context,
+              builder: (builder) {
+                return EcopointInfo();
+              });
+        });
   }
 }
-
 
 Future<List<Ecopoint>> getEcopoints(
     double latitude, double longitude, double radius) async {
@@ -146,7 +141,8 @@ Future<List<Ecopoint>> getEcopoints(
   return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
 }
 
-Future<BitmapDescriptor> _iconToMarker(IconData icon, double size, Color color) async {
+Future<BitmapDescriptor> _iconToMarker(
+    IconData icon, double size, Color color) async {
   final pictureRecorder = PictureRecorder();
   final canvas = Canvas(pictureRecorder);
   final textPainter = TextPainter(textDirection: TextDirection.ltr);
@@ -159,8 +155,7 @@ Future<BitmapDescriptor> _iconToMarker(IconData icon, double size, Color color) 
         fontSize: size,
         fontFamily: icon.fontFamily,
         color: color,
-      )
-  );
+      ));
   textPainter.layout();
   textPainter.paint(canvas, Offset(0.0, 0.0));
 

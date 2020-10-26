@@ -23,14 +23,16 @@ class _TutorialState extends State<Tutorial> {
           ),
           SizedBox(height: 20),
           Container(
-            width: 280,
-            height: 450,
+            width: 309,
+            height: 479,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 color: Colors.black),
             alignment: Alignment.center,
             child: Container(
-              decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.all(Radius.circular(100)) ),
+              decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.all(Radius.circular(100))),
               child: IconButton(
                 icon: Icon(
                   Icons.play_arrow,
@@ -42,14 +44,19 @@ class _TutorialState extends State<Tutorial> {
             ),
           ),
           SizedBox(height: 30),
-          Text(
-            'Skip Tutorial',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 25,
-                color: BROWN_DARK,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'SFProDisplay'),
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/GMap');
+            },
+            child: Text(
+              'Skip Tutorial',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 25,
+                  color: BROWN_DARK,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'SFProDisplay'),
+            ),
           )
         ],
       ),

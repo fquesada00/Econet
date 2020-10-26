@@ -25,7 +25,7 @@ class NavBar extends StatelessWidget {
                 if (withBack)
                   Expanded(
                     child: Align(
-                      alignment: Alignment(-0.7, 1),
+                      alignment: Alignment(1, 1),
                       child: CupertinoNavigationBarBackButton(
                         color: Colors.black,
                       ),
@@ -34,6 +34,7 @@ class NavBar extends StatelessWidget {
                 else
                   (Spacer()),
                 Expanded(
+                  flex: 4,
                   child: Padding(
                     padding: const EdgeInsets.all(7.0),
                     child: Text(
