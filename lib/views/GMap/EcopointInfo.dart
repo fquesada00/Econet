@@ -16,7 +16,7 @@ class EcopointInfo extends StatefulWidget {
 class EcopointInfoState extends State<EcopointInfo> {
   //EcopointInfoState({this.adress});
   //String adress;
-  List<String> residues = ['Paper', 'Plastic', 'Glass', 'Wood'];
+  List<String> residues = ['Paper', 'Plastic', 'Glass'];
 
   @override
   Widget build(BuildContext context) {
@@ -150,9 +150,7 @@ class EcopointInfoState extends State<EcopointInfo> {
                 btnData: ButtonData(
                     text: 'OPEN ECOPOINT',
                     color: GREEN_MEDIUM,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/signup_method');
-                    }),
+                    onPressed: () {}),
                 width: 150,
                 extend: true,
               ),
