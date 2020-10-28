@@ -74,8 +74,15 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
             children: fieldData
                 .map((field) => Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 35, vertical: 10.0),
+                          horizontal: 35, vertical: 5),
                       child: TextFormField(
+                        textInputAction: field.labelText.toLowerCase() ==
+                                'password' // Si es el ultimo field, tiene que dar la opcion de Done
+                            ? TextInputAction.done
+                            : TextInputAction.next,
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
                         obscureText:
                             (field.labelText.toLowerCase() == 'password')
                                 ? !_passwordVisible
@@ -134,17 +141,16 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                       ]))),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
+          padding:
+              const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
           child: Button1(
-              btnData: ButtonData(
-                  text: 'SIGN UP',
-                  color: GREEN_MEDIUM,
+              btnData: ButtonData('SIGN UP', backgroundColor: GREEN_MEDIUM,
                   onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      print('FORM: OK');
-                      Navigator.pushNamed(context, '/ecollector_or_regular');
-                    }
-                  })),
+            if (_formKey.currentState.validate()) {
+              print('FORM: OK');
+              Navigator.pushNamed(context, '/ecollector_or_regular');
+            }
+          })),
         ),
       ],
     );

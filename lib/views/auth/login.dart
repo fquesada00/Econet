@@ -136,14 +136,12 @@ class __LoginFormState extends State<_LoginForm> {
         Padding(
           padding: const EdgeInsets.only(top: 30.0),
           child: Button1(
-              btnData: ButtonData(
-                  text: 'LOG IN',
-                  color: BROWN_MEDIUM,
+              btnData: ButtonData('LOG IN', backgroundColor: BROWN_MEDIUM,
                   onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      print('FORM: OK');
-                    }
-                  })),
+            if (_formKey.currentState.validate()) {
+              print('FORM: OK');
+            }
+          })),
         ),
       ],
     );

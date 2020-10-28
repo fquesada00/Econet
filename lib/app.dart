@@ -5,6 +5,7 @@ import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/Gmap/EcopointInfo.dart';
+import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => Login(),
         '/ecollector_or_regular': (context) => EcollectorOrRegular(),
         '/filter_testing': (context) => FilterTesting(),
+        '/ecopoint_expanded': (context) => EcopointExpanded(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(

@@ -40,20 +40,16 @@ class LoginOrSignup extends StatelessWidget {
             ),
             SizedBox(height: size.height * 0.1),
             Button1(
-                btnData: ButtonData(
-                    text: 'SIGN UP',
-                    color: GREEN_MEDIUM,
+                btnData: ButtonData('SIGN UP', backgroundColor: GREEN_MEDIUM,
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signup_method');
-                    })),
+              Navigator.pushNamed(context, '/signup_method');
+            })),
             SizedBox(height: size.height * 0.03),
             Button1(
-                btnData: ButtonData(
-                    text: 'LOG IN',
-                    color: BROWN_MEDIUM,
+                btnData: ButtonData('LOG IN', backgroundColor: BROWN_MEDIUM,
                     onPressed: () {
-                      Navigator.pushNamed(context, '/login');
-                    })),
+              Navigator.pushNamed(context, '/login');
+            })),
           ],
         ));
   }

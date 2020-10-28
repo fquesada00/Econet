@@ -12,23 +12,19 @@ class SignUpMethod extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     List<ButtonData> _buttonData = [
-      ButtonData(
-          text: 'Continue with Apple',
+      ButtonData('Continue with Apple',
           icon: Icon(CustomIcons.apple),
-          color: Colors.black,
+          backgroundColor: Colors.black,
           onPressed: () {}),
-      ButtonData(
-          text: 'Continue with Google',
+      ButtonData('Continue with Google',
           icon: Icon(CustomIcons.google),
-          color: Color(0xFF4285F4),
+          backgroundColor: Color(0xFF4285F4),
           onPressed: () {}),
-      ButtonData(
-          text: 'Continue with Email',
+      ButtonData('Continue with Email',
           icon: Icon(Icons.email),
-          color: GREEN_MEDIUM,
-          onPressed: () {
-            Navigator.pushNamed(context, '/signup_email');
-          }),
+          backgroundColor: GREEN_MEDIUM, onPressed: () {
+        Navigator.pushNamed(context, '/signup_email');
+      }),
     ];
 
     return Scaffold(
@@ -42,7 +38,6 @@ class SignUpMethod extends StatelessWidget {
               height: 120),
           SizedBox(height: size.height * 0.03),
           Column(
-
               children: _buttonData
                   .map((btn) => Padding(
                         padding: const EdgeInsets.all(25.0),

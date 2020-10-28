@@ -5,54 +5,68 @@ import 'package:auto_size_text/auto_size_text.dart';
 class Button1 extends StatefulWidget {
   final ButtonData btnData;
   final double width;
-  final bool extend;
+  final double height;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final bool adjust;
   //Constructor
-  Button1({this.btnData, this.width = 0, this.extend = false});
+  Button1({
+    this.btnData,
+    this.width = 0,
+    this.height = 0,
+    this.fontSize = 20,
+    this.fontWeight = FontWeight.w500,
+    this.adjust = false,
+  });
 
   @override
-  _Button1State createState() => _Button1State(btnData, width, extend);
+  _Button1State createState() =>
+      _Button1State(btnData, width, height, fontSize, fontWeight, adjust);
 }
 
 class _Button1State extends State<Button1> {
   double width;
+  double height;
+  double fontSize;
+  FontWeight fontWeight;
   double minWidth;
   ButtonData data;
-  bool extend;
+  //Propiedad para hacer que el boton se ajuste al width
+  bool adjust;
 
-  _Button1State(ButtonData data, double width, bool extend) {
-    this.data = data;
-    this.width = width;
-    this.extend = extend;
-  }
+  _Button1State(this.data, this.width, this.height, this.fontSize,
+      this.fontWeight, this.adjust);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print(width);
+
     if (width == null || width == 0) {
       width = size.width * 0.7;
     }
 
-    if (extend) {
-      minWidth = size.width * 0.87;
-    } else {
-      minWidth = size.width * 0.75;
+    if (height == null || height == 0) {
+      height = size.height / 13;
     }
 
-    print(minWidth);
+    if (adjust) {
+      minWidth = width;
+    } else {
+      minWidth = size.width * 0.87;
+    }
 
     return MaterialButton(
-        height: size.height / 13,
+        height: height,
         minWidth: minWidth,
-        color: widget.btnData.color,
+        color: widget.btnData.backgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(104),
         ),
         elevation: 0,
         highlightElevation: 0,
-        highlightColor: widget.btnData.color,
+        highlightColor: widget.btnData.backgroundColor,
         splashColor: Colors.white.withOpacity(0.4),
-        textColor: Colors.white,
+        textColor: widget.btnData.textColor,
         onPressed: widget.btnData.onPressed,
         child: Container(
           width: width,
@@ -69,8 +83,8 @@ class _Button1State extends State<Button1> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'SFProDisplay',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
+                    fontWeight: fontWeight,
+                    fontSize: fontSize,
                   ),
                 ),
               ),
