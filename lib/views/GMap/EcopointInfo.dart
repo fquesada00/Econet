@@ -2,7 +2,6 @@ import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/econet_chip.dart';
 import 'package:econet/views/widgets/button1.dart';
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,11 +19,13 @@ class EcopointInfoState extends State<EcopointInfo> {
   String ecopointName = "Beto's Ecopoint";
   double distance = 0.2;
   String address = 'Address 1234';
+  String ecollector = 'Beto';
+  DateTime deliveryDate = new DateTime.utc(2020, 10, 26);
 
   @override
   Widget build(BuildContext context) {
     return new Container(
-        height: 370,
+        height: 340,
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -147,18 +148,26 @@ class EcopointInfoState extends State<EcopointInfo> {
                 ],
               ),
             ),
-            SizedBox(height: 25),
+            SizedBox(height: 10),
             Button1(
-              btnData: ButtonData('OPEN ECOPOINT',
-                  backgroundColor: GREEN_MEDIUM, onPressed: () {
-                Navigator.pushNamed(context, '/ecopoint_expanded', arguments: {
-                  'ecopointName': ecopointName,
-                  'address': address,
-                  'distance': distance,
-                  'residues': residues
-                });
-              }),
-              width: 150,
+              btnData: ButtonData(
+                'OPEN ECOPOINT',
+                () {
+                  Navigator.pushNamed(context, '/ecopoint_expanded',
+                      arguments: {
+                        'ecopointName': ecopointName,
+                        'address': address,
+                        'distance': distance,
+                        'residues': residues,
+                        'ecollector': ecollector,
+                        'deliveryDate': deliveryDate,
+                      });
+                },
+                backgroundColor: GREEN_MEDIUM,
+                width: 200,
+                height: 50,
+                fontSize: 50,
+              ),
             ),
             SizedBox(height: 30),
           ],

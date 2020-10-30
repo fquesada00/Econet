@@ -1,4 +1,3 @@
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -136,12 +135,15 @@ class __LoginFormState extends State<_LoginForm> {
         Padding(
           padding: const EdgeInsets.only(top: 30.0),
           child: Button1(
-              btnData: ButtonData('LOG IN', backgroundColor: BROWN_MEDIUM,
-                  onPressed: () {
-            if (_formKey.currentState.validate()) {
-              print('FORM: OK');
-            }
-          })),
+              btnData: ButtonData(
+            'LOG IN',
+            () {
+              if (_formKey.currentState.validate()) {
+                print('FORM: OK');
+              }
+            },
+            backgroundColor: BROWN_MEDIUM,
+          )),
         ),
       ],
     );

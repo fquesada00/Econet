@@ -1,6 +1,5 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -144,14 +143,18 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
           padding:
               const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
           child: Button1(
-              btnData: ButtonData('SIGN UP', backgroundColor: GREEN_MEDIUM,
-                  onPressed: () {
-            if (_formKey.currentState.validate()) {
-              print('FORM: OK');
-              Navigator.pushNamed(context, '/ecollector_or_regular');
-            }
-          })),
-        ),
+            btnData: ButtonData(
+              'SIGN UP',
+              () {
+                if (_formKey.currentState.validate()) {
+                  print('FORM: OK');
+                  Navigator.pushNamed(context, '/ecollector_or_regular');
+                }
+              },
+              backgroundColor: GREEN_MEDIUM,
+            ),
+          ),
+        )
       ],
     );
   }

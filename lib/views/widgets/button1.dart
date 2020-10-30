@@ -1,93 +1,122 @@
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:flutter/material.dart';
+import 'package:econet/presentation/constants.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class Button1 extends StatefulWidget {
-  final ButtonData btnData;
-  final double width;
-  final double height;
-  final double fontSize;
-  final FontWeight fontWeight;
-  final bool adjust;
-  //Constructor
-  Button1({
-    this.btnData,
+class ButtonData {
+  String text;
+  //El boton acepta tantos iconos como svg, pero no ambos al mismo tiempo
+  //Si se le llega a pasar los 2 campos, se le asigna solo el icono
+  Icon icon;
+  String svgUrl;
+  Color textColor;
+  Color backgroundColor;
+  Function onPressed;
+  double width;
+  double height;
+  double fontSize;
+  FontWeight fontWeight;
+  //Propiedad para hacer que el boton se ajuste al width
+  bool adjust;
+
+  ButtonData(
+    this.text,
+    this.onPressed, {
+    this.icon,
+    this.svgUrl,
+    this.textColor = Colors.white,
+    this.backgroundColor = GREEN_MEDIUM,
     this.width = 0,
     this.height = 0,
     this.fontSize = 20,
     this.fontWeight = FontWeight.w500,
     this.adjust = false,
   });
+}
+
+class Button1 extends StatefulWidget {
+  final ButtonData btnData;
+
+  //Constructor
+  Button1({this.btnData});
 
   @override
-  _Button1State createState() =>
-      _Button1State(btnData, width, height, fontSize, fontWeight, adjust);
+  _Button1State createState() => _Button1State(btnData);
 }
 
 class _Button1State extends State<Button1> {
-  double width;
-  double height;
-  double fontSize;
-  FontWeight fontWeight;
   double minWidth;
   ButtonData data;
-  //Propiedad para hacer que el boton se ajuste al width
-  bool adjust;
 
-  _Button1State(this.data, this.width, this.height, this.fontSize,
-      this.fontWeight, this.adjust);
+  _Button1State(this.data);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    if (width == null || width == 0) {
-      width = size.width * 0.7;
+    if (data.width == null || data.width == 0) {
+      data.width = size.width * 0.7;
     }
 
-    if (height == null || height == 0) {
-      height = size.height / 13;
+    if (data.height == null || data.height == 0) {
+      data.height = size.height / 13;
     }
 
-    if (adjust) {
-      minWidth = width;
+    if (data.adjust) {
+      minWidth = data.width;
     } else {
       minWidth = size.width * 0.87;
     }
 
+    if (data.svgUrl != null && data.icon != null) {
+      data.svgUrl = null;
+    }
+
     return MaterialButton(
-        height: height,
+        height: data.height,
         minWidth: minWidth,
-        color: widget.btnData.backgroundColor,
+        color: data.backgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(104),
         ),
         elevation: 0,
         highlightElevation: 0,
-        highlightColor: widget.btnData.backgroundColor,
+        highlightColor: data.backgroundColor,
         splashColor: Colors.white.withOpacity(0.4),
-        textColor: widget.btnData.textColor,
-        onPressed: widget.btnData.onPressed,
+        textColor: data.textColor,
+        onPressed: data.onPressed,
         child: Container(
-          width: width,
+          width: data.width,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (widget.btnData.icon != null)
-                Expanded(flex: 1, child: (widget.btnData.icon)),
               Expanded(
-                flex: 6,
+                  child: SizedBox(
+                height: 0,
+              )),
+              if (data.icon != null) Expanded(flex: 1, child: (data.icon)),
+              if (data.svgUrl != null)
+                SvgPicture.asset(
+                  data.svgUrl,
+                  height: data.fontSize,
+                ),
+              Expanded(
+                flex: 8,
                 child: AutoSizeText(
-                  widget.btnData.text,
+                  data.text,
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'SFProDisplay',
-                    fontWeight: fontWeight,
-                    fontSize: fontSize,
+                    fontWeight: data.fontWeight,
+                    fontSize: data.fontSize,
                   ),
                 ),
               ),
+              Expanded(
+                  child: SizedBox(
+                height: 0,
+              )),
             ],
           ),
         ));
