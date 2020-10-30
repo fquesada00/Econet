@@ -33,7 +33,15 @@ class EcopointExpanded extends StatelessWidget {
             Button1(
               btnData: ButtonData(
                 'RECYCLE',
-                () {},
+                () {Navigator.pushNamed(context, '/pickDelivery',
+                    arguments: {
+                      'ecopointName': "ecopointName",
+                      'address': "address",
+                      'distance': "distance",
+                      'residues': "residues",
+                      'ecollector': "ecollector",
+                      'deliveryDate': "deliveryDate",
+                    });},
                 backgroundColor: GREEN_DARK,
                 fontSize: 24,
                 svgUrl: 'assets/icons/econet-circle.svg',
