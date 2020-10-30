@@ -5,17 +5,30 @@ import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/widgets/button1.dart';
+import 'package:tinycolor/tinycolor.dart';
+import 'package:flutter/src/widgets/framework.dart';
 
-class PickDelivery extends StatefulWidget {
+
+/*class PickDelivery extends StatefulWidget {
   @override
   PickDeliveryState createState() => PickDeliveryState();
-}
+}*/
 
-class PickDeliveryState extends State<PickDelivery> {
+class PickDelivery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
-
+    //final List<String> arguments = ModalRoute.of(context).settings.arguments as List<String>;
+    final testList = List<String>(10);
+    testList[0] = "Testlist";
+    testList[1] = "newThing";
+    testList[2] = "Monday: 2203";
+    testList[3] = "Testlist";
+    testList[4] = "newThing";
+    testList[5] = "Monday: 2203";
+    testList[6] = "Testlist";
+    testList[7] = "newThing";
+    testList[8] = "Monday: 2203";
+    testList[9] = "Monday: 2203";
     return Scaffold(
       backgroundColor: BROWN_DARK,
       appBar: NavBar(
@@ -32,21 +45,7 @@ class PickDeliveryState extends State<PickDelivery> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: InfoCardContainer(
-              content: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                child: Container(
-                    height: 200,
-                    color: Color(0xFFE5E2E2),
-                    alignment: Alignment.center,
-                    child: Wrap(
-                      runSpacing: 5,
-                      spacing: 5,
-                      children: [Container()] /*List<Widget>.from((arguments['residues']
-                          .map((residue) =>
-                          EconetChip(residue, CHIP_DATA[residue], false))
-                          .toList())),*/
-                    )),
-              ),
+              timeslots: testList //arguments,
             ),
           ),
         ),
@@ -67,60 +66,18 @@ class PickDeliveryState extends State<PickDelivery> {
   }
 }
 
-class EcollectorCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      width: 180,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: GREEN_DARK,
-        borderRadius: BorderRadius.all(Radius.circular(25)),
-      ),
-      child: Container(
-        height: 180,
-        width: 170,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Text('Ecollector',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.white)),
-            CircleAvatar(radius: 45, backgroundColor: Colors.white),
-            Button1(
-              btnData: ButtonData(
-                'Beto',
-                () {},
-                backgroundColor: Colors.white,
-                textColor: GREEN_DARK,
-                fontSize: 23,
-                width: 80,
-                height: 35,
-                fontWeight: FontWeight.w600,
-                adjust: true,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+
 
 class InfoCardContainer extends StatelessWidget {
-  final Widget content;
-  final String header;
-  final IconData icon;
+  final List<String> timeslots;
 
-  InfoCardContainer({this.content, this.header, this.icon});
+  InfoCardContainer({this.timeslots});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print("TIMESLOTTTTTTTTTT##################");
+    print(this.timeslots);
     const containerHeight = 70.0;
 
     return Container(
@@ -139,26 +96,81 @@ class InfoCardContainer extends StatelessWidget {
         ],
       ),
       child:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 10),
-            Container(
-              height: containerHeight,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10,5,10,5),
-                child: content,
-              ),
-            ),
-            Container(
-              height: containerHeight,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10,5,10,5),
-                child: content,
-              ),
-            ),
-          ],
+        ListView(
+          children: List<Widget>.from((this.timeslots
+              .map((time) =>
+              TimeslotCard(time, Colors.grey, true))
+              .toList()))
         )
     );
+  }
+}
+class TimeslotCard2 extends StatelessWidget{
+  final String timeslot;
+  TimeslotCard2(this.timeslot);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10,5,10,5),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        child:Container(
+          height: 50,
+          color: Color(0xFFE5E2E2),
+          alignment: Alignment.center,
+          child: Text(this.timeslot),
+        ),
+      ),
+    );
+  }
+}
+
+
+class TimeslotCard extends StatefulWidget {
+  final String chipName;
+  final Color chipColor;
+  final bool isFilter;
+
+  TimeslotCard(this.chipName, this.chipColor, this.isFilter);
+
+  @override
+  TimeslotCardState createState() => TimeslotCardState();
+}
+
+class TimeslotCardState extends State<TimeslotCard> {
+  bool _isSelected = false;
+  Color textColor = Colors.white;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return FilterChip(
+        padding: const EdgeInsets.symmetric(horizontal: 100),
+        label: Text(
+          widget.chipName,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+            color: textColor,
+          ),
+        ),
+        selected: _isSelected,
+        backgroundColor: widget.chipColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        pressElevation: 0,
+        onSelected: (isSelected) {
+          //Solo es seleccionable si es un filtro
+          if (widget.isFilter) {
+            setState(() {
+              _isSelected = isSelected;
+            });
+          }
+        },
+        selectedColor: widget.chipName == 'Recycling Plants Only'
+            ? TinyColor(widget.chipColor).brighten(50).color
+            : TinyColor(widget.chipColor).brighten(15).color);
   }
 }
