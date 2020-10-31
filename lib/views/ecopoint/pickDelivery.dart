@@ -44,8 +44,8 @@ class PickDelivery extends StatelessWidget {
         Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: InfoCardContainer(
-              timeslots: testList //arguments,
+            child: TimeslotCard(
+              testList //arguments,
             ),
           ),
         ),
@@ -67,7 +67,7 @@ class PickDelivery extends StatelessWidget {
 }
 
 
-
+/*
 class InfoCardContainer extends StatelessWidget {
   final List<String> timeslots;
 
@@ -125,52 +125,79 @@ class TimeslotCard2 extends StatelessWidget{
     );
   }
 }
-
+*/
 
 class TimeslotCard extends StatefulWidget {
-  final String chipName;
-  final Color chipColor;
-  final bool isFilter;
 
-  TimeslotCard(this.chipName, this.chipColor, this.isFilter);
+  final List<String> timeslots;
+
+  TimeslotCard(this.timeslots);
 
   @override
-  TimeslotCardState createState() => TimeslotCardState();
+  TimeslotCardState createState() => TimeslotCardState(this.timeslots);
 }
 
 class TimeslotCardState extends State<TimeslotCard> {
-  bool _isSelected = false;
+
+  final List<String> timeslots;
+  //bool _isSelected = false;
   Color textColor = Colors.white;
+  TimeslotCardState(this.timeslots);
+
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    int _value = 2;
+    print("TIMESLOTTTTTTTTTT##################");
+    return Container(
+        width: size.width * 0.8,
+        height: 350,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          boxShadow: [
+            BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+            )
+          ],
+        ),
+        child:
+        ListView(
+        children: List<Widget>.generate(this.timeslots.length,
+            (int index) {
+                return ChoiceChip(
+                    //padding: const EdgeInsets.symmetric(horizontal: 100),
+                    label: Text(
+                      this.timeslots[index],
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: textColor,
+                      ),
+                    ),
+                    selected: _value == index,
+                    //backgroundColor: widget.chipColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    pressElevation: 0,
+                    onSelected: (bool selected) {
+                      //Solo es seleccionable si es un filtro
+                      setState(() {
+                        _value = selected ? index : null;
+                      });
 
-    return FilterChip(
-        padding: const EdgeInsets.symmetric(horizontal: 100),
-        label: Text(
-          widget.chipName,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 20,
-            color: textColor,
-          ),
-        ),
-        selected: _isSelected,
-        backgroundColor: widget.chipColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        pressElevation: 0,
-        onSelected: (isSelected) {
-          //Solo es seleccionable si es un filtro
-          if (widget.isFilter) {
-            setState(() {
-              _isSelected = isSelected;
-            });
-          }
-        },
-        selectedColor: widget.chipName == 'Recycling Plants Only'
-            ? TinyColor(widget.chipColor).brighten(50).color
-            : TinyColor(widget.chipColor).brighten(15).color);
+                    },
+                    /*selectedColor: widget.chipName == 'Recycling Plants Only'
+                        ? TinyColor(widget.chipColor).brighten(50).color
+                        : TinyColor(widget.chipColor).brighten(15).color);}).toList())*/
+                    );
+                  }).toList()
+        )
+    );
   }
 }
