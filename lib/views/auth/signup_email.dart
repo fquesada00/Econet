@@ -175,6 +175,13 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                 errorMessage = await auth.registerWithEmailAndPassword(
                     emailController.text, passwordController.text) as String;
                 print(errorMessage);
+                if (errorMessage.trim() == "successfully logged in") {
+                  print("DID IT");
+                  Navigator.popUntil(context, ModalRoute.withName('/auth'));
+                } else {
+                  print("not equal");
+                }
+                print(errorMessage);
                 setState(() {});
 
                 //Navigator.pushNamed(context, '/ecollector_or_regular');

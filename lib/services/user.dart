@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
@@ -97,6 +98,7 @@ abstract class AuthProvider implements ChangeNotifier {
   Stream<MyUser> onAuthStateChanged();
   Future<String> emailLogin(String email, String password);
   Future<String> registerWithEmailAndPassword(String email, String password);
+  Future<void> loginWithGoogle();
   logOut();
 }
 
@@ -198,5 +200,23 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
   @override
   Future<void> logOut() async {
     return await _firebaseAuth.signOut();
+  }
+
+  @override
+  Future<void> loginWithGoogle() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    // Create a new credential
+    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

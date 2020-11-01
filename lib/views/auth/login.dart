@@ -50,14 +50,16 @@ class __LoginFormState extends State<_LoginForm> {
 
   final _formKey = GlobalKey<FormState>();
 
-  List<_LoginServiceData> services = [
-    _LoginServiceData(color: Colors.black, icon: CustomIcons.apple),
-    _LoginServiceData(color: Color(0xFF4285F4), icon: CustomIcons.google),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
+    List<_LoginServiceData> services = [
+      _LoginServiceData(color: Colors.black, icon: CustomIcons.apple),
+      _LoginServiceData(
+          color: Color(0xFF4285F4),
+          icon: CustomIcons.google,
+          onPressed: Provider.of<AuthProvider>(context).loginWithGoogle),
+    ];
     return Column(
       children: [
         Form(
@@ -176,8 +178,8 @@ class __LoginFormState extends State<_LoginForm> {
 class _LoginServiceData {
   Color color;
   IconData icon;
-
-  _LoginServiceData({this.color, this.icon});
+  Function onPressed;
+  _LoginServiceData({this.color, this.icon, this.onPressed});
 }
 
 class _LoginServiceButton extends StatelessWidget {
@@ -192,7 +194,7 @@ class _LoginServiceButton extends StatelessWidget {
       highlightElevation: 0,
       color: data.color,
       textColor: Colors.white,
-      onPressed: () => null,
+      onPressed: () => data.onPressed.call(),
       child: Icon(data.icon, size: 35),
       padding: EdgeInsets.all(13),
       shape: CircleBorder(),
