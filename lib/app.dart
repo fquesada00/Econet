@@ -1,3 +1,4 @@
+import 'package:econet/auth_widget.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/GMap/filter_testing.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
@@ -19,9 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+        providers: [
+          ChangeNotifierProvider<AuthProvider>(
+              create: (_) => FirebaseAuthProvider())
+        ],
         child: MaterialApp(
-          initialRoute: '/',
+          initialRoute: '/auth',
           routes: {
             '/': (context) => MyHomePage(title: 'Econet is flying high'),
             '/loginsignup': (context) => LoginOrSignup(),
@@ -32,6 +36,7 @@ class MyApp extends StatelessWidget {
             '/login': (context) => Login(),
             '/ecollector_or_regular': (context) => EcollectorOrRegular(),
             '/filter_testing': (context) => FilterTesting(),
+            '/auth': (context) => AuthWidget(),
           },
           title: 'Flutter Demo',
           theme: ThemeData(

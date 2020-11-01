@@ -37,8 +37,9 @@ class _SignupEmailState extends State<SignupEmail> {
 class _FieldTemplateData {
   final String labelText;
   final Icon icon;
+  TextEditingController controller;
 
-  _FieldTemplateData({@required this.labelText, this.icon});
+  _FieldTemplateData({@required this.labelText, this.icon, this.controller});
 }
 
 class _EmailRegisterForm extends StatefulWidget {
@@ -47,21 +48,37 @@ class _EmailRegisterForm extends StatefulWidget {
 }
 
 class __EmailRegisterFormState extends State<_EmailRegisterForm> {
+  static TextEditingController nameController = TextEditingController(),
+      lastNameController = TextEditingController(),
+      emailController = TextEditingController(),
+      passwordController = TextEditingController();
+
   List<_FieldTemplateData> fieldData = [
-    _FieldTemplateData(labelText: 'First Name', icon: Icon(Icons.person)),
-    _FieldTemplateData(labelText: 'Last Name', icon: Icon(Icons.person)),
-    _FieldTemplateData(labelText: 'Email Address', icon: Icon(Icons.email)),
-    _FieldTemplateData(labelText: 'Password', icon: Icon(Icons.lock)),
+    _FieldTemplateData(
+        labelText: 'First Name',
+        icon: Icon(Icons.person),
+        controller: nameController),
+    _FieldTemplateData(
+        labelText: 'Last Name',
+        icon: Icon(Icons.person),
+        controller: lastNameController),
+    _FieldTemplateData(
+        labelText: 'Email Address',
+        icon: Icon(Icons.email),
+        controller: emailController),
+    _FieldTemplateData(
+        labelText: 'Password',
+        icon: Icon(Icons.lock),
+        controller: passwordController),
   ];
 
-  TextEditingController emailController = TextEditingController(),
-      passwordController = TextEditingController();
   String errorMessage = "";
   bool _passwordVisible = false;
 
   @override
   void initState() {
     _passwordVisible = false;
+
     super.initState();
   }
 
@@ -82,6 +99,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 35, vertical: 10.0),
                       child: TextFormField(
+                        controller: field.controller,
                         obscureText:
                             (field.labelText.toLowerCase() == 'password')
                                 ? !_passwordVisible
@@ -146,17 +164,16 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
               btnData: ButtonData(
                   text: 'SIGN UP',
                   color: GREEN_MEDIUM,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       print('FORM: OK');
-                      setState(() async {
-                        errorMessage =
-                            await auth.firebaseRegisterWithEmailAndPassword(
-                                emailController.text,
-                                passwordController.text) as String;
-                      });
+                      errorMessage = await auth.registerWithEmailAndPassword(
+                              emailController.text, passwordController.text)
+                          as String;
+                      print(errorMessage);
+                      setState(() {});
 
-                      Navigator.pushNamed(context, '/ecollector_or_regular');
+                      //Navigator.pushNamed(context, '/ecollector_or_regular');
                     }
                   })),
         ),

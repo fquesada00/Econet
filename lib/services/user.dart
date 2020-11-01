@@ -6,25 +6,6 @@ import 'dart:async';
 class UserApi {
   static String token;
 
-  Future<void> firebaseEmailLogin(String email, String password) async {
-    if (email == null || password == null) {
-      print("ALGUNO DE LOS CAMPOS ESTA  VACIO");
-      return -1;
-    }
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      token = await userCredential.user.getIdToken();
-      print("TOKEN ====" + token);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    }
-  }
-
   Future<void> firebaseLogout() async {
     return await FirebaseAuth.instance.signOut();
   }
@@ -61,7 +42,7 @@ class UserApi {
 }
 
 class User {
-  int userId;
+  String userId;
   String name, email, type, token;
 
   User({this.userId, this.name, this.email, this.type, this.token});
@@ -97,7 +78,13 @@ enum AuthStatus {
   LoggedOut,
 }
 
-class AuthProvider with ChangeNotifier {
+abstract class AuthProvider implements ChangeNotifier {
+  Stream<User> onAuthStateChanged();
+  Future<String> emailLogin(String email, String password);
+  Future<String> registerWithEmailAndPassword(String email, String password);
+}
+
+class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
   AuthStatus _loggedInStatus = AuthStatus.NotLoggedIn;
   AuthStatus _registeredStatus = AuthStatus.NotRegistered;
 
@@ -106,9 +93,24 @@ class AuthProvider with ChangeNotifier {
   String _token;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Future<String> firebaseEmailLogin(String email, String password) async {
+  Future<User> _userFromFirebase(FirebaseUser firebaseUser) async {
+    return firebaseUser == null
+        ? null
+        : User(
+            email: firebaseUser.email,
+            userId: firebaseUser.uid,
+            token: await firebaseUser.getIdToken());
+  }
+
+  @override
+  Stream<User> onAuthStateChanged() {
+    return _firebaseAuth.authStateChanges().map((event) => null);
+  }
+
+  @override
+  Future<String> emailLogin(String email, String password) async {
     if (email == null || password == null) {
-      print("ALGUNO DE LOS CAMPOS ESTA  VACIO");
+      print("ALGUNO DE LOS CAMPOS ESTA VACIO");
       if (email == null) {
         return "email is empty";
       } else {
@@ -137,7 +139,8 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<String> firebaseRegisterWithEmailAndPassword(
+  @override
+  Future<String> registerWithEmailAndPassword(
       String email, String password) async {
     if (email == null || password == null) {
       print("ALGUNO DE LOS CAMPOS ESTA  VACIO");
@@ -148,22 +151,26 @@ class AuthProvider with ChangeNotifier {
       }
     }
     try {
-      _registeredStatus = AuthStatus.Registering;
-      notifyListeners();
+      // _registeredStatus = AuthStatus.Registering;
+      // notifyListeners();
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+      print("HOLIS");
       _token = await userCredential.user.getIdToken();
       _loggedInStatus = AuthStatus.LoggedIn;
-      notifyListeners();
-      print("TOKEN ====" + _token);
+      // notifyListeners();
+      // print("TOKEN ====" + _token);
       return "successfully logged in";
     } on FirebaseAuthException catch (e) {
-      _loggedInStatus = AuthStatus.NotLoggedIn;
-      notifyListeners();
+      print("HOLIS 2");
+      // _loggedInStatus = AuthStatus.NotLoggedIn;
+      // notifyListeners();
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
+      } else {
+        print(e);
       }
       return e.code;
     }

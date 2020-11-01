@@ -58,8 +58,7 @@ class __LoginFormState extends State<_LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider auth = Provider.of<AuthProvider>(context);
-
+    final auth = Provider.of<AuthProvider>(context);
     return Column(
       children: [
         Form(
@@ -142,7 +141,7 @@ class __LoginFormState extends State<_LoginForm> {
                 .toList(),
           ),
         ),
-        auth.loggedInStatus != AuthStatus.Authenticating
+        auth.onAuthStateChanged() != null
             ? Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Button1(
@@ -151,11 +150,9 @@ class __LoginFormState extends State<_LoginForm> {
                         color: BROWN_MEDIUM,
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            setState(() async {
-                              errorMessage = await auth.firebaseEmailLogin(
-                                  emailController.text,
-                                  passwordController.text) as String;
-                            });
+                            errorMessage = await auth.emailLogin(
+                                emailController.text, passwordController.text);
+                            setState(() {});
                             print('FORM: OK');
                             Navigator.pushNamed(context, '/GMap');
                           }
