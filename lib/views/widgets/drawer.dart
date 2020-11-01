@@ -1,8 +1,12 @@
+import 'package:econet/presentation/constants.dart';
+import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Widget _createDrawerItem({String text, bool active, GestureTapCallback onTap}) {
   return ListTile(
+    dense: true,
+    contentPadding: EdgeInsets.fromLTRB(16, 0, 0, 0),
     title: Container(
       alignment: Alignment.centerLeft,
       height: 40,
@@ -13,31 +17,40 @@ Widget _createDrawerItem({String text, bool active, GestureTapCallback onTap}) {
           style: TextStyle(
             color: Colors.black,
             fontSize: 26,
-            fontFamily: 'SFProDisplayBold',
+            fontFamily: 'SFProDisplay',
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
       decoration: BoxDecoration(
-          color: (active) ? Colors.white : null,
-          borderRadius: BorderRadius.circular(90)),
+        color: (active) ? Colors.white : null,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(90),
+          bottomLeft: Radius.circular(90),
+        ),
+      ),
     ),
     onTap: onTap,
   );
 }
 
-
 class AppDrawer extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => DrawerState();
 }
 
 class DrawerState extends State<AppDrawer> {
-  var states = [true, false, false, false, false, false];  // Home es el que corre primero
+  var states = [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+  ]; // Home es el que corre primero
 
-  void changeState(index){
-    for(int i = 0; i < states.length; i++)
-      states[i] = false;
+  void changeState(index) {
+    for (int i = 0; i < states.length; i++) states[i] = false;
 
     states[index] = true;
   }
@@ -46,18 +59,60 @@ class DrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        padding: EdgeInsets.fromLTRB(0, 130, 0, 0),
+        padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
         children: <Widget>[
-
-          _createDrawerItem(text: 'Home', active: states[0], onTap: (){setState((){changeState(0);});}),
-          _createDrawerItem(text: 'My recycling', active: states[1], onTap: (){setState((){changeState(1);});}),
-          _createDrawerItem(text: 'News', active: states[2], onTap: (){setState((){changeState(2);});}),
-          _createDrawerItem(text: 'Tutorials', active: states[3], onTap: (){setState((){changeState(3);});}),
-          _createDrawerItem(text: 'FAQs', active: states[4], onTap: (){setState((){changeState(4);});}),
-          _createDrawerItem(text: 'Profile', active: states[5], onTap: (){setState((){changeState(5);});}),
+          _createDrawerItem(
+              text: 'Home',
+              active: states[0],
+              onTap: () {
+                setState(() {
+                  changeState(0);
+                });
+              }),
+          _createDrawerItem(
+              text: 'My recycling',
+              active: states[1],
+              onTap: () {
+                setState(() {
+                  changeState(1);
+                });
+              }),
+          _createDrawerItem(
+              text: 'News',
+              active: states[2],
+              onTap: () {
+                setState(() {
+                  changeState(2);
+                });
+              }),
+          _createDrawerItem(
+              text: 'Tutorials',
+              active: states[3],
+              onTap: () {
+                setState(() {
+                  changeState(3);
+                });
+              }),
+          _createDrawerItem(
+              text: 'FAQs',
+              active: states[4],
+              onTap: () {
+                setState(() {
+                  changeState(4);
+                });
+              }),
+          _createDrawerItem(
+              text: 'Profile',
+              active: states[5],
+              onTap: () {
+                setState(() {
+                  changeState(5);
+                });
+              }),
 
           // No lo pude mandar con la funcion por que tiene icono, distinto tamanio, color y font
           ListTile(
+            contentPadding: EdgeInsets.fromLTRB(16, 40, 0, 40),
             title: GestureDetector(
               onTap: () {}, //IMPLEMENTAR
               child: Container(
@@ -65,20 +120,22 @@ class DrawerState extends State<AppDrawer> {
                 child: Row(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 15),
                       child: Icon(
-                        Icons.remove_red_eye, // agregar icono reciclaje
+                        CustomIcons.recycle,
                         color: Colors.white,
                       ),
                     ),
                     Expanded(
-                      child: Center(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Text(
-                          'Become an ecollector',
+                          'Become an Ecollector',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 22,
-                            fontFamily: 'SFProDisplaySemiBold',
+                            fontSize: 20,
+                            fontFamily: 'SFProDisplay',
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -86,8 +143,12 @@ class DrawerState extends State<AppDrawer> {
                   ],
                 ),
                 decoration: BoxDecoration(
-                    color: Color(0xFFB3816E),
-                    borderRadius: BorderRadius.circular(90)),
+                  color: BROWN_DARK,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(90),
+                    bottomLeft: Radius.circular(90),
+                  ),
+                ),
               ),
             ),
           ),
@@ -100,25 +161,40 @@ class DrawerState extends State<AppDrawer> {
           ),
 
           ListTile(
+            dense: true,
             leading: Icon(Icons.settings),
             title: Text(
               'Settings',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
-                fontFamily: 'SFProDisplay',
+                fontFamily: 'SFProText',
               ),
             ),
             onTap: () {},
           ),
           ListTile(
+            dense: true,
+            leading: Icon(Icons.exit_to_app),
+            title: Text(
+              'Log out',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontFamily: 'SFProText',
+              ),
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            dense: true,
             leading: Icon(Icons.help),
             title: Text(
               'Help',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
-                fontFamily: 'SFProDisplay',
+                fontFamily: 'SFProText',
               ),
             ),
             onTap: () {},

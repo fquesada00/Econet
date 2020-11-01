@@ -43,7 +43,6 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                           color: GREEN_MEDIUM,
                           textColor: Colors.white,
                           onPressed: () {
-                            print("aösldjfsöaldjflösaj");
                             print(Scaffold.of(context).isDrawerOpen);
                             Scaffold.of(context).openDrawer();
                           },
@@ -77,11 +76,13 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                                 borderRadius: _BORDER_RADIUS,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
                                 borderRadius: _BORDER_RADIUS,
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
                                 borderRadius: _BORDER_RADIUS,
                               ),
                               hintText: "Search locations, filters",
@@ -104,7 +105,7 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                           elevation: 5,
                           //color: (Scaffold.of(context).isDrawerOpen) ? Colors.white : BROWN_MEDIUM,
                           //textColor: (Scaffold.of(context).isDrawerOpen) ? BROWN_MEDIUM : Colors.white,
-                          color : BROWN_MEDIUM,
+                          color: BROWN_MEDIUM,
                           textColor: Colors.white,
                           onPressed: () => null,
                           child: Icon(
