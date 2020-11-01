@@ -2,7 +2,6 @@ import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/econet_chip.dart';
 import 'package:econet/views/widgets/button1.dart';
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,12 @@ class EcopointInfo extends StatefulWidget {
 class EcopointInfoState extends State<EcopointInfo> {
   //EcopointInfoState({this.adress});
   //String adress;
-  List<String> residues = ['Paper', 'Plastic', 'Glass', 'Wood'];
+  List<String> residues = ['Paper', 'Plastic', 'Glass'];
+  String ecopointName = "Beto's Ecopoint";
+  double distance = 0.2;
+  String address = 'Address 1234';
+  String ecollector = 'Beto';
+  DateTime deliveryDate = new DateTime.utc(2020, 10, 26);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class EcopointInfoState extends State<EcopointInfo> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(25), topRight: Radius.circular(25))),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -42,17 +46,17 @@ class EcopointInfoState extends State<EcopointInfo> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            "Beto",
+                            ecopointName,
                             style: TextStyle(
-                                fontSize: 40, fontWeight: FontWeight.w700),
+                                fontSize: 30, fontWeight: FontWeight.w700),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        SizedBox(width: 5),
                         Text(
-                          "0.2 km",
+                          "$distance km",
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 18,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF989898),
                           ),
@@ -94,7 +98,7 @@ class EcopointInfoState extends State<EcopointInfo> {
                     width: 285,
                     alignment: Alignment(0, 0),
                     child: Text(
-                      "Esto es una calle real 1234",
+                      address,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -105,7 +109,7 @@ class EcopointInfoState extends State<EcopointInfo> {
                 ],
               ),
             ),
-            SizedBox(height: 15),
+            SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(
@@ -144,19 +148,28 @@ class EcopointInfoState extends State<EcopointInfo> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25.0),
-              child: Button1(
-                btnData: ButtonData(
-                    text: 'OPEN ECOPOINT',
-                    color: GREEN_MEDIUM,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/signup_method');
-                    }),
-                width: 150,
-                extend: true,
+            SizedBox(height: 10),
+            Button1(
+              btnData: ButtonData(
+                'OPEN ECOPOINT',
+                () {
+                  Navigator.pushNamed(context, '/ecopoint_expanded',
+                      arguments: {
+                        'ecopointName': ecopointName,
+                        'address': address,
+                        'distance': distance,
+                        'residues': residues,
+                        'ecollector': ecollector,
+                        'deliveryDate': deliveryDate,
+                      });
+                },
+                backgroundColor: GREEN_MEDIUM,
+                width: 200,
+                height: 50,
+                fontSize: 50,
               ),
             ),
+            SizedBox(height: 30),
           ],
         ));
   }

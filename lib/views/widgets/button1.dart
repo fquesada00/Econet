@@ -1,79 +1,122 @@
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:flutter/material.dart';
+import 'package:econet/presentation/constants.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+class ButtonData {
+  String text;
+  //El boton acepta tantos iconos como svg, pero no ambos al mismo tiempo
+  //Si se le llega a pasar los 2 campos, se le asigna solo el icono
+  Icon icon;
+  String svgUrl;
+  Color textColor;
+  Color backgroundColor;
+  Function onPressed;
+  double width;
+  double height;
+  double fontSize;
+  FontWeight fontWeight;
+  //Propiedad para hacer que el boton se ajuste al width
+  bool adjust;
+
+  ButtonData(
+    this.text,
+    this.onPressed, {
+    this.icon,
+    this.svgUrl,
+    this.textColor = Colors.white,
+    this.backgroundColor = GREEN_MEDIUM,
+    this.width = 0,
+    this.height = 0,
+    this.fontSize = 20,
+    this.fontWeight = FontWeight.w500,
+    this.adjust = false,
+  });
+}
 
 class Button1 extends StatefulWidget {
   final ButtonData btnData;
-  final double width;
-  final bool extend;
+
   //Constructor
-  Button1({this.btnData, this.width = 0, this.extend = false});
+  Button1({this.btnData});
 
   @override
-  _Button1State createState() => _Button1State(btnData, width, extend);
+  _Button1State createState() => _Button1State(btnData);
 }
 
 class _Button1State extends State<Button1> {
-  double width;
   double minWidth;
   ButtonData data;
-  bool extend;
 
-  _Button1State(ButtonData data, double width, bool extend) {
-    this.data = data;
-    this.width = width;
-    this.extend = extend;
-  }
+  _Button1State(this.data);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print(width);
-    if (width == null || width == 0) {
-      width = size.width * 0.7;
+
+    if (data.width == null || data.width == 0) {
+      data.width = size.width * 0.7;
     }
 
-    if (extend) {
-      minWidth = size.width * 0.87;
+    if (data.height == null || data.height == 0) {
+      data.height = size.height / 13;
+    }
+
+    if (data.adjust) {
+      minWidth = data.width;
     } else {
-      minWidth = size.width * 0.75;
+      minWidth = size.width * 0.87;
     }
 
-    print(minWidth);
+    if (data.svgUrl != null && data.icon != null) {
+      data.svgUrl = null;
+    }
 
     return MaterialButton(
-        height: size.height / 13,
+        height: data.height,
         minWidth: minWidth,
-        color: widget.btnData.color,
+        color: data.backgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(104),
         ),
         elevation: 0,
         highlightElevation: 0,
-        highlightColor: widget.btnData.color,
+        highlightColor: data.backgroundColor,
         splashColor: Colors.white.withOpacity(0.4),
-        textColor: Colors.white,
-        onPressed: widget.btnData.onPressed,
+        textColor: data.textColor,
+        onPressed: data.onPressed,
         child: Container(
-          width: width,
+          width: data.width,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (widget.btnData.icon != null)
-                Expanded(flex: 1, child: (widget.btnData.icon)),
               Expanded(
-                flex: 6,
+                  child: SizedBox(
+                height: 0,
+              )),
+              if (data.icon != null) Expanded(flex: 1, child: (data.icon)),
+              if (data.svgUrl != null)
+                SvgPicture.asset(
+                  data.svgUrl,
+                  height: data.fontSize,
+                ),
+              Expanded(
+                flex: 8,
                 child: AutoSizeText(
-                  widget.btnData.text,
+                  data.text,
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'SFProDisplay',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
+                    fontWeight: data.fontWeight,
+                    fontSize: data.fontSize,
                   ),
                 ),
               ),
+              Expanded(
+                  child: SizedBox(
+                height: 0,
+              )),
             ],
           ),
         ));

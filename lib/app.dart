@@ -6,14 +6,19 @@ import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/Gmap/EcopointInfo.dart';
+import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
+import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
+
 import 'package:provider/provider.dart';
 import 'package:econet/services/user.dart';
+
+import 'package:econet/views/ecopoint/pickDelivery.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -37,6 +42,8 @@ class MyApp extends StatelessWidget {
             '/ecollector_or_regular': (context) => EcollectorOrRegular(),
             '/filter_testing': (context) => FilterTesting(),
             '/auth': (context) => AuthWidget(),
+            '/ecopoint_expanded': (context) => EcopointExpanded(),
+            '/pickDelivery': (context) => PickDelivery(),
           },
           title: 'Flutter Demo',
           theme: ThemeData(
@@ -55,7 +62,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title = "p2"}) : super(key: key);
   final String title;
 
   @override

@@ -41,14 +41,29 @@ class UserApi {
   }
 }
 
-class User {
+class MyUser {
   String userId;
   String name, email, type, token;
+  Future<String> tokenFuture;
 
-  User({this.userId, this.name, this.email, this.type, this.token});
+  MyUser(
+      {this.userId,
+      this.name,
+      this.email,
+      this.type,
+      this.token,
+      this.tokenFuture}) {
+    getUserToken();
+  }
 
-  factory User.fromJson(Map<String, dynamic> map) {
-    return User(
+  getUserToken() async {
+    if (this.tokenFuture != null) {
+      this.token = await this.tokenFuture;
+    }
+  }
+
+  factory MyUser.fromJson(Map<String, dynamic> map) {
+    return MyUser(
       userId: map['id'] ?? 1,
       name: map['name'] ?? "beto",
       email: map['email'] ?? "beto@gmail.com",
@@ -79,9 +94,10 @@ enum AuthStatus {
 }
 
 abstract class AuthProvider implements ChangeNotifier {
-  Stream<User> onAuthStateChanged();
+  Stream<MyUser> onAuthStateChanged();
   Future<String> emailLogin(String email, String password);
   Future<String> registerWithEmailAndPassword(String email, String password);
+  logOut();
 }
 
 class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
@@ -93,18 +109,21 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
   String _token;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Future<User> _userFromFirebase(FirebaseUser firebaseUser) async {
+  MyUser _userFromFirebase(User firebaseUser) {
+    print("FIREBASE USER ===== " + firebaseUser.toString());
     return firebaseUser == null
         ? null
-        : User(
+        : MyUser(
             email: firebaseUser.email,
             userId: firebaseUser.uid,
-            token: await firebaseUser.getIdToken());
+            tokenFuture: firebaseUser.getIdToken());
   }
 
   @override
-  Stream<User> onAuthStateChanged() {
-    return _firebaseAuth.authStateChanges().map((event) => null);
+  Stream<MyUser> onAuthStateChanged() {
+    return _firebaseAuth
+        .authStateChanges()
+        .map((user) => _userFromFirebase(user));
   }
 
   @override
@@ -125,7 +144,7 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
       _token = await userCredential.user.getIdToken();
       _loggedInStatus = AuthStatus.LoggedIn;
       notifyListeners();
-      print("TOKEN ====" + _token);
+      //print("TOKEN ====" + _token);
       return "successfully logged in";
     } on FirebaseAuthException catch (e) {
       _loggedInStatus = AuthStatus.NotLoggedIn;
@@ -176,7 +195,8 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
     }
   }
 
-  Future<void> firebaseLogout() async {
+  @override
+  Future<void> logOut() async {
     return await _firebaseAuth.signOut();
   }
 }

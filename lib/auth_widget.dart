@@ -11,14 +11,17 @@ class AuthWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context, listen: false);
     return Container(
-      child: StreamBuilder<User>(
+      child: StreamBuilder<MyUser>(
           stream: auth.onAuthStateChanged(),
           builder: (BuildContext context, AsyncSnapshot snap) {
+            print(
+                "---------------------------------------------------//AUTH WIDGET STATE CHANGED//------------------------------");
             if (snap.connectionState == ConnectionState.active) {
               final user = snap.data;
               return user == null ? LoginOrSignup() : MyHomePage();
             }
             return Scaffold(
+              backgroundColor: Colors.red,
               body: Center(
                 child: CircularProgressIndicator(),
               ),

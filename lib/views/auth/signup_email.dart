@@ -1,6 +1,5 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -97,9 +96,16 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
             children: fieldData
                 .map((field) => Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 35, vertical: 10.0),
+                          horizontal: 35, vertical: 5),
                       child: TextFormField(
                         controller: field.controller,
+                        textInputAction: field.labelText.toLowerCase() ==
+                                'password' // Si es el ultimo field, tiene que dar la opcion de Done
+                            ? TextInputAction.done
+                            : TextInputAction.next,
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
                         obscureText:
                             (field.labelText.toLowerCase() == 'password')
                                 ? !_passwordVisible
@@ -162,20 +168,20 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
               const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
           child: Button1(
               btnData: ButtonData(
-                  text: 'SIGN UP',
-                  color: GREEN_MEDIUM,
-                  onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      print('FORM: OK');
-                      errorMessage = await auth.registerWithEmailAndPassword(
-                              emailController.text, passwordController.text)
-                          as String;
-                      print(errorMessage);
-                      setState(() {});
+            'SIGN UP',
+            () async {
+              if (_formKey.currentState.validate()) {
+                print('FORM: OK');
+                errorMessage = await auth.registerWithEmailAndPassword(
+                    emailController.text, passwordController.text) as String;
+                print(errorMessage);
+                setState(() {});
 
-                      //Navigator.pushNamed(context, '/ecollector_or_regular');
-                    }
-                  })),
+                //Navigator.pushNamed(context, '/ecollector_or_regular');
+              }
+            },
+            backgroundColor: GREEN_MEDIUM,
+          )),
         ),
       ],
     );

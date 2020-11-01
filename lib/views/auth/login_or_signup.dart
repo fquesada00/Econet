@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/presentation/constants.dart';
@@ -41,19 +40,21 @@ class LoginOrSignup extends StatelessWidget {
             SizedBox(height: size.height * 0.1),
             Button1(
                 btnData: ButtonData(
-                    text: 'SIGN UP',
-                    color: GREEN_MEDIUM,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/signup_method');
-                    })),
+              'SIGN UP',
+              () {
+                Navigator.pushNamed(context, '/signup_method');
+              },
+              backgroundColor: GREEN_MEDIUM,
+            )),
             SizedBox(height: size.height * 0.03),
             Button1(
                 btnData: ButtonData(
-                    text: 'LOG IN',
-                    color: BROWN_MEDIUM,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login');
-                    })),
+              'LOG IN',
+              () {
+                Navigator.pushNamed(context, '/login');
+              },
+              backgroundColor: BROWN_MEDIUM,
+            )),
           ],
         ));
   }

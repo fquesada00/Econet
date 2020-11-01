@@ -1,4 +1,3 @@
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,22 +12,25 @@ class SignUpMethod extends StatelessWidget {
 
     List<ButtonData> _buttonData = [
       ButtonData(
-          text: 'Continue with Apple',
-          icon: Icon(CustomIcons.apple),
-          color: Colors.black,
-          onPressed: () {}),
+        'Continue with Apple',
+        () {},
+        icon: Icon(CustomIcons.apple),
+        backgroundColor: Colors.black,
+      ),
       ButtonData(
-          text: 'Continue with Google',
-          icon: Icon(CustomIcons.google),
-          color: Color(0xFF4285F4),
-          onPressed: () {}),
+        'Continue with Google',
+        () {},
+        icon: Icon(CustomIcons.google),
+        backgroundColor: Color(0xFF4285F4),
+      ),
       ButtonData(
-          text: 'Continue with Email',
-          icon: Icon(Icons.email),
-          color: GREEN_MEDIUM,
-          onPressed: () {
-            Navigator.pushNamed(context, '/signup_email');
-          }),
+        'Continue with Email',
+        () {
+          Navigator.pushNamed(context, '/signup_email');
+        },
+        icon: Icon(Icons.email),
+        backgroundColor: GREEN_MEDIUM,
+      ),
     ];
 
     return Scaffold(
@@ -42,7 +44,6 @@ class SignUpMethod extends StatelessWidget {
               height: 120),
           SizedBox(height: size.height * 0.03),
           Column(
-
               children: _buttonData
                   .map((btn) => Padding(
                         padding: const EdgeInsets.all(25.0),

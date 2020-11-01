@@ -1,4 +1,3 @@
-import 'package:econet/views/widgets/button_data.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -145,18 +144,28 @@ class __LoginFormState extends State<_LoginForm> {
             ? Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Button1(
-                    btnData: ButtonData(
-                        text: 'LOG IN',
-                        color: BROWN_MEDIUM,
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            errorMessage = await auth.emailLogin(
-                                emailController.text, passwordController.text);
-                            setState(() {});
-                            print('FORM: OK');
-                            Navigator.pushNamed(context, '/GMap');
-                          }
-                        })),
+                  btnData: ButtonData(
+                    'LOG IN',
+                    () async {
+                      if (_formKey.currentState.validate()) {
+                        errorMessage = await auth.emailLogin(
+                            emailController.text, passwordController.text);
+                        print(errorMessage);
+                        if (errorMessage.trim() == "successfully logged in") {
+                          print("DID IT");
+                          Navigator.popUntil(
+                              context, ModalRoute.withName('/auth'));
+                        } else {
+                          print("not equal");
+                        }
+                        setState(() {});
+                        print('FORM: OK');
+                        // Navigator.pushNamed(context, '/GMap');
+                      }
+                    },
+                    backgroundColor: BROWN_MEDIUM,
+                  ),
+                ),
               )
             : CircularProgressIndicator(),
       ],
