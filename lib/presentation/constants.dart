@@ -30,3 +30,10 @@ const Map<String, Color> CHIP_DATA = {
   'Ecopoints Only': GREEN_DARK,
   'Recycling Plants Only': Colors.black,
 };
+
+const List<String> RECENT_SEARCHES_DATA = [
+  'Address 5678',
+  'Neighborhood X',
+  'Address 1111',
+  'Recycling Plant Z'
+];

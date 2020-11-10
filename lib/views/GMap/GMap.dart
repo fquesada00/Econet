@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
@@ -24,11 +23,17 @@ class GMapState extends State<GMap> {
   List<Marker> markers = List();
   Future<List<Ecopoint>> ecopoints;
   BitmapDescriptor markerIcon;
+  static bool searchingFlag = false;
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(-34.523644, -58.479677),
     zoom: 15.4746,
   );
+
+  void switchSearchState() {
+    searchingFlag = !searchingFlag;
+    setState(() {});
+  }
 
   @override
   Future<void> initState() {
@@ -43,9 +48,6 @@ class GMapState extends State<GMap> {
 
   _setMarkerIcon() async {
     markerIcon = await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
-    // await BitmapDescriptor.fromAssetImage(
-    //     ImageConfiguration(devicePixelRatio: 1),
-    //     'assets/icons/recycle_icon.png'); // por alguna razon no puedo modificar el tamanio, tuve que cambiar el de la imagen manualmente
   }
 
   @override
@@ -53,57 +55,67 @@ class GMapState extends State<GMap> {
     Size size = MediaQuery.of(context).size;
 
     return new Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: GMapNavBar(
-          text: 'Search',
-          withBack: true,
-          backgroundColor: Colors.transparent,
-          textColor: GREEN_MEDIUM,
-        ),
-        drawer: AppDrawer(),
-        body: Stack(children: <Widget>[
+      extendBodyBehindAppBar: true,
+      appBar: GMapNavBar(
+        withBack: true,
+        searchingFlag: searchingFlag,
+        switchSearchState: switchSearchState,
+        backgroundColor: Colors.transparent,
+        textColor: GREEN_MEDIUM,
+      ),
+      drawer: AppDrawer(),
+      body: Stack(
+        children: <Widget>[
           Container(
-              child: FutureBuilder<List<Ecopoint>>(
-            future: ecopoints,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                snapshot.data.forEach((element) {
-                  print(element);
-                  markers.add(createMarker(element.userEmail, element.longitude,
-                      element.latitude, element.adress, context));
-                });
-              }
+            child: FutureBuilder<List<Ecopoint>>(
+              future: ecopoints,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  snapshot.data.forEach((element) {
+                    print(element);
+                    markers.add(createMarker(
+                        element.userEmail,
+                        element.longitude,
+                        element.latitude,
+                        element.adress,
+                        context));
+                  });
+                }
 
-              return GoogleMap(
-                //Con esto sacamos el logo de Google: Cuidado que si
-                //queremos subir esto al Play Store nos hacen quilombo
-                padding: EdgeInsets.symmetric(horizontal: 500),
+                return GoogleMap(
+                  //Con esto sacamos el logo de Google: Cuidado que si
+                  //queremos subir esto al Play Store nos hacen quilombo
+                  padding: EdgeInsets.symmetric(horizontal: 500),
 
-                markers: markers.toSet(),
-                zoomControlsEnabled: false,
-                initialCameraPosition: _kGooglePlex,
-                mapToolbarEnabled: false,
-                compassEnabled: false,
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-              );
-            },
-          )),
-          Container(
-            margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
-            child: EconetButton(onPressed: () {
-              print("HOLA");
-            }),
-            alignment: Alignment.bottomRight,
+                  markers: markers.toSet(),
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: _kGooglePlex,
+                  mapToolbarEnabled: false,
+                  compassEnabled: false,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                );
+              },
+            ),
           ),
+          if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
+            Container(
+              margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
+              child: EconetButton(onPressed: () {
+                print("HOLA");
+              }),
+              alignment: Alignment.bottomRight,
+            ),
           /*GMapNavBar(
               text: 'Search',
               withBack: true,
               backgroundColor: Colors.transparent,
               textColor: GREEN_MEDIUM,
               height: 120),*/
-        ]));
+        ],
+      ),
+    );
   }
 
   Marker createMarker(
