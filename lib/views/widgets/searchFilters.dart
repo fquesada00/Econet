@@ -46,7 +46,7 @@ class _SearchFiltersState extends State<SearchFilters> {
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.all(5),
-        height: 150,
+        height: 190,
         width: 340,
         decoration: BoxDecoration(
           boxShadow: [
@@ -79,7 +79,7 @@ class _SearchFiltersState extends State<SearchFilters> {
               SizedBox(height: 10),
               Container(
                 width: 290,
-                height: 60,
+                height: 100,
                 decoration: BoxDecoration(
                   color: Color(0xFFE5E2E2),
                   borderRadius: BorderRadius.circular(15),
@@ -87,13 +87,15 @@ class _SearchFiltersState extends State<SearchFilters> {
                 child: CupertinoScrollbar(
                   isAlwaysShown: true,
                   controller: _controller,
-                  child: ListView(
+                  child: GridView.count(
+                    crossAxisCount: 2,
                     controller: _controller,
                     scrollDirection: Axis.horizontal,
+                    childAspectRatio: 0.55,
                     children: List.from(CHIP_DATA.keys)
                         .map(
                           (k) => Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 3),
+                            padding: const EdgeInsets.only(left: 2),
                             child: EconetChip(k, CHIP_DATA[k], true),
                           ),
                         )
