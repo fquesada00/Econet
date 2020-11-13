@@ -1,28 +1,73 @@
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:flutter/src/widgets/framework.dart';
+class PickTime extends StatefulWidget {
+  //EcopointInfo({this.adress);
+  //String adress;
+  @override
+  State<StatefulWidget> createState() => PickTimeState();
+}
 
 
+class PickTimeState extends State<PickTime> {
 
-class PickTime extends StatelessWidget {
+  int _currentMinute = 0;
+  int _currentHour = 17;
+  int _startHour;
+  int _startMinute;
+  int _endHour;
+  int _endMinute;
+  bool _isLowTime;
+  bool _isHighTime;
+
+  void addTime(){
+    print("addTime");
+    if(!((_currentHour == _endHour) && (_currentMinute == _endMinute))){
+      _isLowTime = false;
+      _currentMinute = (_currentMinute + 1)%4;
+      if (_currentMinute == 0){
+        _currentHour +=1;
+      }
+    }
+    print((_currentHour == _endHour));
+    print((_currentMinute == _endMinute));
+    if((_currentHour == _endHour) && (_currentMinute == _endMinute)){
+      print("is highTime!");
+      _isHighTime = true;
+    }
+    setState(() {});
+   }
+  void removeTime(){
+    _isLowTime = true;
+    if(!((_currentHour == _startHour) && (_currentMinute == _startMinute))){
+      _isHighTime = false;
+      _currentMinute = _currentMinute - 1;
+      if (_currentMinute < 0){
+        _currentHour -=1;
+        _currentMinute = 3;
+      }
+    }
+    if((_currentHour == _endHour) && (_currentMinute == _endMinute)){
+      _isLowTime = true;
+    }
+    setState(() {});
+   }
   @override
   Widget build(BuildContext context) {
+    final Map _arguments = ModalRoute.of(context).settings.arguments as Map;
+    _startHour = 17; //Should be something like _arguments["timeStart"]
+    _startMinute = 0;
+    _endHour = 20;
+    _endMinute = 0;
+    _isLowTime = false;
+    _isHighTime = false;
     //final List<String> arguments = ModalRoute.of(context).settings.arguments as List<String>;
     final testList = List<String>(10);
     Size size = MediaQuery.of(context).size;
-    testList[0] = "Mon 26/10 15:30-17:30";
-    testList[1] = "Mon 26/10 19:30-21:00";
-    testList[2] = "Tue 27/10 17:00-19:00";
-    testList[3] = "Wed 28/10 17:00-19:00";
-    testList[4] = "Thu 29/10 10:00-12:00";
-    testList[5] = "Wen 26/10 15:30-17:30";
-    testList[6] = "Testlist";
-    testList[7] = "newThing";
-    testList[8] = "Monday: 2203";
-    testList[9] = "Monday: 2203";
     return Scaffold(
       backgroundColor: BROWN_DARK,
       appBar: NavBar(
@@ -52,7 +97,52 @@ class PickTime extends StatelessWidget {
                     offset: Offset(0, 3),
                   )
                 ],
-              ),)
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      Text(_arguments["date"],style:TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700
+                      )),
+                      Text("Available: " + _arguments["timeStart"] + " - " +  _arguments["timeEnd"],style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500
+                      ))
+                    ],
+                  ),
+                  new Material(color: Colors.white,child: Container(width: 300,height: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children:[
+                          IconButton(
+                            splashRadius: 30,
+                            splashColor: BROWN_LIGHT,
+                            disabledColor: Colors.grey,
+                            icon: Icon(CustomIcons.plus_circle),
+                            onPressed: _isHighTime ? null : (){addTime();
+                            setState(() {_isHighTime = true;});},
+                            iconSize: 35,
+                          ),
+                          Text(_currentHour.toString() + ":" + (_currentMinute*15).toString().padLeft(2, '0'),style:TextStyle(
+                            fontSize: 63,
+                          )),
+                          IconButton(
+                            splashRadius: 30,
+                            splashColor: BROWN_LIGHT,
+                            disabledColor: Colors.grey,
+                            icon: Icon(CustomIcons.minus_circle),
+                            onPressed: _isLowTime ? null : removeTime,
+                            iconSize: 35,
+                          ),
+                        ]
+                      ))),
+                  SizedBox()
+                ],
+              )
+            )
           ),
         ),
         Center(

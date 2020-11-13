@@ -52,7 +52,7 @@ class PickDelivery extends StatelessWidget {
                       arguments: {
                         'timeStart': "17:00",
                         'timeEnd': "20:00",
-                        'date': "Wen 26/10",
+                        'date': "Wednesday 26th October",
                       });},
               backgroundColor: GREEN_LIGHT,
             ),
