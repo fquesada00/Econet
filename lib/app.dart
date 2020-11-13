@@ -14,6 +14,7 @@ import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
+import 'package:econet/views/ecopoint/pickTime.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/filter_testing': (context) => FilterTesting(),
         '/ecopoint_expanded': (context) => EcopointExpanded(),
         '/pickDelivery':(context)=>PickDelivery(),
+        '/pickTime':(context)=>PickTime(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(

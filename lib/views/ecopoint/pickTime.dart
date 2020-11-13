@@ -7,11 +7,12 @@ import 'package:flutter/src/widgets/framework.dart';
 
 
 
-class PickDelivery extends StatelessWidget {
+class PickTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final List<String> arguments = ModalRoute.of(context).settings.arguments as List<String>;
     final testList = List<String>(10);
+    Size size = MediaQuery.of(context).size;
     testList[0] = "Mon 26/10 15:30-17:30";
     testList[1] = "Mon 26/10 19:30-21:00";
     testList[2] = "Tue 27/10 17:00-19:00";
@@ -28,7 +29,7 @@ class PickDelivery extends StatelessWidget {
         backgroundColor: BROWN_DARK,
         withBack: true,
         //textColor: GREEN_DARK,
-        text: "Pick a day for delivering residues",
+        text: "Aproximate time for delivering residues",
       ),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -37,9 +38,21 @@ class PickDelivery extends StatelessWidget {
         Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: TimeslotCard(
-              testList //arguments,
-            ),
+            child: Container(
+              width: size.width * 0.8,
+              height: 430,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 6,
+                    offset: Offset(0, 3),
+                  )
+                ],
+              ),)
           ),
         ),
         Center(
@@ -48,12 +61,7 @@ class PickDelivery extends StatelessWidget {
             child: Button1(
             btnData: ButtonData(
               'CONTINUE',
-                  () {Navigator.pushNamed(context, '/pickTime',
-                      arguments: {
-                        'timeStart': "17:00",
-                        'timeEnd': "20:00",
-                        'date': "Wen 26/10",
-                      });},
+                  () {},
               backgroundColor: GREEN_LIGHT,
             ),
           ),
