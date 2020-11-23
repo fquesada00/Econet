@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/econet_chip.dart';
+import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 class AlwaysVisibleScrollbarPainter extends ScrollbarPainter {
   AlwaysVisibleScrollbarPainter()
@@ -40,7 +41,24 @@ class SearchFilters extends StatefulWidget {
 }
 
 class _SearchFiltersState extends State<SearchFilters> {
-  ScrollController _controller = new ScrollController();
+  LinkedScrollControllerGroup _controllers;
+  ScrollController _controller1 = new ScrollController();
+  ScrollController _controller2 = new ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = LinkedScrollControllerGroup();
+    _controller1 = _controllers.addAndGet();
+    _controller2 = _controllers.addAndGet();
+  }
+
+  @override
+  void dispose() {
+    _controller1.dispose();
+    _controller2.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,23 +102,51 @@ class _SearchFiltersState extends State<SearchFilters> {
                   color: Color(0xFFE5E2E2),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: CupertinoScrollbar(
-                  isAlwaysShown: true,
-                  controller: _controller,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    controller: _controller,
-                    scrollDirection: Axis.horizontal,
-                    childAspectRatio: 0.55,
-                    children: List.from(CHIP_DATA.keys)
-                        .map(
-                          (k) => Padding(
-                            padding: const EdgeInsets.only(left: 2),
-                            child: EconetChip(k, CHIP_DATA[k], true),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 50,
+                      child: ListView(
+                        shrinkWrap: true,
+                        controller: _controller1,
+                        scrollDirection: Axis.horizontal,
+                        children: List.from(
+                          CHIP_DATA.keys
+                              .take(((CHIP_DATA.keys.length + 1) / 2).round())
+                              .map(
+                                (k) => Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                                  child: EconetChip(k, CHIP_DATA[k], true),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      child: CupertinoScrollbar(
+                        isAlwaysShown: true,
+                        controller: _controller2,
+                        child: ListView(
+                          shrinkWrap: true,
+                          controller: _controller2,
+                          scrollDirection: Axis.horizontal,
+                          children: List.from(
+                            CHIP_DATA.keys
+                                .skip(((CHIP_DATA.keys.length) / 2).round())
+                                .map(
+                                  (k) => Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                                    child: EconetChip(k, CHIP_DATA[k], true),
+                                  ),
+                                )
+                                .toList(),
                           ),
-                        )
-                        .toList(),
-                  ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ]));
