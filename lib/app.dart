@@ -33,15 +33,15 @@ class MyApp extends StatelessWidget {
         '/ecollector_or_regular': (context) => EcollectorOrRegular(),
         '/filter_testing': (context) => FilterTesting(),
         '/ecopoint_expanded': (context) => EcopointExpanded(),
-        '/pickDelivery':(context)=>PickDelivery(),
-        '/pickTime':(context)=>PickTime(),
+        '/pickDelivery': (context) => PickDelivery(),
+        '/pickTime': (context) => PickTime(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: MaterialColor(0xFFA3CB8F, _color),
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        canvasColor: MaterialColor(0xFFA3CB8F,
-            _color), // el navigation drawer toma este color de fondo
+        canvasColor: MaterialColor(0xFFA3CB8F, _color),
+        // el navigation drawer toma este color de fondo
         splashColor: Colors.white.withOpacity(0.4),
         highlightColor: Colors.white.withOpacity(0.1),
         bottomSheetTheme:
@@ -112,6 +112,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(context, '/filter_testing');
               },
             ),
+            RaisedButton(
+                child: Text("calendar"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/calendar');
+                }),
             ecopointAvailable
                 ? SafeArea(
                     child: ListView.builder(
