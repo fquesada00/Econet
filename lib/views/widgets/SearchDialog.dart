@@ -30,7 +30,7 @@ class _SearchDialogState extends State<SearchDialog> {
           children: <Widget>[
             SearchBox(_controller),
             SizedBox(height: 15),
-            SearchHistory(),
+            SearchHistory(_controller),
             SizedBox(height: 15),
             SearchFilters(),
           ],
@@ -114,11 +114,19 @@ class _SearchBoxState extends State<SearchBox> {
 }
 
 class SearchHistory extends StatefulWidget {
+  TextEditingController _controller;
+
+  SearchHistory(this._controller);
+
   @override
-  _SearchHistoryState createState() => _SearchHistoryState();
+  _SearchHistoryState createState() => _SearchHistoryState(this._controller);
 }
 
 class _SearchHistoryState extends State<SearchHistory> {
+  TextEditingController _controller;
+
+  _SearchHistoryState(this._controller);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -157,31 +165,37 @@ class _SearchHistoryState extends State<SearchHistory> {
                 .map(
                   (currentText) => Padding(
                     padding: EdgeInsets.only(bottom: 10),
-                    child: Container(
-                      width: 290,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFE5E2E2),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Icon(
-                              Icons.history,
-                              size: 30,
+                    child: InkWell(
+                      onTap: () {
+                        _controller.text = currentText;
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: 290,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFE5E2E2),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Icon(
+                                Icons.history,
+                                size: 30,
+                              ),
                             ),
-                          ),
-                          Text(
-                            currentText,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 17,
-                              fontFamily: 'SFProText',
+                            Text(
+                              currentText,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontFamily: 'SFProText',
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
