@@ -7,7 +7,6 @@ class Ecopoint {
   String _id;
   User ecollector;
   bool _isPlant;
-  bool _isRecurring;
   List<Residue> _residues;
   String _plantId;
   DateTime _deadline;
