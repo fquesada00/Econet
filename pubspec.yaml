@@ -3,7 +3,7 @@ description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -42,6 +42,7 @@ dependencies:
   provider: ^4.3.2+2
   auto_size_text: ^2.1.0
   tinycolor: ^1.0.3
+  google_sign_in: "^4.5.1"
 
   #for linking scrollers in searchFilters
   linked_scroll_controller: ^0.1.2
@@ -56,7 +57,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -117,6 +117,6 @@ flutter:
     - family: CustomIcons
       fonts:
         - asset: assets/fonts/CustomIcons/CustomIcons.ttf
-   #
+    #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

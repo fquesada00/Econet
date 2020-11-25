@@ -1,7 +1,9 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/services/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Widget _createDrawerItem({String text, bool active, GestureTapCallback onTap}) {
   return ListTile(
@@ -57,6 +59,7 @@ class DrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
@@ -184,7 +187,10 @@ class DrawerState extends State<AppDrawer> {
                 fontFamily: 'SFProText',
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              auth.logOut();
+              Navigator.popUntil(context, ModalRoute.withName('/auth'));
+            },
           ),
           ListTile(
             dense: true,

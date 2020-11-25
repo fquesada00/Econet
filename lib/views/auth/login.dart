@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/services/user.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -36,6 +38,9 @@ class _LoginForm extends StatefulWidget {
 
 class __LoginFormState extends State<_LoginForm> {
   bool _passwordVisible = false;
+  TextEditingController emailController = TextEditingController(),
+      passwordController = TextEditingController();
+  String errorMessage = "";
 
   @override
   void initState() {
@@ -45,13 +50,16 @@ class __LoginFormState extends State<_LoginForm> {
 
   final _formKey = GlobalKey<FormState>();
 
-  List<_LoginServiceData> services = [
-    _LoginServiceData(color: Colors.black, icon: CustomIcons.apple),
-    _LoginServiceData(color: Color(0xFF4285F4), icon: CustomIcons.google),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    List<_LoginServiceData> services = [
+      _LoginServiceData(color: Colors.black, icon: CustomIcons.apple),
+      _LoginServiceData(
+          color: Color(0xFF4285F4),
+          icon: CustomIcons.google,
+          onPressed: Provider.of<AuthProvider>(context).loginWithGoogle),
+    ];
     return Column(
       children: [
         Form(
@@ -62,6 +70,7 @@ class __LoginFormState extends State<_LoginForm> {
                 padding: const EdgeInsets.only(
                     left: 35, right: 35, bottom: 20, top: 50),
                 child: TextFormField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     labelStyle: TextStyle(
@@ -81,6 +90,7 @@ class __LoginFormState extends State<_LoginForm> {
               Padding(
                 padding: const EdgeInsets.only(left: 35, right: 35, top: 8.0),
                 child: TextFormField(
+                  controller: passwordController,
                   obscureText: !_passwordVisible,
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -132,19 +142,34 @@ class __LoginFormState extends State<_LoginForm> {
                 .toList(),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: Button1(
-              btnData: ButtonData(
-            'LOG IN',
-            () {
-              if (_formKey.currentState.validate()) {
-                print('FORM: OK');
-              }
-            },
-            backgroundColor: BROWN_MEDIUM,
-          )),
-        ),
+        auth.onAuthStateChanged() != null
+            ? Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Button1(
+                  btnData: ButtonData(
+                    'LOG IN',
+                    () async {
+                      if (_formKey.currentState.validate()) {
+                        errorMessage = await auth.emailLogin(
+                            emailController.text, passwordController.text);
+                        print(errorMessage);
+                        if (errorMessage.trim() == "successfully logged in") {
+                          print("DID IT");
+                          Navigator.popUntil(
+                              context, ModalRoute.withName('/auth'));
+                        } else {
+                          print("not equal");
+                        }
+                        setState(() {});
+                        print('FORM: OK');
+                        // Navigator.pushNamed(context, '/GMap');
+                      }
+                    },
+                    backgroundColor: BROWN_MEDIUM,
+                  ),
+                ),
+              )
+            : CircularProgressIndicator(),
       ],
     );
   }
@@ -153,8 +178,8 @@ class __LoginFormState extends State<_LoginForm> {
 class _LoginServiceData {
   Color color;
   IconData icon;
-
-  _LoginServiceData({this.color, this.icon});
+  Function onPressed;
+  _LoginServiceData({this.color, this.icon, this.onPressed});
 }
 
 class _LoginServiceButton extends StatelessWidget {
@@ -169,7 +194,7 @@ class _LoginServiceButton extends StatelessWidget {
       highlightElevation: 0,
       color: data.color,
       textColor: Colors.white,
-      onPressed: () => null,
+      onPressed: () => data.onPressed.call(),
       child: Icon(data.icon, size: 35),
       padding: EdgeInsets.all(13),
       shape: CircleBorder(),

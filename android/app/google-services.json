@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "742772042866-j4ske3h5qj74fp96oufkaa6i925vqbpr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.econet",
+            "certificate_hash": "f93b9ec03d701beb49182558bf681cc689a3454d"
+          }
+        },
+        {
           "client_id": "742772042866-vbrcfhrth6ld1muvck2bhfcjv20jjtn7.apps.googleusercontent.com",
           "client_type": 3
         }

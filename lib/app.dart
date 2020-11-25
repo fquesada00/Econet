@@ -1,3 +1,4 @@
+import 'package:econet/auth_widget.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/GMap/filter_testing.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
@@ -13,6 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
+
+import 'package:provider/provider.dart';
+import 'package:econet/services/user.dart';
+
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickTime.dart';
 
@@ -20,40 +25,46 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => MyHomePage(title: 'Econet is flying high'),
-        '/loginsignup': (context) => LoginOrSignup(),
-        '/signup_method': (context) => SignUpMethod(),
-        '/GMap': (context) => GMap(),
-        '/tutorial': (context) => Tutorial(),
-        '/signup_email': (context) => SignupEmail(),
-        '/login': (context) => Login(),
-        '/ecollector_or_regular': (context) => EcollectorOrRegular(),
-        '/filter_testing': (context) => FilterTesting(),
-        '/ecopoint_expanded': (context) => EcopointExpanded(),
-        '/pickDelivery': (context) => PickDelivery(),
-        '/pickTime': (context) => PickTime(),
-      },
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: MaterialColor(0xFFA3CB8F, _color),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        canvasColor: MaterialColor(0xFFA3CB8F, _color),
-        // el navigation drawer toma este color de fondo
-        splashColor: Colors.white.withOpacity(0.4),
-        highlightColor: Colors.white.withOpacity(0.1),
-        bottomSheetTheme:
-            BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
-        fontFamily: 'SFProDisplay',
-      ),
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AuthProvider>(
+              create: (_) => FirebaseAuthProvider())
+        ],
+        child: MaterialApp(
+          initialRoute: '/auth',
+          routes: {
+            '/': (context) => MyHomePage(title: 'Econet is flying high'),
+            '/loginsignup': (context) => LoginOrSignup(),
+            '/signup_method': (context) => SignUpMethod(),
+            '/GMap': (context) => GMap(),
+            '/tutorial': (context) => Tutorial(),
+            '/signup_email': (context) => SignupEmail(),
+            '/login': (context) => Login(),
+            '/ecollector_or_regular': (context) => EcollectorOrRegular(),
+            '/filter_testing': (context) => FilterTesting(),
+            '/auth': (context) => AuthWidget(),
+            '/ecopoint_expanded': (context) => EcopointExpanded(),
+            '/pickDelivery': (context) => PickDelivery(),
+            '/pickTime': (context) => PickTime(),
+          },
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: MaterialColor(0xFFA3CB8F, _color),
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            canvasColor: MaterialColor(0xFFA3CB8F, _color),
+            // el navigation drawer toma este color de fondo
+            splashColor: Colors.white.withOpacity(0.4),
+            highlightColor: Colors.white.withOpacity(0.1),
+            bottomSheetTheme: BottomSheetThemeData(
+                backgroundColor: Colors.black.withOpacity(0)),
+            fontFamily: 'SFProDisplay',
+          ),
+        ));
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title = "p2"}) : super(key: key);
   final String title;
 
   @override
