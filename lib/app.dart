@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:econet/services/user.dart';
 
 import 'package:econet/views/ecopoint/pickDelivery.dart';
+import 'package:econet/views/ecopoint/pickTime.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -44,13 +45,14 @@ class MyApp extends StatelessWidget {
             '/auth': (context) => AuthWidget(),
             '/ecopoint_expanded': (context) => EcopointExpanded(),
             '/pickDelivery': (context) => PickDelivery(),
+            '/pickTime': (context) => PickTime(),
           },
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: MaterialColor(0xFFA3CB8F, _color),
             visualDensity: VisualDensity.adaptivePlatformDensity,
-            canvasColor: MaterialColor(0xFFA3CB8F,
-                _color), // el navigation drawer toma este color de fondo
+            canvasColor: MaterialColor(0xFFA3CB8F, _color),
+            // el navigation drawer toma este color de fondo
             splashColor: Colors.white.withOpacity(0.4),
             highlightColor: Colors.white.withOpacity(0.1),
             bottomSheetTheme: BottomSheetThemeData(
@@ -121,6 +123,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(context, '/filter_testing');
               },
             ),
+            RaisedButton(
+                child: Text("delivery"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/pickDelivery');
+                }),
             ecopointAvailable
                 ? SafeArea(
                     child: ListView.builder(

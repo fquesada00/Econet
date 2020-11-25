@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'Ecopoint.dart';
 import 'EconetButton.dart';
@@ -21,31 +21,44 @@ class GMap extends StatefulWidget {
 
 class GMapState extends State<GMap> {
   Completer<GoogleMapController> _controller = Completer();
+  TextEditingController text_controller = new TextEditingController();
   List<Marker> markers = List();
   Future<List<Ecopoint>> ecopoints;
   BitmapDescriptor markerIcon;
+  static bool searchingFlag = false;
+  static LatLng _initialPosition; //para que no de error de null al arrancar
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(-34.523644, -58.479677),
-    zoom: 15.4746,
-  );
+  void getLocation() async {
+    Position currentPosition;
+    try {
+      currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+    } catch (error) {
+      print("ERROR: " + error.toString());
+      return;
+    }
+    //HARDCODEADO
+    // markers.add(createMarker("positionMarker", -34.523274, -58.479917, "TesterCalle", null));
+
+    //NO HARDCODEADO, toma posicion real del dispositivo
+    markers.add(createMarker("positionMarker", currentPosition.latitude,
+        currentPosition.longitude, currentPosition.toString(), null));
+    setState(() {
+      _initialPosition =
+          new LatLng(currentPosition.latitude, currentPosition.longitude);
+    });
+    return;
+  }
 
   @override
   Future<void> initState() {
+    getLocation();
     ecopoints = getEcopoints(4536456, 2345234, 5435);
 
-//   This is just for testing, replace user position or last cashed position
-    markers.add(createMarker(
-        "markerDefault", -34.523274, -58.479917, "TesterCalle", null));
+    //asigno iconos a marcadores
     _setMarkerIcon();
-    super.initState();
-  }
 
-  _setMarkerIcon() async {
-    markerIcon = await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
-    // await BitmapDescriptor.fromAssetImage(
-    //     ImageConfiguration(devicePixelRatio: 1),
-    //     'assets/icons/recycle_icon.png'); // por alguna razon no puedo modificar el tamanio, tuve que cambiar el de la imagen manualmente
+    super.initState();
   }
 
   @override
@@ -53,77 +66,118 @@ class GMapState extends State<GMap> {
     Size size = MediaQuery.of(context).size;
 
     return new Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: GMapNavBar(
-          text: 'Search',
-          withBack: true,
-          backgroundColor: Colors.transparent,
-          textColor: GREEN_MEDIUM,
-        ),
-        drawer: AppDrawer(),
-        body: Stack(children: <Widget>[
+      extendBodyBehindAppBar: true,
+      appBar: GMapNavBar(
+        withBack: true,
+        searchingFlag: searchingFlag,
+        switchSearchState: switchSearchState,
+        backgroundColor: Colors.transparent,
+        textColor: GREEN_MEDIUM,
+        text_controller: text_controller,
+      ),
+      drawer: AppDrawer(),
+      body: Stack(
+        children: <Widget>[
           Container(
-              child: FutureBuilder<List<Ecopoint>>(
-            future: ecopoints,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                snapshot.data.forEach((element) {
-                  print(element);
-                  markers.add(createMarker(element.userEmail, element.longitude,
-                      element.latitude, element.adress, context));
-                });
-              }
+            child: FutureBuilder<List<Ecopoint>>(
+              future: ecopoints,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  snapshot.data.forEach((element) {
+                    print(element);
+                    markers.add(createMarker(
+                        element.userEmail,
+                        element.longitude,
+                        element.latitude,
+                        element.adress,
+                        context));
+                  });
+                }
 
-              return GoogleMap(
-                //Con esto sacamos el logo de Google: Cuidado que si
-                //queremos subir esto al Play Store nos hacen quilombo
-                padding: EdgeInsets.symmetric(horizontal: 500),
+                if (_initialPosition == null)
+                  //la posicion actual tarda en cargar, sin este if se muestra un error 
+                  return Container();
+                else
+                  return GoogleMap(
+                    //Con esto sacamos el logo de Google: Cuidado que si
+                    //queremos subir esto al Play Store nos hacen quilombo
+                    padding: EdgeInsets.symmetric(horizontal: 500),
 
-                markers: markers.toSet(),
-                zoomControlsEnabled: false,
-                initialCameraPosition: _kGooglePlex,
-                mapToolbarEnabled: false,
-                compassEnabled: false,
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-              );
-            },
-          )),
-          Container(
-            margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
-            child: EconetButton(onPressed: () {
-              print("HOLA");
-            }),
-            alignment: Alignment.bottomRight,
+                    markers: markers.toSet(),
+                    zoomControlsEnabled: false,
+                    initialCameraPosition: CameraPosition(
+                      // target: LatLng(-34.523644, -58.479677), HARDCODEADO
+
+                      // el chequeo de null es por que el mapa se crea antes de que se encuentra la posicion actual
+                      target: _initialPosition,
+                      zoom: 15.4746,
+                    ),
+                    mapToolbarEnabled: false,
+                    compassEnabled: false,
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                  );
+              },
+            ),
           ),
-          /*GMapNavBar(
-              text: 'Search',
-              withBack: true,
-              backgroundColor: Colors.transparent,
-              textColor: GREEN_MEDIUM,
-              height: 120),*/
-        ]));
+          if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
+            Container(
+              margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
+              child: EconetButton(onPressed: () {
+                print("HOLA");
+              }),
+              alignment: Alignment.bottomRight,
+            ),
+        ],
+      ),
+    );
+  }
+
+  void switchSearchState() {
+    searchingFlag = !searchingFlag;
+    setState(() {});
+  }
+
+  _setMarkerIcon() async {
+    markerIcon = await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
   }
 
   Marker createMarker(
       String id, double latitude, double longitude, String adress, context) {
     LatLng latlng = LatLng(latitude, longitude);
-    return Marker(
-        markerId: MarkerId(id),
-        position: latlng,
-        icon: markerIcon,
-        //markerIcon!=null? markerIcon:BitmapDescriptor.defaultMarker,
-        draggable: false,
-        zIndex: 1,
-        //Calling the function that does the popup
-        onTap: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (builder) {
-                return EcopointInfo();
-              });
-        });
+    if (id == "positionMarker")
+      //marcador de la posicion en la que se encontraba al abrir la app
+      return Marker(
+          markerId: MarkerId(id),
+          position: latlng,
+          icon: BitmapDescriptor.defaultMarker,
+          draggable: false,
+          zIndex: 1,
+          //Calling the function that does the popup
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (builder) {
+                  return EcopointInfo();
+                });
+          });
+    else
+      return Marker(
+          markerId: MarkerId(id),
+          position: latlng,
+          icon: markerIcon,
+          //markerIcon!=null? markerIcon:BitmapDescriptor.defaultMarker,
+          draggable: false,
+          zIndex: 1,
+          //Calling the function that does the popup
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (builder) {
+                  return EcopointInfo();
+                });
+          });
   }
 }
 
