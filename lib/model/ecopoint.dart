@@ -17,27 +17,27 @@ class Ecopoint {
   LatLng _coordinates;
 
   Ecopoint(
-      this.ecollector,
+      this._ecollector,
       this._isPlant,
-      this._isRecurring,
       this._residues,
       this._plantId,
       this._deadline,
       this._openHours,
       this._additionalInfo,
+      this._name,
       this._address,
       this._coordinates);
 
   Ecopoint.fromFirebase(
       this._id,
-      this.ecollector,
+      this._ecollector,
       this._isPlant,
-      this._isRecurring,
       this._residues,
       this._plantId,
       this._deadline,
       this._openHours,
       this._additionalInfo,
+      this._name,
       this._address,
       this._coordinates);
 }
