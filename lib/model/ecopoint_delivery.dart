@@ -7,4 +7,5 @@ class EcopointDelivery {
   DateTime _date;
   List<Bag> _bags;
   User _user;
+  bool _isConfirmed;
 }

@@ -1,4 +1,4 @@
-import 'package:econet/model/TimeSlot.dart';
+import 'package:econet/model/timeslot.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/model/user.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

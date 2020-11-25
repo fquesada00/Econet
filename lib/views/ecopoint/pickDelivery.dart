@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:econet/model/TimeSlot.dart';
+import 'package:econet/model/timeslot.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';

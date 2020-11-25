@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'TimeRange.dart';
+import 'package:econet/model/timerange.dart';
 
 class TimeSlot implements Comparable<TimeSlot> {
   List<TimeRange> ranges;
@@ -14,7 +14,7 @@ class TimeSlot implements Comparable<TimeSlot> {
     this.ranges = List();
   }
 
-  Future <void> okBtn() async {
+  Future<void> okBtn() async {
     sleep(Duration(seconds: 5));
     return;
   }
@@ -53,12 +53,15 @@ class TimeSlot implements Comparable<TimeSlot> {
     int secondMinutes = int.parse(to.substring(3, 5));
     bool flag = false;
 
-    for(int i = 0 ; i <ranges.length ;i++){
-      if(isBetween(ranges[i].first.hour * 100 + ranges[i].first.minute,
-          ranges[i].last.hour * 100 + ranges[i].last.minute,
-          firstHour * 100 + firstMinutes) || isBetween(ranges[i].first.hour * 100 + ranges[i].first.minute,
-          ranges[i].last.hour * 100 + ranges[i].last.minute,
-          secondHour * 100 + secondMinutes)){
+    for (int i = 0; i < ranges.length; i++) {
+      if (isBetween(
+              ranges[i].first.hour * 100 + ranges[i].first.minute,
+              ranges[i].last.hour * 100 + ranges[i].last.minute,
+              firstHour * 100 + firstMinutes) ||
+          isBetween(
+              ranges[i].first.hour * 100 + ranges[i].first.minute,
+              ranges[i].last.hour * 100 + ranges[i].last.minute,
+              secondHour * 100 + secondMinutes)) {
         flag = true;
         overlapPos = i + 1; // imprimir a la hora de hacer display
         break;
