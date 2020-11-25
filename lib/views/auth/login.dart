@@ -54,7 +54,6 @@ class __LoginFormState extends State<_LoginForm> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     List<_LoginServiceData> services = [
-      _LoginServiceData(color: Colors.black, icon: CustomIcons.apple),
       _LoginServiceData(
           color: Color(0xFF4285F4),
           icon: CustomIcons.google,
@@ -71,6 +70,7 @@ class __LoginFormState extends State<_LoginForm> {
                     left: 35, right: 35, bottom: 20, top: 50),
                 child: TextFormField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     labelStyle: TextStyle(
@@ -90,6 +90,7 @@ class __LoginFormState extends State<_LoginForm> {
               Padding(
                 padding: const EdgeInsets.only(left: 35, right: 35, top: 8.0),
                 child: TextFormField(
+                  keyboardType: TextInputType.visiblePassword,
                   controller: passwordController,
                   obscureText: !_passwordVisible,
                   decoration: InputDecoration(
