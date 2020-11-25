@@ -5,8 +5,10 @@ import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/Gmap/EcopointInfo.dart';
+import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
+import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickTime.dart';
+import 'package:econet/views/ecopoint/createEcopoint.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -35,6 +38,10 @@ class MyApp extends StatelessWidget {
         '/ecopoint_expanded': (context) => EcopointExpanded(),
         '/pickDelivery': (context) => PickDelivery(),
         '/pickTime': (context) => PickTime(),
+        '/createEcopoint': (context) => CreateEcopoint(),
+        '/ecopointExpanded': (context) => EcopointExpanded(),
+        '/pickWeekday': (context) => PickWeekday(),
+        '/pickTimeCreateEcopoint': (context) => PickTimeCreateEcopoint(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -117,6 +124,43 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.pushNamed(context, '/pickDelivery');
                 }),
+            RaisedButton(
+                child: Text("sheduleTrip"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/createEcopoint',
+                  arguments: {
+                    'plantName': "Plant 1",
+                    'address': "Adress 1234",
+                    'distance': 0.2,
+                    'residues': ['Paper', 'Plastic', 'Glass','Metal','Electronics','Wood','Textile'],
+                  });
+                }),
+            RaisedButton(
+                child: Text("ecopointExpanded"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/ecopointExpanded',
+                      arguments: {
+                        'ecopointName': "Plant 1",
+                        'address': "Adress 1234",
+                        'distance': 0.2,
+                        'residues': ['Paper', 'Plastic', 'Glass','Metal','Electronics','Wood','Textile'],
+                        'ecollector': "ecollector",
+                        'deliveryDate': new DateTime.utc(2020, 10, 26),
+                      });
+                }),
+            RaisedButton(
+                child: Text("pickWeekday"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/pickWeekday');
+                }),
+            RaisedButton(
+              child: Text("pickTimeCreateEcopoint"),
+                  onPressed:() {Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+                  arguments: {
+                    "daysAvailable": [false,true,false,true,false,true,true],
+                    "currentDay": "TUESDAY",
+                  });},
+            ),
             ecopointAvailable
                 ? SafeArea(
                     child: ListView.builder(

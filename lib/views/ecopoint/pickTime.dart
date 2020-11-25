@@ -69,9 +69,9 @@ class PickTimeState extends State<PickTime> {
     final testList = List<String>(10);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: BROWN_DARK,
+      backgroundColor: MEDIUM_BLUE,
       appBar: NavBar(
-        backgroundColor: BROWN_DARK,
+        backgroundColor: MEDIUM_BLUE,
         withBack: true,
         //textColor: GREEN_DARK,
         text: "Aproximate time for delivering residues",
@@ -118,20 +118,25 @@ class PickTimeState extends State<PickTime> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children:[
                           IconButton(
-                            splashRadius: 30,
-                            splashColor: BROWN_LIGHT,
+                            splashRadius: 27,
+                            splashColor: MEDIUM_BLUE,
                             disabledColor: Colors.grey,
                             icon: Icon(CustomIcons.plus_circle),
+                            constraints: BoxConstraints(
+                              minWidth: 60,
+                              minHeight: 60,
+                            ),
                             onPressed: _isHighTime ? null : (){addTime();
                             setState(() {_isHighTime = true;});},
                             iconSize: 35,
                           ),
                           Text(_currentHour.toString() + ":" + (_currentMinute*15).toString().padLeft(2, '0'),style:TextStyle(
                             fontSize: 63,
+                            fontWeight: FontWeight.w700
                           )),
                           IconButton(
-                            splashRadius: 30,
-                            splashColor: BROWN_LIGHT,
+                            splashRadius: 27,
+                            splashColor: MEDIUM_BLUE,
                             disabledColor: Colors.grey,
                             icon: Icon(CustomIcons.minus_circle),
                             onPressed: _isLowTime ? null : removeTime,

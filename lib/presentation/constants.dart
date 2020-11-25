@@ -9,6 +9,7 @@ const Color GREEN_DARK = Color.fromRGBO(100, 154, 59, 1);
 const Color BROWN_DARK = Color.fromRGBO(179, 129, 110, 1);
 const Color BROWN_MEDIUM = Color.fromRGBO(199, 162, 107, 1);
 const Color BROWN_LIGHT = Color.fromRGBO(222, 210, 170, 1);
+const Color MEDIUM_BLUE = Color(0xFF8F9CDF);
 
 //Colores de tags (residuos, filtros, etc)
 const Color PAPER_COLOR = BROWN_MEDIUM;
