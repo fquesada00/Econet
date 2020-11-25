@@ -113,9 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             RaisedButton(
-                child: Text("calendar"),
+                child: Text("delivery"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/calendar');
+                  Navigator.pushNamed(context, '/pickDelivery');
                 }),
             ecopointAvailable
                 ? SafeArea(

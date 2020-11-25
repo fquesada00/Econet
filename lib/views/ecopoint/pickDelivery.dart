@@ -1,7 +1,7 @@
 import 'dart:collection';
 
+import 'package:econet/model/TimeSlot.dart';
 import 'package:econet/presentation/constants.dart';
-import 'package:econet/views/timeSlot/TimeSlot.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +9,8 @@ import 'package:econet/views/widgets/button1.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class PickDelivery extends StatelessWidget {
+  static final int WEEKDAYS = 7;
+
   String getMonth(int number) {
     switch (number) {
       case 1:
@@ -64,60 +66,95 @@ class PickDelivery extends StatelessWidget {
   List<bool> unavailableWeekDays(List<TimeSlot> list) {
     List<bool> ret = List(7);
     for (int i = 0; i < ret.length; i++) ret[i] = false;
-    for (int i = 0; i < list.length; i++) ret[list[i].getDay() - 1] = true;
+    for (int i = 0; i < list.length; i++) ret[list[i].weekDay - 1] = true;
     return ret;
   }
 
-  // recibo el arreglo de timeslot ordenado
-  DateTime firstFit(
-      DateTime date, List<TimeSlot> list, DateTime start, DateTime end) {
-    if (date.isAfter(start) && date.isBefore(end)) {
-      DateTime ret;
-      DateTime aux;
-      Map<int, TimeSlot> maping = HashMap();
-      for (int i = 0; i < list.length; i++)
-        maping[list[i].getDay() - 1] = list[i];
-      for (int i = date.weekday, j = 0; j < 7; j++) {
-        if (maping.containsKey(i)) {
-          for (int k = 0; k < maping[i].ranges.length; k++) {
-            //EN PROCESO
-            // if (ret == null) {
-            //   ret = DateTime(
-            //       date.year,
-            //       date.month,
-            //       i,
-            //       maping[i].ranges[k].getFirst().hour,
-            //       maping[i].ranges[k].getFirst().minute);
-            //   aux = DateTime(
-            //       date.year,
-            //       date.month,
-            //       i,
-            //       maping[i].ranges[k].getLast().hour,
-            //       maping[i].ranges[k].getLast().minute);
-            // } else if ((ret.weekday == maping[i].getDay() &&
-            //     ((aux.hour * 100 + aux.minute) <
-            //         (date.hour * 100 + date.minute)) || ())) {
-            //   ret = DateTime(
-            //       date.year,
-            //       date.month,
-            //       i,
-            //       maping[i].ranges[k].getFirst().hour,
-            //       maping[i].ranges[k].getFirst().minute);
-            //   aux = DateTime(
-            //       date.year,
-            //       date.month,
-            //       i,
-            //       maping[i].ranges[k].getLast().hour,
-            //       maping[i].ranges[k].getLast().minute);
-            // }
+  int nextDay(int day, int totalDays, int maxDay) {
+    if (day == maxDay) return totalDays;
+    for (int i = 0; i < totalDays; i++) {
+      if (day == maxDay) day = 0;
+      day++;
+    }
+    return day;
+  }
 
-            // if((date.is) /*|| ret.isAfter(date)*/)
-          }
+  int nextMonth(int day, int month, int totalDays) {
+    switch (month) {
+      case 1:
+      case 3:
+      case 5:
+      case 7:
+      case 8:
+      case 10:
+      case 12:
+        return nextDay(day, totalDays, 31);
+      case 2:
+        if (DateTime.now().year % 4 == 0) {
+          return nextDay(day, totalDays, 29);
         }
+        return nextDay(day, totalDays, 28);
+      default:
+        return nextDay(day, totalDays, 30);
+    }
+  }
+
+  // recibo el array ordenado, tanto por timeSlot como por timeRange
+  DateTime firstDate(List<TimeSlot> list) {
+    DateTime start, end;
+    DateTime _date = DateTime.now();
+    int currentMonth = _date.month;
+    int currentDay = _date.day;
+    int currentWeekDay = _date.weekday;
+    int currentYear = _date.year;
+    int listIdx = -1;
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].weekDay >= currentWeekDay) {
+        listIdx = i;
+        break;
       }
     }
-
+    if (listIdx == -1) listIdx = 0;
+    for (int i = listIdx, j = 0; j < list.length; j++) {
+      for (int k = 0; k < list[i].ranges.length; k++) {
+        if (currentWeekDay.compareTo(list[i].weekDay) != 0) {
+          int totalDays = currentWeekDay - list[i].weekDay;
+          currentDay = nextMonth(currentDay, currentMonth, totalDays.abs());
+          if (currentDay == 1) {
+            currentMonth = currentMonth == 12 ? 1 : (currentMonth + 1);
+            if (currentMonth == 1) currentYear++;
+          }
+          currentWeekDay = list[i].weekDay;
+        }
+        start = DateTime(currentYear, currentMonth, currentDay,
+            list[i].ranges[k].first.hour, list[i].ranges[k].first.minute);
+        end = DateTime(currentYear, currentMonth, currentDay,
+            list[i].ranges[k].last.hour, list[i].ranges[k].last.minute);
+        if (_date.isAfter(start) && _date.isBefore(end)) {
+          return _date;
+        } else if (_date.isBefore(start)) {
+          return start;
+        }
+        i = i == (list.length - 1) ? 0 : (i + 1);
+      }
+    }
+    // no hubo match
     return null;
+  }
+
+  DateTime lastDate(List<TimeSlot> list, DateTime endCollect) {
+    DateTime _date = DateTime.now();
+    int currentWeekDay = _date.weekday;
+    int listIdx = -1;
+    for (int i = 0; i < list.length; i++)
+      if (list[i].weekDay < currentWeekDay) listIdx = i;
+    if (listIdx == -1) listIdx = list.length - 1;
+    return DateTime(
+        endCollect.year,
+        endCollect.month,
+        endCollect.day,
+        list[listIdx].ranges[list[listIdx].ranges.length - 1].last.hour,
+        list[listIdx].ranges[list[listIdx].ranges.length - 1].last.minute);
   }
 
   @override
@@ -137,25 +174,42 @@ class PickDelivery extends StatelessWidget {
 
     TimeSlot t1 = TimeSlot(1);
     TimeSlot t2 = TimeSlot(2);
+    TimeSlot t3 = TimeSlot(4);
 
-    t1.addRange('15:00', '20:00');
+    TimeOfDay t = TimeOfDay(hour: 20, minute: 00);
+    print("${t.minute}" + " ee ${t}");
+
     t1.addRange('20:00', '23:59');
+    t1.addRange('15:00', '20:00');
+    t1.addRange('19:00', '20:01');
 
     t2.addRange('10:00', '20:00');
 
+    t3.addRange('09:00', '10:00');
+
+    t1.ranges.sort();
     DateTime _date;
+
+    List<TimeSlot> list = List();
+    list.add(t2);
+    list.add(t1);
+    list.add(t3);
+    list.sort();
+    list.forEach((elementT) {
+      print("ElementT: ${elementT.weekDay}");
+      elementT.ranges.forEach((element) {
+        print("${element}");
+      });
+    });
 
     DateTime startCollect = DateTime(2020, 2, 13);
     DateTime endCollect = DateTime(2021, 2, 13);
 
-    DateTime start;
-    DateTime end;
+    DateTime start = firstDate(list);
+    DateTime end = lastDate(list, endCollect);
 
-    List<TimeSlot> timesSlot = List();
-    timesSlot.add(t1);
-    timesSlot.add(t2);
-
-    List<bool> notAvailableWeekDays = unavailableWeekDays(timesSlot);
+    List<bool> notAvailableWeekDays = unavailableWeekDays(list);
+    print("${notAvailableWeekDays.toString()}");
 
     return Scaffold(
       backgroundColor: BROWN_DARK,
@@ -174,7 +228,7 @@ class PickDelivery extends StatelessWidget {
                   btnData: ButtonData('SELECT A DATE', () {
                 showDatePicker(
                   context: context,
-                  initialDate: DateTime(2020, 11, 23),
+                  initialDate: start,
                   firstDate: start,
                   //aca seria la primer aparicion del ecopoint desde hoy, que sea posible
                   lastDate: end,
