@@ -28,37 +28,43 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => MyHomePage(title: 'Econet is flying high'),
-        '/loginsignup': (context) => LoginOrSignup(),
-        '/signup_method': (context) => SignUpMethod(),
-        '/GMap': (context) => GMap(),
-        '/tutorial': (context) => Tutorial(),
-        '/signup_email': (context) => SignupEmail(),
-        '/login': (context) => Login(),
-        '/ecollector_or_regular': (context) => EcollectorOrRegular(),
-        '/filter_testing': (context) => FilterTesting(),
-        '/ecopoint_expanded': (context) => EcopointExpanded(),
-        '/pickDelivery': (context) => PickDelivery(),
-        '/pickTime': (context) => PickTime(),
-        '/createEcopoint': (context) => CreateEcopoint(),
-        '/ecopointExpanded': (context) => EcopointExpanded(),
-        '/pickWeekday': (context) => PickWeekday(),
-        '/pickTimeCreateEcopoint': (context) => PickTimeCreateEcopoint(),
-      },
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: MaterialColor(0xFFA3CB8F, _color),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        canvasColor: MaterialColor(0xFFA3CB8F, _color),
-        // el navigation drawer toma este color de fondo
-        splashColor: Colors.white.withOpacity(0.4),
-        highlightColor: Colors.white.withOpacity(0.1),
-        bottomSheetTheme:
-            BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
-        fontFamily: 'SFProDisplay',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(
+            create: (_) => FirebaseAuthProvider())
+      ],
+      child: MaterialApp(
+        initialRoute: '/',
+        routes: {
+          '/': (context) => MyHomePage(title: 'Econet is flying high'),
+          '/loginsignup': (context) => LoginOrSignup(),
+          '/signup_method': (context) => SignUpMethod(),
+          '/GMap': (context) => GMap(),
+          '/tutorial': (context) => Tutorial(),
+          '/signup_email': (context) => SignupEmail(),
+          '/login': (context) => Login(),
+          '/ecollector_or_regular': (context) => EcollectorOrRegular(),
+          '/filter_testing': (context) => FilterTesting(),
+          '/ecopoint_expanded': (context) => EcopointExpanded(),
+          '/pickDelivery': (context) => PickDelivery(),
+          '/pickTime': (context) => PickTime(),
+          '/createEcopoint': (context) => CreateEcopoint(),
+          '/ecopointExpanded': (context) => EcopointExpanded(),
+          '/pickWeekday': (context) => PickWeekday(),
+          '/pickTimeCreateEcopoint': (context) => PickTimeCreateEcopoint(),
+        },
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: MaterialColor(0xFFA3CB8F, _color),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          canvasColor: MaterialColor(0xFFA3CB8F, _color),
+          // el navigation drawer toma este color de fondo
+          splashColor: Colors.white.withOpacity(0.4),
+          highlightColor: Colors.white.withOpacity(0.1),
+          bottomSheetTheme: BottomSheetThemeData(
+              backgroundColor: Colors.black.withOpacity(0)),
+          fontFamily: 'SFProDisplay',
+        ),
       ),
     );
   }
@@ -132,26 +138,40 @@ class _MyHomePageState extends State<MyHomePage> {
             RaisedButton(
                 child: Text("sheduleTrip"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/createEcopoint',
-                  arguments: {
+                  Navigator.pushNamed(context, '/createEcopoint', arguments: {
                     'plantName': "Plant 1",
                     'address': "Adress 1234",
                     'distance': 0.2,
-                    'residues': ['Paper', 'Plastic', 'Glass','Metal','Electronics','Wood','Textile'],
+                    'residues': [
+                      'Paper',
+                      'Plastic',
+                      'Glass',
+                      'Metal',
+                      'Electronics',
+                      'Wood',
+                      'Textile'
+                    ],
                   });
                 }),
             RaisedButton(
                 child: Text("ecopointExpanded"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/ecopointExpanded',
-                      arguments: {
-                        'ecopointName': "Plant 1",
-                        'address': "Adress 1234",
-                        'distance': 0.2,
-                        'residues': ['Paper', 'Plastic', 'Glass','Metal','Electronics','Wood','Textile'],
-                        'ecollector': "ecollector",
-                        'deliveryDate': new DateTime.utc(2020, 10, 26),
-                      });
+                  Navigator.pushNamed(context, '/ecopointExpanded', arguments: {
+                    'ecopointName': "Plant 1",
+                    'address': "Adress 1234",
+                    'distance': 0.2,
+                    'residues': [
+                      'Paper',
+                      'Plastic',
+                      'Glass',
+                      'Metal',
+                      'Electronics',
+                      'Wood',
+                      'Textile'
+                    ],
+                    'ecollector': "ecollector",
+                    'deliveryDate': new DateTime.utc(2020, 10, 26),
+                  });
                 }),
             RaisedButton(
                 child: Text("pickWeekday"),
@@ -160,11 +180,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 }),
             RaisedButton(
               child: Text("pickTimeCreateEcopoint"),
-                  onPressed:() {Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
-                  arguments: {
-                    "daysAvailable": [false,true,false,true,false,true,true],
-                    "currentDay": "TUESDAY",
-                  });},
+              onPressed: () {
+                Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+                    arguments: {
+                      "daysAvailable": [
+                        false,
+                        true,
+                        false,
+                        true,
+                        false,
+                        true,
+                        true
+                      ],
+                      "currentDay": "TUESDAY",
+                    });
+              },
             ),
             ecopointAvailable
                 ? SafeArea(
