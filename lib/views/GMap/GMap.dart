@@ -162,15 +162,15 @@ class GMapState extends State<GMap> {
 
   void getLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
-    if (permission != LocationPermission.denied &&
-        permission != LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       return;
     }
 
     Position currentPosition;
     loadingPosition = true;
     setState(() {});
-    
+
     try {
       //el metodo dentro pide los permisos
       currentPosition = await Geolocator.getCurrentPosition(
