@@ -13,6 +13,7 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
   final bool searchingFlag;
   final Function switchSearchState;
   final TextEditingController text_controller;
+  final Function() onFilledAdress;
 
   const GMapNavBar(
       {Key key,
@@ -22,7 +23,8 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
       this.backgroundColor,
       this.textColor,
       this.context,
-      this.text_controller})
+      this.text_controller,
+      this.onFilledAdress})
       : super(key: key);
 
   @override
@@ -81,8 +83,11 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                               builder: (BuildContext context) =>
                                   SearchDialog(text_controller),
                             );
+
                             // cuando se cierra el popup, vuelven a aparecer los widgets del mapa
                             switchSearchState();
+                            // si se ingreso una direccion
+                            if (text_controller.value.text.length > 0) onFilledAdress();
                           },
                           child: Container(
                             padding: EdgeInsets.all(5),

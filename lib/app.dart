@@ -83,20 +83,21 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Ecopoint> ecopoints;
   bool ecopointAvailable = false;
 
-  void _incrementCounter() async {
-    ecopoints = (await getEcopoints(343, 343, 432)).cast<Ecopoint>();
-    if (ecopoints != null && ecopoints.length != 0) {
-      setState(() {
-        ecopointAvailable = true;
-        _counter++;
-      });
-    } else {
-      setState(() {
-        ecopointAvailable = false;
-        _counter--;
-      });
-    }
-  }
+  // qe es esto????
+  // void _incrementCounter() async {
+  //   ecopoints = (await getEcopoints(343, 343, 432)).cast<Ecopoint>();
+  //   if (ecopoints != null && ecopoints.length != 0) {
+  //     setState(() {
+  //       ecopointAvailable = true;
+  //       _counter++;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       ecopointAvailable = false;
+  //       _counter--;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

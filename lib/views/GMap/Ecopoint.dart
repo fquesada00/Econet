@@ -1,9 +1,9 @@
-class Ecopoint{
+class Ecopoint {
   String userEmail;
-  double latitude,longitude;
+  double latitude, longitude;
   String adress;
 
-  Ecopoint({this.userEmail,this.latitude,this.longitude,this.adress});
+  Ecopoint({this.userEmail, this.latitude, this.longitude, this.adress});
 
   factory Ecopoint.fromJson(Map<String, dynamic> json) {
     return Ecopoint(
