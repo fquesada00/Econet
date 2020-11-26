@@ -13,6 +13,7 @@ class LoginOrSignup extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Column(
           children: <Widget>[

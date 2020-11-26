@@ -43,6 +43,8 @@ app.*.symbols
 app.*.map.json
 
 gradle.properties
+pubspec.lock
+**.xcconfig
 
 
 # iOS/XCode related

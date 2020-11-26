@@ -1,8 +1,10 @@
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/user.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignupEmail extends StatefulWidget {
   @override
@@ -34,8 +36,14 @@ class _SignupEmailState extends State<SignupEmail> {
 class _FieldTemplateData {
   final String labelText;
   final Icon icon;
+  TextEditingController controller;
+  final TextInputType keyboardType;
 
-  _FieldTemplateData({@required this.labelText, this.icon});
+  _FieldTemplateData(
+      {@required this.labelText,
+      this.icon,
+      this.controller,
+      this.keyboardType});
 }
 
 class _EmailRegisterForm extends StatefulWidget {
@@ -44,18 +52,41 @@ class _EmailRegisterForm extends StatefulWidget {
 }
 
 class __EmailRegisterFormState extends State<_EmailRegisterForm> {
+  static TextEditingController nameController = TextEditingController(),
+      lastNameController = TextEditingController(),
+      emailController = TextEditingController(),
+      passwordController = TextEditingController();
+
   List<_FieldTemplateData> fieldData = [
-    _FieldTemplateData(labelText: 'First Name', icon: Icon(Icons.person)),
-    _FieldTemplateData(labelText: 'Last Name', icon: Icon(Icons.person)),
-    _FieldTemplateData(labelText: 'Email Address', icon: Icon(Icons.email)),
-    _FieldTemplateData(labelText: 'Password', icon: Icon(Icons.lock)),
+    _FieldTemplateData(
+        labelText: 'Full Name',
+        icon: Icon(Icons.person),
+        controller: nameController,
+        keyboardType: TextInputType.name),
+    _FieldTemplateData(
+        labelText: 'Email Address',
+        icon: Icon(Icons.email),
+        controller: emailController,
+        keyboardType: TextInputType.emailAddress),
+    _FieldTemplateData(
+        labelText: 'Phone Number',
+        icon: Icon(Icons.phone),
+        controller: lastNameController,
+        keyboardType: TextInputType.phone),
+    _FieldTemplateData(
+        labelText: 'Password',
+        icon: Icon(Icons.lock),
+        controller: passwordController,
+        keyboardType: TextInputType.visiblePassword),
   ];
 
+  String errorMessage = "";
   bool _passwordVisible = false;
 
   @override
   void initState() {
     _passwordVisible = false;
+
     super.initState();
   }
 
@@ -63,6 +94,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     return ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -75,6 +107,8 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 35, vertical: 5),
                       child: TextFormField(
+                        keyboardType: field.keyboardType,
+                        controller: field.controller,
                         textInputAction: field.labelText.toLowerCase() ==
                                 'password' // Si es el ultimo field, tiene que dar la opcion de Done
                             ? TextInputAction.done
@@ -97,8 +131,8 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                                   ? IconButton(
                                       icon: Icon(
                                         _passwordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -143,18 +177,29 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
           padding:
               const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
           child: Button1(
-            btnData: ButtonData(
-              'SIGN UP',
-              () {
-                if (_formKey.currentState.validate()) {
-                  print('FORM: OK');
-                  Navigator.pushNamed(context, '/ecollector_or_regular');
+              btnData: ButtonData(
+            'SIGN UP',
+            () async {
+              if (_formKey.currentState.validate()) {
+                print('FORM: OK');
+                errorMessage = await auth.registerWithEmailAndPassword(
+                    emailController.text, passwordController.text) as String;
+                print(errorMessage);
+                if (errorMessage.trim() == "successfully logged in") {
+                  print("DID IT");
+                  Navigator.popUntil(context, ModalRoute.withName('/auth'));
+                } else {
+                  print("not equal");
                 }
-              },
-              backgroundColor: GREEN_MEDIUM,
-            ),
-          ),
-        )
+                print(errorMessage);
+                setState(() {});
+
+                //Navigator.pushNamed(context, '/ecollector_or_regular');
+              }
+            },
+            backgroundColor: GREEN_MEDIUM,
+          )),
+        ),
       ],
     );
   }

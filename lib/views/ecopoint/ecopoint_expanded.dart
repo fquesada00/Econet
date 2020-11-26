@@ -37,15 +37,16 @@ class EcopointExpanded extends StatelessWidget {
             Button1(
               btnData: ButtonData(
                 'RECYCLE',
-                () {Navigator.pushNamed(context, '/pickDelivery',
-                    arguments: {
-                      'ecopointName': "ecopointName",
-                      'address': "address",
-                      'distance': "distance",
-                      'residues': "residues",
-                      'ecollector': "ecollector",
-                      'deliveryDate': "deliveryDate",
-                    });},
+                () {
+                  Navigator.pushNamed(context, '/pickDelivery', arguments: {
+                    'ecopointName': "ecopointName",
+                    'address': "address",
+                    'distance': "distance",
+                    'residues': "residues",
+                    'ecollector': "ecollector",
+                    'deliveryDate': "deliveryDate",
+                  });
+                },
                 backgroundColor: GREEN_DARK,
                 fontSize: 24,
                 svgUrl: 'assets/icons/econet-circle.svg',
@@ -112,7 +113,7 @@ class EcopointExpanded extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: InfoCardContainer(
             header: 'Delivers on',
-            icon: CupertinoIcons.calendar,
+            icon: CupertinoIcons.car,
             content: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               child: CupertinoScrollbar(

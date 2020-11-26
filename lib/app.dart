@@ -1,3 +1,4 @@
+import 'package:econet/auth_widget.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/GMap/filter_testing.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
@@ -15,6 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
+
+import 'package:provider/provider.dart';
+import 'package:econet/services/user.dart';
+
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickTime.dart';
 import 'package:econet/views/ecopoint/createEcopoint.dart';
@@ -60,7 +65,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title = "p2"}) : super(key: key);
   final String title;
 
   @override

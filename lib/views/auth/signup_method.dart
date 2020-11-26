@@ -12,12 +12,6 @@ class SignUpMethod extends StatelessWidget {
 
     List<ButtonData> _buttonData = [
       ButtonData(
-        'Continue with Apple',
-        () {},
-        icon: Icon(CustomIcons.apple),
-        backgroundColor: Colors.black,
-      ),
-      ButtonData(
         'Continue with Google',
         () {},
         icon: Icon(CustomIcons.google),
