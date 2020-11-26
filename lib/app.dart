@@ -7,6 +7,7 @@ import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
+import 'file:///C:/Users/rodri/AndroidStudioProjects/Econet/lib/views/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
           '/ecopointExpanded': (context) => EcopointExpanded(),
           '/pickWeekday': (context) => PickWeekday(),
           '/pickTimeCreateEcopoint': (context) => PickTimeCreateEcopoint(),
+          '/settings': (context) => Settings(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -75,26 +77,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  List<Ecopoint> ecopoints;
-  bool ecopointAvailable = false;
-
-  // qe es esto????
-  // void _incrementCounter() async {
-  //   ecopoints = (await getEcopoints(343, 343, 432)).cast<Ecopoint>();
-  //   if (ecopoints != null && ecopoints.length != 0) {
-  //     setState(() {
-  //       ecopointAvailable = true;
-  //       _counter++;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       ecopointAvailable = false;
-  //       _counter--;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     //Widget para variar las configuraciones del status bar entre las views
@@ -193,19 +175,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
               },
             ),
-            ecopointAvailable
-                ? SafeArea(
-                    child: ListView.builder(
-                      itemCount: ecopoints.length,
-                      itemBuilder: (context, index) {
-                        Ecopoint aux = ecopoints[index];
-                        return ListTile(
-                          title: Text('${aux.latitude},${aux.longitude}'),
-                        );
-                      },
-                    ),
-                  )
-                : Container(),
+            RaisedButton(
+                child: Text("settings"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/settings');
+                }),
           ],
         ),
       ),

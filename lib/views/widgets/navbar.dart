@@ -20,11 +20,12 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
     Size size = MediaQuery.of(context).size;
 
     return Container(
-        color: backgroundColor,
-        height: height,
-        width: size.width,
-        child:
-            Row(crossAxisAlignment: CrossAxisAlignment.end, children: <Widget>[
+      color: backgroundColor,
+      height: height,
+      width: size.width,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
           if (withBack)
             Expanded(
               child: Align(
@@ -53,7 +54,9 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           Spacer(),
-        ]));
+        ],
+      ),
+    );
   }
 
   @override
