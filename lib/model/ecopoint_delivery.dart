@@ -1,5 +1,4 @@
 import 'package:econet/model/bag.dart';
-import 'package:econet/model/residue.dart';
 import 'package:econet/model/user.dart';
 
 class EcopointDelivery {

@@ -1,6 +1,6 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
-import 'package:econet/views/widgets/econet_chip.dart';
+import 'package:econet/views/widgets/econet_display_chip.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +9,6 @@ import 'package:econet/views/widgets/button1.dart';
 class CreateEcopoint extends StatelessWidget {
   ScrollController _controller1 = new ScrollController();
   ScrollController _controller2 = new ScrollController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -25,22 +24,22 @@ class CreateEcopoint extends StatelessWidget {
       ),
       body: ListView(children: <Widget>[
         SizedBox(height: 30),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Button1(
               btnData: ButtonData(
                 'SHEDULE TRIP',
-                    () {Navigator.pushNamed(context, '/pickDelivery',
-                    arguments: {
-                      'ecopointName': "ecopointName",
-                      'address': "address",
-                      'distance': "distance",
-                      'residues': "residues",
-                      'ecollector': "ecollector",
-                      'deliveryDate': "deliveryDate",
-                    });},
+                () {
+                  Navigator.pushNamed(context, '/pickDelivery', arguments: {
+                    'ecopointName': "ecopointName",
+                    'address': "address",
+                    'distance': "distance",
+                    'residues': "residues",
+                    'ecollector': "ecollector",
+                    'deliveryDate': "deliveryDate",
+                  });
+                },
                 backgroundColor: GREEN_DARK,
                 fontSize: 24,
                 svgUrl: 'assets/icons/econet-circle.svg',
@@ -88,17 +87,17 @@ class CreateEcopoint extends StatelessWidget {
                       height: 70,
                       color: Color(0xFFE5E2E2),
                       alignment: Alignment(0, 0),
-                      child: SingleChildScrollView(controller: _controller1,child: Wrap(
-
-                        runSpacing: 5,
-                        spacing: 5,
-                        alignment: WrapAlignment.center,
-                        children: List<Widget>.from((arguments['residues']
-                            .map((residue) =>
-                            EconetChip(residue, CHIP_DATA[residue], false))
-                            .toList())),
-                      ))
-                  )),
+                      child: SingleChildScrollView(
+                          controller: _controller1,
+                          child: Wrap(
+                            runSpacing: 5,
+                            spacing: 5,
+                            alignment: WrapAlignment.center,
+                            children: List<Widget>.from((arguments['residues']
+                                .map((residue) => EconetDisplayChip(
+                                    residue, CHIP_DATA[residue]))
+                                .toList())),
+                          )))),
             ),
           ),
         ),
@@ -117,17 +116,17 @@ class CreateEcopoint extends StatelessWidget {
                       height: 70,
                       color: Color(0xFFE5E2E2),
                       alignment: Alignment(0, 0),
-                      child: SingleChildScrollView(controller: _controller2,child: Wrap(
-
-                        runSpacing: 5,
-                        spacing: 5,
-                        alignment: WrapAlignment.center,
-                        children: List<Widget>.from((arguments['residues']
-                            .map((residue) =>
-                            EconetChip(residue, CHIP_DATA[residue], false))
-                            .toList())),
-                      ))
-                  )),
+                      child: SingleChildScrollView(
+                          controller: _controller2,
+                          child: Wrap(
+                            runSpacing: 5,
+                            spacing: 5,
+                            alignment: WrapAlignment.center,
+                            children: List<Widget>.from((arguments['residues']
+                                .map((residue) => EconetDisplayChip(
+                                    residue, CHIP_DATA[residue]))
+                                .toList())),
+                          )))),
             ),
           ),
         ),
@@ -135,7 +134,6 @@ class CreateEcopoint extends StatelessWidget {
     );
   }
 }
-
 
 class InfoCardContainer extends StatelessWidget {
   final Widget content;

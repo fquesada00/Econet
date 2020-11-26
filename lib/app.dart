@@ -1,11 +1,8 @@
-import 'package:econet/auth_widget.dart';
-import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/GMap/filter_testing.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
-import 'package:econet/views/Gmap/EcopointInfo.dart';
 import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
@@ -20,7 +17,6 @@ import 'package:econet/views/auth/login.dart';
 import 'package:provider/provider.dart';
 import 'package:econet/services/user.dart';
 
-import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickTime.dart';
 import 'package:econet/views/ecopoint/createEcopoint.dart';
 

@@ -1,6 +1,6 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
-import 'package:econet/views/widgets/econet_chip.dart';
+import 'package:econet/views/widgets/econet_display_chip.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -156,8 +156,8 @@ class EcopointInfoState extends State<EcopointInfo> {
                               spacing: 5,
                               alignment: WrapAlignment.center,
                               children: residues
-                                  .map((residue) => EconetChip(
-                                      residue, CHIP_DATA[residue], false))
+                                  .map((residue) => EconetDisplayChip(
+                                      residue, CHIP_DATA[residue]))
                                   .toList(),
                             ))),
                   )
