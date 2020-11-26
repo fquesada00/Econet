@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:econet/services/user.dart';
 
 class EcollectorOrRegular extends StatelessWidget {
+  MyUser user;
+
   @override
   Widget build(BuildContext context) {
+    user = ModalRoute.of(context).settings.arguments;
+    print("ARGUMENTS RECEIVED === " + user.toString());
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(

@@ -58,7 +58,7 @@ class __LoginFormState extends State<_LoginForm> {
       _LoginServiceData(
           color: Color(0xFF4285F4),
           icon: CustomIcons.google,
-          onPressed: Provider.of<AuthProvider>(context).loginWithGoogle),
+          onPressed: signInWithGoolge(context)),
     ];
     return Column(
       children: [
@@ -150,18 +150,7 @@ class __LoginFormState extends State<_LoginForm> {
                     'LOG IN',
                     () async {
                       if (_formKey.currentState.validate()) {
-                        errorMessage = await auth.emailLogin(
-                            emailController.text, passwordController.text);
-                        print(errorMessage);
-                        if (errorMessage.trim() == "successfully logged in") {
-                          print("DID IT");
-                          Navigator.popUntil(
-                              context, ModalRoute.withName('/auth'));
-                        } else {
-                          print("not equal");
-                        }
-                        setState(() {});
-                        print('FORM: OK');
+                        signInWithEmailAndPassword(context);
                         // Navigator.pushNamed(context, '/GMap');
                       }
                     },
@@ -172,6 +161,33 @@ class __LoginFormState extends State<_LoginForm> {
             : CircularProgressIndicator(),
       ],
     );
+  }
+
+  signInWithEmailAndPassword(BuildContext context) async {
+    errorMessage = await Provider.of<AuthProvider>(context)
+        .emailLogin(emailController.text, passwordController.text);
+    print(errorMessage);
+    if (errorMessage.trim() == "successfully logged in") {
+      print("DID IT");
+      Navigator.popUntil(context, ModalRoute.withName('/auth'));
+    } else {
+      print("not equal");
+    }
+    setState(() {});
+    print('FORM: OK');
+  }
+
+  signInWithGoolge(BuildContext context) async {
+    final res = await Provider.of<AuthProvider>(context).signInWithGoogle();
+
+    if (res != null) {
+      print("DID IT");
+      Navigator.popUntil(context, ModalRoute.withName('/auth'));
+    } else {
+      print("not equal");
+    }
+    setState(() {});
+    print('FORM: OK');
   }
 }
 

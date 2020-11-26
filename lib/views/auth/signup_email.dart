@@ -177,14 +177,17 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                 print(errorMessage);
                 if (errorMessage.trim() == "successfully logged in") {
                   print("DID IT");
-                  Navigator.popUntil(context, ModalRoute.withName('/auth'));
+                  //Navigator.popUntil(context, ModalRoute.withName('/auth'));
+                  Navigator.pushReplacementNamed(
+                      context, '/ecollector_or_regular',
+                      arguments: MyUser(
+                          firstName: nameController.text,
+                          lastName: lastNameController.text));
                 } else {
                   print("not equal");
                 }
                 print(errorMessage);
                 setState(() {});
-
-                //Navigator.pushNamed(context, '/ecollector_or_regular');
               }
             },
             backgroundColor: GREEN_MEDIUM,

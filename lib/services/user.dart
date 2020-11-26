@@ -44,12 +44,13 @@ class UserApi {
 
 class MyUser {
   String userId;
-  String name, email, type, token;
+  String firstName, lastName, email, type, token;
   Future<String> tokenFuture;
 
   MyUser(
       {this.userId,
-      this.name,
+      this.firstName,
+      this.lastName,
       this.email,
       this.type,
       this.token,
@@ -66,7 +67,8 @@ class MyUser {
   factory MyUser.fromJson(Map<String, dynamic> map) {
     return MyUser(
       userId: map['id'] ?? 1,
-      name: map['name'] ?? "beto",
+      firstName: map['firstName'] ?? "beto",
+      lastName: map['lastName'] ?? "sicardi",
       email: map['email'] ?? "beto@gmail.com",
       type: map['type'] ?? "regular",
       token: map['token'] ?? 0,
@@ -98,7 +100,7 @@ abstract class AuthProvider implements ChangeNotifier {
   Stream<MyUser> onAuthStateChanged();
   Future<String> emailLogin(String email, String password);
   Future<String> registerWithEmailAndPassword(String email, String password);
-  Future<void> loginWithGoogle();
+  Future<UserCredential> signInWithGoogle();
   logOut();
 }
 
@@ -199,11 +201,12 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
 
   @override
   Future<void> logOut() async {
+    signOutWithGoogle();
     return await _firebaseAuth.signOut();
   }
 
   @override
-  Future<void> loginWithGoogle() async {
+  Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
@@ -218,5 +221,10 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  @override
+  Future<void> signOutWithGoogle() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signOut();
   }
 }
