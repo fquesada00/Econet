@@ -23,7 +23,7 @@ class _TabSlideChooseState extends State<TabSlideChoose> {
     return Container(
       decoration: BoxDecoration(
         color: widget.backgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(50)),
       ),
       child: TabBar(
         unselectedLabelColor: widget.backgroundColor,

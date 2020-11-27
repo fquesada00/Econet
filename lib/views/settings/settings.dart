@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 class Settings extends StatelessWidget {
   int selected = 0;
   final List<String> tabNames = ["App", "Account"];
-  final List<Widget> tabContents = [SettingsAppTab(), SettingsAccountTab()];
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,6 @@ class Settings extends StatelessWidget {
             withBack: true,
             backgroundColor: Colors.white,
             textColor: GREEN_DARK,
-            height: 120,
           ),
           Expanded(
             child: DefaultTabController(

@@ -8,9 +8,9 @@ import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
-import 'file:///C:/Users/rodri/AndroidStudioProjects/Econet/lib/views/settings/settings.dart';
+import 'package:econet/views/my_recycling/my_recycling.dart';
+import 'package:econet/views/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
           '/pickWeekday': (context) => PickWeekday(),
           '/pickTimeCreateEcopoint': (context) => PickTimeCreateEcopoint(),
           '/settings': (context) => Settings(),
+          '/my_recycling': (context) => MyRecycling(),
           '/add_bags': (context) => AddBags(),
         },
         title: 'Flutter Demo',
@@ -181,6 +182,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text("settings"),
                 onPressed: () {
                   Navigator.pushNamed(context, '/settings');
+                }),
+            RaisedButton(
+                child: Text("my recycling"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/my_recycling');
                 }),
             RaisedButton(
               child: Text("Add Bags"),

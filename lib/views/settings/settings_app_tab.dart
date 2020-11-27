@@ -1,5 +1,4 @@
 import 'package:econet/presentation/constants.dart';
-import 'package:econet/views/widgets/tab_slide_choose.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
