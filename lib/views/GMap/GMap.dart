@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
+import 'package:econet/views/settings/settings_app_tab.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geocoder/geocoder.dart';
@@ -27,13 +28,14 @@ class GMapState extends State<GMap> {
   BitmapDescriptor markerIcon;
   static bool searchingFlag = false, loadingPosition = false;
   static LatLng _initialPosition;
-  static final double ECOPOINT_RADIUS = 15.0;
+  static final double ECOPOINT_RADIUS = SettingsAppTab().ecopoint_finder_radius;
 
   @override
   Future<void> initState() {
     //asigno variable de icono a marcadores de ecopoints
     _setMarkerIcon();
     getLocation();
+    print("ECOPOINT RADIUS VALUE: " + ECOPOINT_RADIUS.toString());
     super.initState();
   }
 
@@ -167,10 +169,11 @@ class GMapState extends State<GMap> {
       return;
     }
 
-    Position currentPosition;
-    loadingPosition = true;
-    setState(() {});
+    setState(() {
+      loadingPosition = true;
+    });
 
+    Position currentPosition;
     try {
       //el metodo dentro pide los permisos
       currentPosition = await Geolocator.getCurrentPosition(

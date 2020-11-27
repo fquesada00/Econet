@@ -47,6 +47,7 @@ class PickWeekday extends StatelessWidget {
                         arguments: {
                           "currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
                           "daysAvailable": this.isWeekdayAllowed
+
                         });},
                     backgroundColor: BROWN_MEDIUM,
                   ),
