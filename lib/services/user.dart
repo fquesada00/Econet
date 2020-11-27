@@ -4,43 +4,43 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
-class UserApi {
-  static String token;
-
-  Future<void> firebaseLogout() async {
-    return await FirebaseAuth.instance.signOut();
-  }
-
-  Future<void> getUserProfile(String email, String token) async {
-    final response = await http.get(
-        "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
-        headers: {
-          'Authorization': 'Bearer $token',
-        });
-    print("HTTPS RESPONSE = " + response.body);
-  }
-
-  Future<void> updateUserProfile(String email, String token, User user) async {
-    final response = await http.put(
-      "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-      //body:user.toJSON()
-      //body: {'userType':"ecollector",'lastName':"TERMEKH"},
-    );
-    print("HTTPS RESPONSE = " + response.body);
-  }
-
-  Future<void> deleteUserProfile(String email, String token) async {
-    final response = await http.delete(
-        "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
-        headers: {
-          'Authorization': 'Bearer $token',
-        });
-    print("HTTPS RESPONSE = " + response.body);
-  }
-}
+// class UserApi {
+//   static String token;
+//
+//   Future<void> firebaseLogout() async {
+//     return await FirebaseAuth.instance.signOut();
+//   }
+//
+//   Future<void> getUserProfile(String email, String token) async {
+//     final response = await http.get(
+//         "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
+//         headers: {
+//           'Authorization': 'Bearer $token',
+//         });
+//     print("HTTPS RESPONSE = " + response.body);
+//   }
+//
+//   Future<void> updateUserProfile(String email, String token, User user) async {
+//     final response = await http.put(
+//       "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
+//       headers: {
+//         'Authorization': 'Bearer $token',
+//       },
+//       //body:user.toJSON()
+//       //body: {'userType':"ecollector",'lastName':"TERMEKH"},
+//     );
+//     print("HTTPS RESPONSE = " + response.body);
+//   }
+//
+//   Future<void> deleteUserProfile(String email, String token) async {
+//     final response = await http.delete(
+//         "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
+//         headers: {
+//           'Authorization': 'Bearer $token',
+//         });
+//     print("HTTPS RESPONSE = " + response.body);
+//   }
+// }
 
 class MyUser {
   String userId;
