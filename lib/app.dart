@@ -4,6 +4,7 @@ import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
+import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           '/pickWeekday': (context) => PickWeekday(),
           '/pickTimeCreateEcopoint': (context) => PickTimeCreateEcopoint(),
           '/settings': (context) => Settings(),
+          '/add_bags': (context) => AddBags(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -180,6 +182,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.pushNamed(context, '/settings');
                 }),
+            RaisedButton(
+              child: Text("Add Bags"),
+              onPressed: () {
+                Navigator.pushNamed(context, '/add_bags');
+              },
+            ),
           ],
         ),
       ),
