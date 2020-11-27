@@ -7,6 +7,9 @@ import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
+import 'package:econet/views/ecopoint/pickDeliveryDate.dart';
+import 'package:econet/views/ecopoint/pickLocation.dart';
+import 'package:econet/views/ecopoint/pickMaterials.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
 import 'package:econet/views/my_recycling/my_recycling.dart';
 import 'package:econet/views/settings/settings.dart';
@@ -44,12 +47,14 @@ class MyApp extends StatelessWidget {
           '/ecollector_or_regular': (context) => EcollectorOrRegular(),
           '/filter_testing': (context) => FilterTesting(),
           '/ecopoint_expanded': (context) => EcopointExpanded(),
-          '/pickDelivery': (context) => PickDelivery(),
+          '/pickDeliveryMaterials': (context) => PickMaterials(),
           '/pickTime': (context) => PickTime(),
           '/createEcopoint': (context) => CreateEcopoint(),
           '/ecopointExpanded': (context) => EcopointExpanded(),
           '/pickWeekday': (context) => PickWeekday(),
           '/pickTimeCreateEcopoint': (context) => PickTimeCreateEcopoint(),
+          '/pickDeliveryDate': (context) => PickDeliveryDate(),
+          '/pickLocation': (context) => PickLocation(),
           '/settings': (context) => Settings(),
           '/my_recycling': (context) => MyRecycling(),
           '/add_bags': (context) => AddBags(),
@@ -113,9 +118,9 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             RaisedButton(
-                child: Text("delivery"),
+                child: Text("pickMaterials"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/pickDelivery');
+                  Navigator.pushNamed(context, '/pickDeliveryMaterials');
                 }),
             RaisedButton(
                 child: Text("sheduleTrip"),

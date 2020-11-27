@@ -48,7 +48,8 @@ class PickWeekday extends StatelessWidget {
                     'CONTINUE',
                         () {Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
                         arguments: {
-                          "daysAvailable": [false,true,false,true,false,true,true]
+                          "daysAvailable": [false,true,false,true,false,true,true],
+                          "currentDay": "TUESDAY",
                         });},
                     backgroundColor: BROWN_MEDIUM,
                   ),

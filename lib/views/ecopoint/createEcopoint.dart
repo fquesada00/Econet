@@ -31,7 +31,7 @@ class CreateEcopoint extends StatelessWidget {
               btnData: ButtonData(
                 'SHEDULE TRIP',
                 () {
-                  Navigator.pushNamed(context, '/pickDelivery', arguments: {
+                  Navigator.pushNamed(context, '/pickDeliveryMaterials', arguments: {
                     'ecopointName': "ecopointName",
                     'address': "address",
                     'distance': "distance",

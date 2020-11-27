@@ -223,7 +223,7 @@ class PickDelivery extends StatelessWidget {
         SizedBox(height: 30),
         Center(
           child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(vertical: 15),
               child: Button1(
                   btnData: ButtonData('SELECT A DATE', () {
                 showDatePicker(
@@ -235,7 +235,6 @@ class PickDelivery extends StatelessWidget {
                   //aca seria la ultima aparicion del ecopoint
                   selectableDayPredicate: (DateTime val) =>
                       notAvailableWeekDays[val.weekday - 1],
-                  // val.weekday == 5 ? false : true,
                 ).then((value) {
                   _date = value;
                 });
@@ -249,7 +248,7 @@ class PickDelivery extends StatelessWidget {
                 'CONTINUE',
                 () {
                   Navigator.pushNamed(context, '/pickTime', arguments: {
-                    'timeStart': "17:00",
+                    'timeStart': "${start.hour}:${start.minute}",
                     'timeEnd': "20:00",
                     'date':
                         "${getWeekDay(_date.weekday)} ${_date.day} ${getMonth(_date.month)} of ${_date.year}",
