@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SettingDetails extends StatelessWidget {
   String name; //deberia estar la funcion que te lleve a donde sea pertinente
@@ -39,6 +40,7 @@ class SettingDetails extends StatelessWidget {
 }
 
 class SettingsAccountTab extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -61,10 +63,13 @@ class SettingsAccountTab extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(top: 15),
+          padding: EdgeInsets.symmetric(vertical: 10),
           width: double.infinity,
           height: 125,
           color: Colors.grey.withOpacity(0.5),
-          child: Image.asset('assets/artwork/profile-default.svg')
+          child: LimitedBox(
+            child: SvgPicture.asset('assets/artwork/profile-default.svg'),
+          ),
         ),
         SettingDetails("Upload new image"),
         SizedBox(
