@@ -14,6 +14,8 @@ class PickTimeCreateEcopoint extends StatelessWidget {
     final testList = List<String>();
     testList.add("15:30-17:30");
     testList.add("19:30-21:00");
+    print("Daysavaiable");
+    print(arguments["daysAvailable"]);
 
     return Scaffold(
       backgroundColor: BROWN_DARK,
@@ -45,12 +47,25 @@ class PickTimeCreateEcopoint extends StatelessWidget {
                 child: Button1(
                   btnData: ButtonData(
                     'CONTINUE',
-                        () {Navigator.pushNamed(context, '/pickTime',
-                        arguments: {
-                          'timeStart': "17:00",
-                          'timeEnd': "20:00",
-                          'date': "Wednesday 26th October",
-                        });},
+                        () {
+                          int i = arguments["currentDay"]+1;
+                          bool nextDay = false;
+                          for(i;i<7;i++){
+                            if(arguments["daysAvailable"][i]) {
+                              nextDay = true;
+                              break;
+                            }
+                          }
+                          if(nextDay){
+                            Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+                                arguments: {
+                                  "currentDay": i,
+                                  "daysAvailable": arguments["daysAvailable"],
+                                });
+                          }else{
+                            print("Push to nextwhateveritis in the else part of the button");
+                          }
+                      },
                     backgroundColor: BROWN_MEDIUM,
                   ),
                 ),
@@ -88,6 +103,7 @@ class TimeslotCardState extends State<TimeslotCard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print(this.arguments);
     return Container(
         width: size.width * 0.8,
         height: 430,
@@ -109,7 +125,7 @@ class TimeslotCardState extends State<TimeslotCard> {
             children:[
               SizedBox(height: 10),
               Text(
-              arguments["currentDay"],
+              WEEKLIST[this.arguments["currentDay"]],
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 42,

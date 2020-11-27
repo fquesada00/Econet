@@ -38,3 +38,13 @@ const List<String> RECENT_SEARCHES_DATA = [
   'Address 1111',
   'Recycling Plant Z'
 ];
+
+const WEEKLIST = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY"
+];

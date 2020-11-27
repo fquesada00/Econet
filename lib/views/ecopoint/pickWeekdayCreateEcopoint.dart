@@ -8,17 +8,13 @@ import 'package:flutter/src/widgets/framework.dart';
 
 
 class PickWeekday extends StatelessWidget {
+  final List<bool> isWeekdayAllowed = List.filled(7, false, growable: false);
+
   @override
   Widget build(BuildContext context) {
     //final List<String> arguments = ModalRoute.of(context).settings.arguments as List<String>;
-    final testList = List<String>(7);
-    testList[0] = "MONDAY";
-    testList[1] = "TUESDAY";
-    testList[2] = "WEDNESDAY";
-    testList[3] = "THURSDAY";
-    testList[4] = "FRIDAY";
-    testList[5] = "SATURDAY";
-    testList[6] = "SUNDAY";
+
+    final dayList = WEEKLIST;
 
     return Scaffold(
       backgroundColor: BROWN_DARK,
@@ -36,7 +32,8 @@ class PickWeekday extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TimeslotCard(
-                    testList //arguments,
+                    dayList,
+                    this.isWeekdayAllowed,//arguments,
                 ),
               ),
             ),
@@ -48,7 +45,8 @@ class PickWeekday extends StatelessWidget {
                     'CONTINUE',
                         () {Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
                         arguments: {
-                          "daysAvailable": [false,true,false,true,false,true,true]
+                          "currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
+                          "daysAvailable": this.isWeekdayAllowed
                         });},
                     backgroundColor: BROWN_MEDIUM,
                   ),
@@ -64,22 +62,28 @@ class PickWeekday extends StatelessWidget {
 class TimeslotCard extends StatefulWidget {
 
   final List<String> timeslots;
+  final List<bool> pickWeekday;
 
-  TimeslotCard(this.timeslots);
+  TimeslotCard(this.timeslots, this.pickWeekday);
 
   @override
-  TimeslotCardState createState() => TimeslotCardState(this.timeslots);
+  TimeslotCardState createState() => TimeslotCardState(this.timeslots, this.pickWeekday);
 }
 
 class TimeslotCardState extends State<TimeslotCard> {
 
   final List<String> timeslots;
-  TimeslotCardState(this.timeslots);
-  final List<bool> _isWeekdayAllowed = List.filled(7, false, growable: false);
+  final List<bool> pickWeekday;
+
+
+  TimeslotCardState(this.timeslots, this.pickWeekday);
 
 
   @override
   Widget build(BuildContext context) {
+    print(this.pickWeekday);
+    print("isweek");
+    //print(this.pickWeekday.isWeekdayAllowed);
     Size size = MediaQuery.of(context).size;
     return Container(
         width: size.width * 0.8,
@@ -119,7 +123,7 @@ class TimeslotCardState extends State<TimeslotCard> {
               backgroundColor: Color(0xFFE5E2E2),
               selectedColor: Color(0xFFBCBCBC),
               selectedShadowColor: Colors.black,
-              selected: _isWeekdayAllowed[index],
+              selected: this.pickWeekday[index],
               materialTapTargetSize: MaterialTapTargetSize.values[1],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -129,7 +133,7 @@ class TimeslotCardState extends State<TimeslotCard> {
                 setState(() {
                   //_value = selected ? index : null;
                   print(selected);
-                  _isWeekdayAllowed[index] = !_isWeekdayAllowed[index];
+                  this.pickWeekday[index] = !this.pickWeekday[index];
                 });
               },
             )
