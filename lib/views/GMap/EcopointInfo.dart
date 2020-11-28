@@ -15,11 +15,12 @@ class EcopointInfo extends StatefulWidget {
 class EcopointInfoState extends State<EcopointInfo> {
   //EcopointInfoState({this.adress});
   //String adress;
-  List<String> residues = ['Paper', 'Plastic', 'Glass'];
+  List<String> residues = ['Paper', 'Plastic', 'Glass','Metal','Electronics','Wood','Textile'];
   String ecopointName = "Beto's Ecopoint";
   double distance = 0.2;
   String address = 'Address 1234';
   String ecollector = 'Beto';
+  ScrollController _controller = new ScrollController();
   DateTime deliveryDate = new DateTime.utc(2020, 10, 26);
 
   @override
@@ -126,8 +127,11 @@ class EcopointInfoState extends State<EcopointInfo> {
                   SizedBox(
                     width: 10,
                   ),
-                  Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  CupertinoScrollbar(
+                    isAlwaysShown: true,
+                    controller: _controller,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         color: Color(0xFFe5e2e2),
@@ -136,15 +140,17 @@ class EcopointInfoState extends State<EcopointInfo> {
                       height: 76,
                       width: 285,
                       alignment: Alignment(0, 0),
-                      child: Wrap(
-                        runSpacing: 5,
-                        spacing: 5,
-                        alignment: WrapAlignment.center,
-                        children: residues
-                            .map((residue) =>
-                                EconetChip(residue, CHIP_DATA[residue], false))
-                            .toList(),
-                      )),
+                      child: SingleChildScrollView(controller: _controller,child:Wrap(
+                            runSpacing: 0,
+                            spacing: 5,
+                            alignment: WrapAlignment.center,
+                            children: residues
+                                .map((residue) =>
+                                    EconetChip(residue, CHIP_DATA[residue], false))
+                                .toList(),
+                        ))
+                      ),
+                  )
                 ],
               ),
             ),

@@ -7,6 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:econet/views/widgets/button1.dart';
 
 class EcopointExpanded extends StatelessWidget {
+  ScrollController _controller1 = new ScrollController();
+  ScrollController _controller2 = new ScrollController();
+
+
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -83,17 +87,23 @@ class EcopointExpanded extends StatelessWidget {
             icon: CustomIcons.recycle,
             content: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: Container(
-                  height: 70,
-                  color: Color(0xFFE5E2E2),
-                  alignment: Alignment.center,
-                  child: Wrap(
-                    runSpacing: 5,
-                    spacing: 5,
-                    children: List<Widget>.from((arguments['residues']
-                        .map((residue) =>
+              child: CupertinoScrollbar(
+                  isAlwaysShown: true,
+                  controller: _controller1,
+                  child: Container(
+                      height: 70,
+                      color: Color(0xFFE5E2E2),
+                      alignment: Alignment(0, 0),
+                      child: SingleChildScrollView(controller: _controller1,child: Wrap(
+
+                        runSpacing: 5,
+                        spacing: 5,
+                        alignment: WrapAlignment.center,
+                        children: List<Widget>.from((arguments['residues']
+                            .map((residue) =>
                             EconetChip(residue, CHIP_DATA[residue], false))
-                        .toList())),
+                            .toList())),
+                      ))
                   )),
             ),
           ),
@@ -106,18 +116,24 @@ class EcopointExpanded extends StatelessWidget {
             icon: CupertinoIcons.car,
             content: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: Container(
+              child: CupertinoScrollbar(
+                  isAlwaysShown: true,
+                  controller: _controller2,
+                  child: Container(
                   height: 70,
                   color: Color(0xFFE5E2E2),
-                  alignment: Alignment.center,
-                  child: Wrap(
+                  alignment: Alignment(0, 0),
+                  child: SingleChildScrollView(controller: _controller2,child: Wrap(
+
                     runSpacing: 5,
                     spacing: 5,
+                    alignment: WrapAlignment.center,
                     children: List<Widget>.from((arguments['residues']
                         .map((residue) =>
                             EconetChip(residue, CHIP_DATA[residue], false))
                         .toList())),
-                  )),
+                  ))
+              )),
             ),
           ),
         ),
