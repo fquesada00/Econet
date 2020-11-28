@@ -48,7 +48,6 @@ class MyRecycling extends StatelessWidget {
       ),
     );
   }
-
 }
 
 //si se usa en otro lado extraer como widget

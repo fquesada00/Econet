@@ -49,7 +49,6 @@ class _TabSlideChooseState extends State<TabSlideChoose> {
       rows.add(
         Tab(
           child: Container(
-            padding: EdgeInsets.all(14.0),
             child: Text(
               names[i],
               textAlign: TextAlign.center,

@@ -1,4 +1,5 @@
 library constants;
+
 import 'package:flutter/material.dart';
 
 //Paleta de colores
@@ -25,6 +26,7 @@ const Color TEXTILE_COLOR = Color(0xFFC76BC7);
 const Color WARNING_COLOR = Color(0xFFFFA826);
 const Color ERROR_COLOR = Color(0xFFAF0000);
 const Color EDIT_COLOR = Color(0xFF9B9B9B);
+const Color INFO_COLOR = Color(0xFFA8A8A8);
 
 const Map<String, Color> CHIP_DATA = {
   'Paper': PAPER_COLOR,

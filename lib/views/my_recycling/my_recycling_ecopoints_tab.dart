@@ -1,4 +1,5 @@
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/widgets/text_above_numbered_circle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +80,8 @@ class MyRecyclingEcopointsTab extends StatelessWidget {
                                 ),
                               ),
                               Chip(
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
                                 label: Text(
                                   deliveriesList[index].timeRemaining,
                                   style: TextStyle(
@@ -98,7 +100,7 @@ class MyRecyclingEcopointsTab extends StatelessWidget {
                       Spacer(),
                       Expanded(
                         flex: 2,
-                        child: textAboveNumberedCircle(
+                        child: TextAboveNumberedCircle(
                             "Pending deliveries",
                             deliveriesList[index].pendingDeliveries,
                             GREEN_DARK),
@@ -106,7 +108,7 @@ class MyRecyclingEcopointsTab extends StatelessWidget {
                       Spacer(),
                       Expanded(
                         flex: 2,
-                        child: textAboveNumberedCircle(
+                        child: TextAboveNumberedCircle(
                             "Delivery requests",
                             deliveriesList[index].requestedDeliveries,
                             BROWN_MEDIUM),
@@ -128,42 +130,6 @@ class MyRecyclingEcopointsTab extends StatelessWidget {
             );
           }),
         ),
-      ),
-    );
-  }
-
-  Widget textAboveNumberedCircle(String text, int number, Color circleColor) {
-    return Container(
-      height: 75,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 15,
-                fontFamily: 'SFProDisplay',
-              ),
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            height: 33,
-            width: 33,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: circleColor,
-            ),
-            child: Text(
-              number.toString(),
-              style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
-            ),
-          ),
-        ],
       ),
     );
   }
