@@ -42,89 +42,112 @@ class MyRecyclingEcopointsTab extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(30)),
                 color: Colors.white,
               ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      deliveriesList[index].residue,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: GREEN_DARK,
-                        fontSize: 22,
-                        fontFamily: 'SFProDisplay',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Spacer(),
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          height: 72,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 4,
+                              child: Container(),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: Text(
-                                  "Due in",
+                                  deliveriesList[index].residue,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 15,
+                                    color: GREEN_DARK,
+                                    fontSize: 22,
                                     fontFamily: 'SFProDisplay',
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
-                              Chip(
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                label: Text(
-                                  deliveriesList[index].timeRemaining,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontFamily: 'SFProDisplay',
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Spacer(),
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                height: 72,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: Text(
+                                        "Due in",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15,
+                                          fontFamily: 'SFProDisplay',
+                                        ),
+                                      ),
+                                    ),
+                                    Chip(
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      label: Text(
+                                        deliveriesList[index].timeRemaining,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontFamily: 'SFProDisplay',
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      backgroundColor: BROWN_DARK,
+                                    ),
+                                  ],
                                 ),
-                                backgroundColor: BROWN_DARK,
                               ),
-                            ],
-                          ),
+                            ),
+                            Spacer(),
+                            Expanded(
+                              flex: 2,
+                              child: TextAboveNumberedCircle(
+                                  "Pending deliveries",
+                                  deliveriesList[index].pendingDeliveries,
+                                  GREEN_DARK),
+                            ),
+                            Spacer(),
+                            Expanded(
+                              flex: 2,
+                              child: TextAboveNumberedCircle(
+                                  "Delivery requests",
+                                  deliveriesList[index].requestedDeliveries,
+                                  BROWN_MEDIUM),
+                            ),
+                          ],
                         ),
-                      ),
-                      Spacer(),
-                      Expanded(
-                        flex: 2,
-                        child: TextAboveNumberedCircle(
-                            "Pending deliveries",
-                            deliveriesList[index].pendingDeliveries,
-                            GREEN_DARK),
-                      ),
-                      Spacer(),
-                      Expanded(
-                        flex: 2,
-                        child: TextAboveNumberedCircle(
-                            "Delivery requests",
-                            deliveriesList[index].requestedDeliveries,
-                            BROWN_MEDIUM),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          alignment: Alignment.topCenter,
-                          child: Icon(
-                            Icons.chevron_right,
-                            size: 36,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      child: Icon(
+                        Icons.chevron_right,
+                        size: 36,
+                      ),
+                    ),
+                  )
                 ],
               ),
             );
