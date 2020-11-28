@@ -7,7 +7,6 @@ import 'my_recycling_deliveries_tab.dart';
 import 'my_recycling_ecopoints_tab.dart';
 
 class MyRecycling extends StatelessWidget {
-  int selected = 0;
   final List<String> tabNames = ["My Deliveries", "My Ecopoints"];
 
   @override
@@ -17,8 +16,10 @@ class MyRecycling extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
-          NavBar2(text: "My Recycling", backgroundColor: Colors.white, textColor: GREEN_DARK),
-
+          NavBar2(
+              text: "My Recycling",
+              backgroundColor: Colors.white,
+              textColor: GREEN_DARK),
           Expanded(
             child: DefaultTabController(
               length: tabNames.length,
@@ -27,10 +28,7 @@ class MyRecycling extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 26, right: 26, top: 26),
                     child: TabSlideChoose(
-                      //funcion que guarda cual se encuentra seleccionado
-                            (int newSelected) {
-                          selected = newSelected;
-                        }, tabNames, Colors.grey.withOpacity(0.5), GREEN_DARK),
+                        tabNames, Colors.grey.withOpacity(0.5), GREEN_DARK),
                   ),
                   Expanded(
                     child: TabBarView(
@@ -57,16 +55,11 @@ class NavBar2 extends StatelessWidget implements PreferredSizeWidget {
   final Color textColor;
   final double height;
 
-  NavBar2({this.text,
-    this.backgroundColor,
-    this.textColor,
-    this.height = 120});
+  NavBar2({this.text, this.backgroundColor, this.textColor, this.height = 120});
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
 
     return Container(
       color: backgroundColor,

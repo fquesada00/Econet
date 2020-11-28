@@ -5,7 +5,7 @@ class MyEcopointPendingTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 15),
+      padding: EdgeInsets.only(bottom: 15),
       child: Column(
         children: <Widget>[
           PendingDeliveryCard("pepepee1",12,"19 days"),

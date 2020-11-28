@@ -46,6 +46,43 @@ class TimeSlot implements Comparable<TimeSlot> {
     return "WeekDay ${weekDay} with time slots: " + ranges.toString();
   }
 
+  //funcion usada en my_ecopoint_details_tab
+  String toStringDay() {
+    String weekDayName;
+    switch (weekDay) {
+      case 0:
+        weekDayName = "Monday";
+        break;
+      case 1:
+        weekDayName = "Tuesday";
+        break;
+      case 2:
+        weekDayName = "Wednesday";
+        break;
+      case 3:
+        weekDayName = "Thursday";
+        break;
+      case 4:
+        weekDayName = "Friday";
+        break;
+      case 5:
+        weekDayName = "Saturday";
+        break;
+      case 6:
+        weekDayName = "Sunday";
+    }
+    return "$weekDayName";
+  }
+
+  //funcion usada en my_ecopoint_details_tab
+  String toStringRanges() {
+    String aux = "";
+    ranges.forEach((element) {
+      aux += element.toString() + " ";
+    });
+    return "$aux";
+  }
+
   bool overlap(String from, String to) {
     int firstHour = int.parse(from.substring(0, 2));
     int firstMinutes = int.parse(from.substring(3, 5));

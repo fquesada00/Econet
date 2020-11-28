@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Settings extends StatelessWidget {
-  int selected = 0;
   final List<String> tabNames = ["App", "Account"];
 
   @override
@@ -31,10 +30,7 @@ class Settings extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 26, right: 26, top: 26),
                     child: TabSlideChoose(
-                            //funcion que guarda cual se encuentra seleccionado
-                            (int newSelected) {
-                      selected = newSelected;
-                    }, tabNames, Colors.grey.withOpacity(0.5), GREEN_DARK),
+                        tabNames, Colors.grey.withOpacity(0.5), GREEN_DARK),
                   ),
                   Expanded(
                     child: TabBarView(

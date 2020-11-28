@@ -9,7 +9,6 @@ import 'my_ecopoint_pending_tab.dart';
 import 'my_ecopoint_requests_tab.dart';
 
 class MyEcopoint extends StatelessWidget {
-  int selected = 0;
   String residueName = "Cardboard";
   final List<String> tabNames = ["Details", "Pending", "Requests"];
 
@@ -32,12 +31,8 @@ class MyEcopoint extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 26, right: 26, top: 26),
-                    child: TabSlideChoose(
-                      //funcion que guarda cual se encuentra seleccionado
-                            (int newSelected) {
-                          selected = newSelected;
-                        }, tabNames, BROWN_MEDIUM, BROWN_DARK),
+                    padding: EdgeInsets.all(26),
+                    child: TabSlideChoose(tabNames, BROWN_MEDIUM, BROWN_DARK),
                   ),
                   Expanded(
                     child: TabBarView(
@@ -56,5 +51,4 @@ class MyEcopoint extends StatelessWidget {
       ),
     );
   }
-  
 }

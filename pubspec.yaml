@@ -49,6 +49,10 @@ dependencies:
   #for linking scrollers in searchFilters
   linked_scroll_controller: ^0.1.2
 
+  #font awesome icons, ejemplo icon: FaIcon(FontAwesomeIcons.recycle)
+  font_awesome_flutter: 8.10.0
+
+  sprintf: "^4.0.0"
 
 dev_dependencies:
   flutter_test:

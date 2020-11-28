@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sprintf/sprintf.dart';
 
 class TimeRange implements Comparable<TimeRange>{
   TimeOfDay first;
@@ -13,6 +14,6 @@ class TimeRange implements Comparable<TimeRange>{
 
   @override
   String toString() {
-    return "${first.hour}:${first.minute}-${last.hour}:${last.minute}";
+    return sprintf("%02d:%02d-%02d:%02d", [first.hour, first.minute, last.hour, last.minute]);  //formato HH:MM
   }
 }

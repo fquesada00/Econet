@@ -40,4 +40,26 @@ class Ecopoint {
       this._name,
       this._address,
       this._coordinates);
+
+  LatLng get coordinates => _coordinates;
+
+  String get address => _address;
+
+  String get name => _name;
+
+  String get additionalInfo => _additionalInfo;
+
+  List<TimeSlot> get openHours => _openHours;
+
+  DateTime get deadline => _deadline;
+
+  String get plantId => _plantId;
+
+  List<Residue> get residues => _residues;
+
+  bool get isPlant => _isPlant;
+
+  User get ecollector => _ecollector;
+
+  String get id => _id;
 }
