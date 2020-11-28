@@ -4,6 +4,7 @@ import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class AddBags extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class _AddBagsState extends State<AddBags> {
   Bag bagData3 = new Bag(BagSize.extraLarge, BagWeight.veryHeavy, 5);
 
   List<Bag> bagList;
+  BagSize bagSize;
 
   @override
   void initState() {
@@ -38,7 +40,7 @@ class _AddBagsState extends State<AddBags> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            InfoCardContainer(
+            BagInfoCardContainer(
               content: Column(
                 children: [
                   ClipRRect(
@@ -60,7 +62,22 @@ class _AddBagsState extends State<AddBags> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Button1(
-                        btnData: ButtonData('ADD BAGS', () {},
+                        btnData: ButtonData('ADD BAGS', () {
+                      showDialog(
+                          context: context,
+                          builder: (context) =>
+                              _BagDialog(_BagSizeDialogContent((BagSize size) {
+                                bagSize = size;
+                                Navigator.pop(context);
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => _BagDialog(
+                                            _BagSizeDialogContent(
+                                                (BagSize size) {
+                                          print('douuuu');
+                                        })));
+                              })));
+                    },
                             height: 40,
                             adjust: true,
                             fontWeight: FontWeight.w600,
@@ -191,40 +208,146 @@ class _BagInfoRowState extends State<BagInfoRow> {
       ),
     );
   }
+}
 
-  Color _getBagInfoColor({BagSize bagSize, BagWeight bagWeight}) {
-    if (bagSize != null) {
-      switch (bagSize) {
-        case BagSize.small:
-          return GREEN_MEDIUM;
-        case BagSize.medium:
-          return WARNING_COLOR;
-        case BagSize.large:
-          return RED_MEDIUM;
-        case BagSize.extraLarge:
-          return RED_DARK;
-      }
-    } else if (bagWeight != null) {
-      switch (bagWeight) {
-        case BagWeight.light:
-          return GREEN_MEDIUM;
-        case BagWeight.heavy:
-          return WARNING_COLOR;
-        case BagWeight.veryHeavy:
-          return RED_MEDIUM;
-      }
-    }
+class _BagSizeDialogContent extends StatelessWidget {
+  final Function(BagSize size) setBagSize;
 
-    return null;
+  _BagSizeDialogContent(this.setBagSize);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          "Select your bags' and/or objects' size",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 20),
+        Wrap(
+          spacing: 7,
+          runSpacing: 7,
+          alignment: WrapAlignment.center,
+          children: BagSize.values
+              .map(
+                (size) => RaisedButton(
+                  color: _getBagInfoColor(bagSize: size),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  padding: EdgeInsets.zero,
+                  onPressed: () => setBagSize(size),
+                  child: Container(
+                    height: 120,
+                    width: 120,
+                    alignment: Alignment.center,
+                    child: Text(
+                      bagSizeToString(size).toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+        SizedBox(height: 20),
+        RaisedButton(
+          color: INFO_COLOR,
+          onPressed: () {},
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 0,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          child: Text(
+            "How can I determine my bags' sizes?",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 19,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        )
+      ],
+    );
   }
 }
 
-class InfoCardContainer extends StatelessWidget {
+class _BagDialog extends StatelessWidget {
+  final Widget content;
+
+  _BagDialog(this.content);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: contentHolder(context),
+    );
+  }
+
+  Widget contentHolder(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: 500,
+          padding: EdgeInsets.fromLTRB(16, 70, 16, 16),
+          margin: EdgeInsets.only(top: 50),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(17),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: Offset(0.0, 10.0),
+              ),
+            ],
+          ),
+          child: content,
+        ),
+        Positioned(
+            top: 0,
+            left: 1,
+            right: 1,
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: SvgPicture.asset(
+                'assets/artwork/recycle-bag.svg',
+                semanticsLabel: 'Recycling bag',
+              ),
+              radius: 50,
+            )),
+        Positioned(
+          top: 60,
+          left: 10,
+          child: CupertinoNavigationBarBackButton(
+            color: Colors.black,
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class BagInfoCardContainer extends StatelessWidget {
   final Widget content;
   final String header;
   final IconData icon;
 
-  InfoCardContainer({this.content, this.header, this.icon});
+  BagInfoCardContainer({this.content, this.header, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -286,4 +409,30 @@ class InfoCardContainer extends StatelessWidget {
       ),
     );
   }
+}
+
+Color _getBagInfoColor({BagSize bagSize, BagWeight bagWeight}) {
+  if (bagSize != null) {
+    switch (bagSize) {
+      case BagSize.small:
+        return GREEN_MEDIUM;
+      case BagSize.medium:
+        return WARNING_COLOR;
+      case BagSize.large:
+        return RED_MEDIUM;
+      case BagSize.extraLarge:
+        return RED_DARK;
+    }
+  } else if (bagWeight != null) {
+    switch (bagWeight) {
+      case BagWeight.light:
+        return GREEN_MEDIUM;
+      case BagWeight.heavy:
+        return WARNING_COLOR;
+      case BagWeight.veryHeavy:
+        return RED_MEDIUM;
+    }
+  }
+
+  return null;
 }
