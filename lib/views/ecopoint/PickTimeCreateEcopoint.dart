@@ -1,3 +1,5 @@
+import 'package:econet/model/create_ecopoint_view_model.dart';
+import 'package:econet/model/timeslot.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +14,21 @@ class PickTimeCreateEcopoint extends StatelessWidget {
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
     final testList = List<String>();
-    testList.add("15:30-17:30");
-    testList.add("19:30-21:00");
-    print("Daysavaiable");
-    print(arguments["daysAvailable"]);
+    final createEcopointModel = CreateEcopointModel.instance;
 
+    print("Testing ecopoint at PickTimeCreateEcopoint");
+    print("name");
+    print(createEcopointModel.name);
+    print("adress");
+    print(createEcopointModel.address);
+    print("selectedResidues");
+    print(createEcopointModel.selectedResidues);
+    print("deliveryDate");
+    print(createEcopointModel.deliveryDate);
+    print("deliveryTime");
+    print(createEcopointModel.deliveryTime);
+    print("availableWeekdays");
+    print(createEcopointModel.availableWeekdays);
     return Scaffold(
       backgroundColor: BROWN_DARK,
       appBar: NavBar(
@@ -34,7 +46,6 @@ class PickTimeCreateEcopoint extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TimeslotCard(
-                    testList,
                     arguments,
                 ),
               ),
@@ -79,22 +90,21 @@ class PickTimeCreateEcopoint extends StatelessWidget {
 
 class TimeslotCard extends StatefulWidget {
 
-  final List<String> timeslots;
   final Map arguments;
 
-  TimeslotCard(this.timeslots,this.arguments);
+  TimeslotCard(this.arguments);
 
   @override
-  TimeslotCardState createState() => TimeslotCardState(this.timeslots,this.arguments);
+  TimeslotCardState createState() => TimeslotCardState(this.arguments);
 }
 
 class TimeslotCardState extends State<TimeslotCard> {
 
-  final List<String> timeslots;
   final Map arguments;
+
   //bool _isSelected = false;
   //Color textColor = Colors.white;
-  TimeslotCardState(this.timeslots,this.arguments);
+  TimeslotCardState(this.arguments);
   int _value = -1;
   final String _ecollector = 'Beto';
 
@@ -103,6 +113,8 @@ class TimeslotCardState extends State<TimeslotCard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    CreateEcopointModel createEcopointModel = CreateEcopointModel.instance;
+    int numberOfRanges = createEcopointModel.getRangesOfDay(arguments["currentDay"]).length;
     print(this.arguments);
     return Container(
         width: size.width * 0.8,
@@ -134,7 +146,7 @@ class TimeslotCardState extends State<TimeslotCard> {
               ),
               Container(height: 288,child:
               ListView(
-                  children: List<Widget>.generate(this.timeslots.length, (int index) {
+                  children: List<Widget>.generate(numberOfRanges, (int index) {
                     return Column(children:[SizedBox(height: 10,),
                       ChoiceChip(
                         label: Container(
@@ -142,7 +154,7 @@ class TimeslotCardState extends State<TimeslotCard> {
                             height: 40,
                             child:
                             Center(child: Text(
-                              this.timeslots[index],
+                              createEcopointModel.getRangesOfDay(arguments["currentDay"])[index].toString(),
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
@@ -187,11 +199,18 @@ class TimeslotCardState extends State<TimeslotCard> {
                         btnData: ButtonData(
                         'ADD TIMESLOT',
                             () {
-                            setState(() {
-                              //_value = selected ? index : null;
-                              print("TIMESLOT ADDED");
-                              timeslots.add("ADD TIMESLOT HERE");
-                            });},
+                              createEcopointModel.addTimeslot(arguments["currentDay"], '17:00','19:00');
+
+                              setState(() {
+                                //_value = selected ? index : null;
+                                print("TIMESLOT ADDED");
+                                print(numberOfRanges);
+                                numberOfRanges = createEcopointModel.getRangesOfDay(arguments["currentDay"]).length;
+                                print(numberOfRanges);
+                                print("afterNumberOfRanges");
+
+
+                              });},
                         backgroundColor: GREEN_LIGHT,
                       ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/src/widgets/framework.dart';
 
 class PickWeekday extends StatelessWidget {
   final List<bool> isWeekdayAllowed = List.filled(7, false, growable: false);
+  final createEcopointModel = CreateEcopointModel.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +45,12 @@ class PickWeekday extends StatelessWidget {
                 child: Button1(
                   btnData: ButtonData(
                     'CONTINUE',
-                        () {Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
-                        arguments: {
-                          "currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
-                          "daysAvailable": this.isWeekdayAllowed
+                        () {
+                          createEcopointModel.availableWeekdays = this.isWeekdayAllowed;
+                          Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+                          arguments: {
+                            "currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
+                            "daysAvailable": this.isWeekdayAllowed
 
                         });},
                     backgroundColor: BROWN_MEDIUM,

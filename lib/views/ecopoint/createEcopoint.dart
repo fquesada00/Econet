@@ -5,10 +5,15 @@ import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/widgets/button1.dart';
+import 'package:econet/model/create_ecopoint_view_model.dart';
 
 class CreateEcopoint extends StatelessWidget {
+
+  //Set the ecopoint to NULL when user clicks shedule trip!!!! Then everything else should work fine
   ScrollController _controller1 = new ScrollController();
   ScrollController _controller2 = new ScrollController();
+  final createEcopointModel = CreateEcopointModel.instance;
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +36,9 @@ class CreateEcopoint extends StatelessWidget {
               btnData: ButtonData(
                 'SHEDULE TRIP',
                 () {
+                  createEcopointModel.reset();
+                  createEcopointModel.name = arguments["plantName"];
+                  createEcopointModel.address = arguments["address"];
                   Navigator.pushNamed(context, '/pickDeliveryMaterials', arguments: {
                     'ecopointName': "ecopointName",
                     'address': "address",

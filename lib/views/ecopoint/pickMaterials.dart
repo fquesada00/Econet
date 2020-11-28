@@ -1,3 +1,4 @@
+import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
@@ -14,6 +15,7 @@ class _PickMaterialsState extends State<PickMaterials> {
   List<String> residues;
 
   List<String> selectedResidues = List();
+
 
   void fillList() {
     residues.add('Paper');
@@ -87,6 +89,8 @@ class _PickMaterialsState extends State<PickMaterials> {
                   if (selectedResidues.length == 0) {
                     //TODO show snackbar
                   } else {
+                    final createEcopointModel = CreateEcopointModel.instance;
+                    createEcopointModel.selectedResidues = selectedResidues;
                     Navigator.pushNamed(context, '/pickDeliveryDate');
                   }
                 },

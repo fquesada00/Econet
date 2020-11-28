@@ -1,3 +1,4 @@
+import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,7 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
   DateTime _date;
   TimeOfDay _time;
   ButtonData btnDataContinue;
+  CreateEcopointModel createEcopointModel = CreateEcopointModel.instance;
 
   String getWeekDay(int number) {
     switch (number) {
@@ -38,10 +40,15 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     DateTime _actual = DateTime.now().toLocal();
+    print("testing create ecopointModel in pickDeliveryDate.dart - residues:");
+    print(createEcopointModel.selectedResidues);
+
     //TODO show snackbar cuando no hay fecha seleccionada
     btnDataContinue = ButtonData(
       "CONTINUE",
       () {
+        createEcopointModel.deliveryTime = _time;
+        createEcopointModel.deliveryDate = _date;
         Navigator.pushNamed(context, '/pickWeekday');
       },
       enabled: false,
