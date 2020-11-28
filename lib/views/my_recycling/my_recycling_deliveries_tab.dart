@@ -103,6 +103,8 @@ class MyRecyclingDeliveriesTab extends StatelessWidget {
 
   String getRemainingDeliverTime(DateTime from) {
     int aux;
+    if (aux != 0) return aux.toString() + " days";
+
     aux = from.difference(DateTime.now()).inDays;
     if (aux != 0) return aux.toString() + " days";
 
