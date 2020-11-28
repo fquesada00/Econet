@@ -4,6 +4,7 @@ import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AddBags extends StatefulWidget {
@@ -18,6 +19,8 @@ class _AddBagsState extends State<AddBags> {
 
   List<Bag> bagList;
   BagSize bagSize;
+  BagWeight bagWeight;
+  int bagQty;
 
   @override
   void initState() {
@@ -62,22 +65,8 @@ class _AddBagsState extends State<AddBags> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Button1(
-                        btnData: ButtonData('ADD BAGS', () {
-                      showDialog(
-                          context: context,
-                          builder: (context) =>
-                              _BagDialog(_BagSizeDialogContent((BagSize size) {
-                                bagSize = size;
-                                Navigator.pop(context);
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => _BagDialog(
-                                            _BagSizeDialogContent(
-                                                (BagSize size) {
-                                          print('douuuu');
-                                        })));
-                              })));
-                    },
+                        btnData: ButtonData(
+                            'ADD BAGS', () => _showDialogs(context),
                             height: 40,
                             adjust: true,
                             fontWeight: FontWeight.w600,
@@ -93,6 +82,42 @@ class _AddBagsState extends State<AddBags> {
         ),
       ),
     );
+  }
+
+  void _showDialogs(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => _BagDialog(_BagSizeDialogContent((BagSize size) {
+              bagSize = size;
+              Navigator.pop(context);
+              showDialog(
+                  context: context,
+                  builder: (context) =>
+                      _BagDialog(_BagWeightDialogContent((BagWeight weight) {
+                        bagWeight = weight;
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                _BagDialog(_BagQtyDialogContent((int qty) {
+                                  bagQty = qty;
+                                  Bag newBag =
+                                      new Bag(bagSize, bagWeight, bagQty);
+                                  int idx;
+                                  if ((idx = bagList.indexOf(newBag)) != -1) {
+                                    if (bagList[idx].qty + bagQty > 99) {
+                                      bagList[idx].qty = 99;
+                                    } else
+                                      bagList[idx].qty =
+                                          bagList[idx].qty + bagQty;
+                                  } else {
+                                    bagList.add(newBag);
+                                  }
+                                  setState(() {});
+                                  Navigator.pop(context);
+                                }, bagSize, bagWeight)));
+                      })));
+            })));
   }
 }
 
@@ -277,6 +302,161 @@ class _BagSizeDialogContent extends StatelessWidget {
             ),
           ),
         )
+      ],
+    );
+  }
+}
+
+class _BagWeightDialogContent extends StatelessWidget {
+  final Function(BagWeight weight) setBagWeight;
+
+  _BagWeightDialogContent(this.setBagWeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          "Select your bags' and/or objects' weight",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 20),
+        Wrap(
+          spacing: 7,
+          runSpacing: 7,
+          alignment: WrapAlignment.center,
+          children: BagWeight.values
+              .map(
+                (weight) => RaisedButton(
+                  color: _getBagInfoColor(bagWeight: weight),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  padding: EdgeInsets.zero,
+                  onPressed: () => setBagWeight(weight),
+                  child: Container(
+                    height: 120,
+                    width: 120,
+                    alignment: Alignment.center,
+                    child: Text(
+                      bagWeightToString(weight).toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+        SizedBox(height: 20),
+        RaisedButton(
+          color: INFO_COLOR,
+          onPressed: () {},
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 0,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          child: Text(
+            "How can I determine my bags' weights?",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 19,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _BagQtyDialogContent extends StatelessWidget {
+  final Function(int qty) setBagQty;
+  final BagSize bagSize;
+  final BagWeight bagWeight;
+  final _qtyFormKey = GlobalKey<FormState>();
+  int bagQty;
+
+  _BagQtyDialogContent(this.setBagQty, this.bagSize, this.bagWeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+              text: "How many ",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                    text: bagSizeToString(bagSize).toLowerCase(),
+                    style:
+                        TextStyle(color: _getBagInfoColor(bagSize: bagSize))),
+                TextSpan(text: ' and '),
+                TextSpan(
+                    text: bagWeightToString(bagWeight).toLowerCase(),
+                    style: TextStyle(
+                        color: _getBagInfoColor(bagWeight: bagWeight))),
+                TextSpan(text: ' bags or objects will you deliver?')
+              ]),
+        ),
+        Form(
+          key: _qtyFormKey,
+          child: TextFormField(
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.done,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            style: TextStyle(
+              fontSize: 20,
+            ),
+            decoration: InputDecoration(
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                hintText: 'Quantity',
+                errorStyle: TextStyle(
+                  fontSize: 16,
+                )),
+            validator: (value) {
+              int qty = int.parse(value.isEmpty ? '0' : value);
+              if (qty <= 0 || qty > 99)
+                return 'Insert a value between 0 and 99';
+              else {
+                bagQty = qty;
+                return null;
+              }
+            },
+          ),
+        ),
+        Text(
+          'Add up to 99 bags',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18, color: EDIT_COLOR),
+        ),
+        Button1(
+            btnData: ButtonData('ADD BAGS', () {
+          if (_qtyFormKey.currentState.validate()) setBagQty(bagQty);
+        },
+                height: 40,
+                adjust: true,
+                fontWeight: FontWeight.w600,
+                icon: Icon(Icons.add_circle))),
       ],
     );
   }
