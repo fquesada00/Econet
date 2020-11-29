@@ -6,6 +6,7 @@ import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
+import 'package:econet/views/ecopoint/ecopoint_overview.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickDeliveryDate.dart';
 import 'package:econet/views/ecopoint/pickLocation.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
           '/my_recycling': (context) => MyRecycling(),
           '/add_bags': (context) => AddBags(),
           '/my_ecopoint': (context) => MyEcopoint(),
+          '/ecopoint_overview': (context) => EcopointOveriew(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -205,6 +207,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text("My ecopoint"),
               onPressed: () {
                 Navigator.pushNamed(context, '/my_ecopoint');
+              },
+            ),
+            RaisedButton(
+              child: Text("ecopoint overview"),
+              onPressed: () {
+                Navigator.pushNamed(context, '/ecopoint_overview');
               },
             ),
           ],
