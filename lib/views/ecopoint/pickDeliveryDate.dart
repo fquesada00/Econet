@@ -111,17 +111,17 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
                   child: Button1(
                     btnData: ButtonData(
                       "Select a date",
-                      () async {
-                        await showDatePicker(
+                      () {
+                        showDatePicker(
                           context: context,
                           initialDate: _actual,
                           firstDate: _actual,
                           lastDate: DateTime(2100).toLocal(),
                           selectableDayPredicate: (DateTime value) => true,
-                        ).then((value) async {
+                        ).then((value) {
                           if (value == null) return;
                           _date = value;
-                          await showTimePicker(
+                          showTimePicker(
                                   context: context,
                                   initialTime: _time == null
                                       ? TimeOfDay(
@@ -130,16 +130,12 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
                                       : _time)
                               .then((value) {
                             _time = (value == null) ? _time : value;
+                            if (_time != null) {
+                              btnDataContinue.enabled = true;
+                              print("${btnDataContinue.enabled}");
+                            }
                             setState(() {
-                              //TODO no pasa de vista en el caso:
-                              /*
-                              -selecciono fecha, cancelo
-                              -selecciono fecha, hora y cancelo
-                               */
-                              if (_time != null) {
-                                btnDataContinue.enabled = true;
-                                print("${btnDataContinue.enabled}");
-                              }
+                              //TODO: Arreglar bug cuando elegis fecha, cancelas antes de elegir hora, elegis fecha y hora y no te deja continuar
                             });
                           });
                         });
