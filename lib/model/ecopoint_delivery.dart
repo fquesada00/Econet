@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:econet/model/bag.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/model/user.dart';
@@ -10,4 +12,38 @@ class EcopointDelivery {
   bool _isConfirmed; // Si el Ecollector respondio o no
   bool
       _responseValue; // La respuesta del Ecollector (acepta=true, rechaza=false)
+
+  EcopointDelivery(ecopointId, date, bags, user, isConfirmed, response) {
+    _ecopointId = ecopointId;
+    _date = date;
+    _bags = bags;
+    _user = user;
+    _isConfirmed = isConfirmed;
+    _responseValue = response;
+  }
+
+  factory EcopointDelivery.fromJson(String jsonString) {
+
+    Map<String,dynamic> json = jsonDecode(jsonString);
+
+    return EcopointDelivery(
+      json['ecopointId'],
+      json['date'],
+      json['bags'],
+      json['user'],
+      json['isConfirmed'],
+      json['response']
+    );
+  }
+
+  String toJson(){
+    return jsonEncode(<String,dynamic>{
+      'ecopointId' : _ecopointId,
+      'date' : _date,
+      'bags' : _bags,
+      'user' : _user,
+      'isConfirmed' : _isConfirmed,
+      'response' : _responseValue
+    });
+  }
 }
