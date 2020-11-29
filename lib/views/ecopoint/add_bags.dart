@@ -25,13 +25,13 @@ class _AddBagsState extends State<AddBags> {
   @override
   void initState() {
     super.initState();
-
     bagList = [bagData1, bagData2, bagData3];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: BROWN_LIGHT,
       appBar: NavBar(
         backgroundColor: BROWN_LIGHT,
@@ -55,7 +55,7 @@ class _AddBagsState extends State<AddBags> {
                         padding: EdgeInsets.all(15),
                         itemCount: bagList.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return BagInfoRow(bagList[index], true);
+                          return BagInfoRow(bagList, index, true);
                         },
                         separatorBuilder: (BuildContext context, int index) =>
                             SizedBox(height: 8),
@@ -66,7 +66,7 @@ class _AddBagsState extends State<AddBags> {
                     padding: const EdgeInsets.all(8.0),
                     child: Button1(
                         btnData: ButtonData(
-                            'ADD BAGS', () => _showDialogs(context),
+                            'ADD BAGS', () => _showAddBagDialogs(context),
                             height: 40,
                             adjust: true,
                             fontWeight: FontWeight.w600,
@@ -84,7 +84,7 @@ class _AddBagsState extends State<AddBags> {
     );
   }
 
-  void _showDialogs(BuildContext context) {
+  void _showAddBagDialogs(BuildContext context) {
     showDialog(
         context: context,
         builder: (context) => _BagDialog(_BagSizeDialogContent((BagSize size) {
@@ -115,32 +115,33 @@ class _AddBagsState extends State<AddBags> {
                                   }
                                   setState(() {});
                                   Navigator.pop(context);
-                                }, bagSize, bagWeight)));
+                                }, bagSize: bagSize, bagWeight: bagWeight)));
                       })));
             })));
   }
 }
 
 class BagInfoRow extends StatefulWidget {
-  final Bag bagData;
+  final List<Bag> bagList;
+  final int index;
   final bool isEditable;
 
-  BagInfoRow(this.bagData, this.isEditable);
+  BagInfoRow(this.bagList, this.index, this.isEditable);
 
   @override
-  _BagInfoRowState createState() => _BagInfoRowState(bagData, isEditable);
+  _BagInfoRowState createState() =>
+      _BagInfoRowState(bagList, index, isEditable);
 }
 
 class _BagInfoRowState extends State<BagInfoRow> {
-  Bag bagData;
+  List<Bag> bagList;
+  int index;
   bool isEditable;
 
-  _BagInfoRowState(this.bagData, this.isEditable);
+  _BagInfoRowState(this.bagList, this.index, this.isEditable);
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFFE5E2E2),
@@ -165,10 +166,10 @@ class _BagInfoRowState extends State<BagInfoRow> {
                   height: 40,
                   width: 80,
                   decoration: BoxDecoration(
-                      color: _getBagInfoColor(bagSize: bagData.size),
+                      color: _getBagInfoColor(bagSize: bagList[index].size),
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   alignment: Alignment.center,
-                  child: Text(bagSizeToString(bagData.size),
+                  child: Text(bagSizeToString(bagList[index].size),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -192,10 +193,10 @@ class _BagInfoRowState extends State<BagInfoRow> {
                   height: 40,
                   width: 80,
                   decoration: BoxDecoration(
-                      color: _getBagInfoColor(bagWeight: bagData.weight),
+                      color: _getBagInfoColor(bagWeight: bagList[index].weight),
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   alignment: Alignment.center,
-                  child: Text(bagWeightToString(bagData.weight),
+                  child: Text(bagWeightToString(bagList[index].weight),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -212,7 +213,7 @@ class _BagInfoRowState extends State<BagInfoRow> {
                 color: Colors.black,
               ),
               child: Text(
-                'x' + bagData.qty.toString(),
+                'x' + bagList[index].qty.toString(),
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -226,10 +227,173 @@ class _BagInfoRowState extends State<BagInfoRow> {
                 iconSize: 30,
                 padding: EdgeInsets.zero,
                 constraints: BoxConstraints(),
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => _BagDialog(_EditBagDialogContent(
+                        bagList, index, () => setState(() {}))),
+                  );
+                },
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _EditBagDialogContent extends StatefulWidget {
+  final List<Bag> bagList;
+  final int index;
+  static Bag bagDataEdit;
+  final Function setAncestorState;
+
+  _EditBagDialogContent(this.bagList, this.index, this.setAncestorState) {
+    if (bagDataEdit == null) {
+      bagDataEdit = new Bag(
+          bagList[index].size, bagList[index].weight, bagList[index].qty);
+    }
+  }
+
+  @override
+  __EditBagDialogContentState createState() =>
+      __EditBagDialogContentState(bagDataEdit);
+}
+
+class __EditBagDialogContentState extends State<_EditBagDialogContent> {
+  Bag bagDataEdit;
+
+  __EditBagDialogContentState(this.bagDataEdit);
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        _EditBagDialogContent.bagDataEdit = null;
+        return true;
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            'Edit bags/objets information',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Column(
+            children: <Widget>[
+              Text('Quantity',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      fontFamily: 'SFProText')),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                  showDialog(
+                      context: context,
+                      builder: (context) =>
+                          _BagDialog(_BagQtyDialogContent((int qty) {
+                            bagDataEdit.qty = qty;
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              builder: (context) => _BagDialog(
+                                  _EditBagDialogContent(widget.bagList,
+                                      widget.index, widget.setAncestorState)),
+                            );
+                          }, isEdit: true, initQty: bagDataEdit.qty)));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  width: 230,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: EDIT_COLOR,
+                      borderRadius: BorderRadius.circular(7)),
+                  child: Text(
+                    bagDataEdit.qty.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          RaisedButton(
+              elevation: 0,
+              highlightElevation: 0,
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 18),
+              color: ERROR_COLOR,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7)),
+              onPressed: () {},
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.delete_forever,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    Text('DELETE',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        )),
+                  ])),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Button1(
+                btnData: ButtonData(
+                  'SAVE',
+                  () {
+                    int idx = widget.index;
+                    widget.bagList[idx] = bagDataEdit;
+                    // widget.bagList[idx].size = bagDataEdit.size;
+                    // widget.bagList[idx].weight = bagDataEdit.weight;
+                    // widget.bagList[idx].qty = bagDataEdit.qty;
+                    _EditBagDialogContent.bagDataEdit = null;
+                    widget.setAncestorState();
+                    Navigator.pop(context);
+                  },
+                  backgroundColor: GREEN_DARK,
+                  adjust: true,
+                  height: 40,
+                  width: 100,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ),
+              Button1(
+                btnData: ButtonData(
+                  'DISCARD',
+                  () {
+                    _EditBagDialogContent.bagDataEdit = null;
+                    Navigator.pop(context);
+                  },
+                  backgroundColor: RED_MEDIUM,
+                  adjust: true,
+                  height: 40,
+                  width: 100,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -384,37 +548,50 @@ class _BagQtyDialogContent extends StatelessWidget {
   final BagSize bagSize;
   final BagWeight bagWeight;
   final _qtyFormKey = GlobalKey<FormState>();
+  final int initQty;
+  final bool isEdit;
   int bagQty;
 
-  _BagQtyDialogContent(this.setBagQty, this.bagSize, this.bagWeight);
+  _BagQtyDialogContent(this.setBagQty,
+      {this.bagSize, this.bagWeight, this.initQty, this.isEdit = false});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-              text: "How many ",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
-              children: <TextSpan>[
-                TextSpan(
-                    text: bagSizeToString(bagSize).toLowerCase(),
-                    style:
-                        TextStyle(color: _getBagInfoColor(bagSize: bagSize))),
-                TextSpan(text: ' and '),
-                TextSpan(
-                    text: bagWeightToString(bagWeight).toLowerCase(),
+        isEdit
+            ? Text(
+                'Edit bag quantity',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            : RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                    text: "How many ",
                     style: TextStyle(
-                        color: _getBagInfoColor(bagWeight: bagWeight))),
-                TextSpan(text: ' bags or objects will you deliver?')
-              ]),
-        ),
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: bagSizeToString(bagSize).toLowerCase(),
+                          style: TextStyle(
+                              color: _getBagInfoColor(bagSize: bagSize))),
+                      TextSpan(text: ' and '),
+                      TextSpan(
+                          text: bagWeightToString(bagWeight).toLowerCase(),
+                          style: TextStyle(
+                              color: _getBagInfoColor(bagWeight: bagWeight))),
+                      TextSpan(text: ' bags or objects will you deliver?')
+                    ]),
+              ),
         Form(
           key: _qtyFormKey,
           child: TextFormField(
@@ -422,6 +599,7 @@ class _BagQtyDialogContent extends StatelessWidget {
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.done,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            initialValue: initQty == null ? '0' : initQty.toString(),
             style: TextStyle(
               fontSize: 20,
             ),
@@ -449,14 +627,19 @@ class _BagQtyDialogContent extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 18, color: EDIT_COLOR),
         ),
-        Button1(
-            btnData: ButtonData('ADD BAGS', () {
-          if (_qtyFormKey.currentState.validate()) setBagQty(bagQty);
-        },
-                height: 40,
-                adjust: true,
-                fontWeight: FontWeight.w600,
-                icon: Icon(Icons.add_circle))),
+        isEdit
+            ? Button1(
+                btnData: ButtonData('EDIT', () {
+                if (_qtyFormKey.currentState.validate()) setBagQty(bagQty);
+              }, height: 40, adjust: true, fontWeight: FontWeight.w600))
+            : Button1(
+                btnData: ButtonData('ADD BAGS', () {
+                if (_qtyFormKey.currentState.validate()) setBagQty(bagQty);
+              },
+                    height: 40,
+                    adjust: true,
+                    fontWeight: FontWeight.w600,
+                    icon: Icon(Icons.add_circle))),
       ],
     );
   }

@@ -1,6 +1,6 @@
 class Bag {
-  BagSize _size;
-  BagWeight _weight;
+  BagSize size;
+  BagWeight weight;
   int qty;
 
   @override
@@ -8,17 +8,13 @@ class Bag {
       identical(this, other) ||
       other is Bag &&
           runtimeType == other.runtimeType &&
-          _size == other._size &&
-          _weight == other._weight;
+          size == other.size &&
+          weight == other.weight;
 
   @override
-  int get hashCode => _size.hashCode ^ _weight.hashCode;
+  int get hashCode => size.hashCode ^ weight.hashCode;
 
-  Bag(this._size, this._weight, this.qty);
-
-  BagSize get size => _size;
-
-  BagWeight get weight => _weight;
+  Bag(this.size, this.weight, this.qty);
 }
 
 enum BagSize { small, medium, large, extraLarge }
