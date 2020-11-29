@@ -1,3 +1,4 @@
+import 'package:econet/model/my_user.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
@@ -180,9 +181,9 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                   //Navigator.popUntil(context, ModalRoute.withName('/auth'));
                   Navigator.pushReplacementNamed(
                       context, '/ecollector_or_regular',
-                      arguments: MyUser(
-                          firstName: nameController.text,
-                          lastName: lastNameController.text));
+                      arguments: MyUser.partial(
+                          nameController.text+
+                          lastNameController.text, emailController.text));
                 } else {
                   print("not equal");
                 }

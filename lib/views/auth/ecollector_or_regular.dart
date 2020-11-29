@@ -1,3 +1,4 @@
+import 'package:econet/model/my_user.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';

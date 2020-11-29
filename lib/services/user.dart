@@ -1,7 +1,8 @@
+import 'package:econet/model/my_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
+
 import 'dart:async';
 
 // class UserApi {
@@ -42,43 +43,43 @@ import 'dart:async';
 //   }
 // }
 
-class MyUser {
-  String userId;
-  String firstName, lastName, email, type, token;
-  Future<String> tokenFuture;
+// class MyUser {
+//   String userId;
+//   String firstName, lastName, email, type, token;
+//   Future<String> tokenFuture;
 
-  MyUser(
-      {this.userId,
-      this.firstName,
-      this.lastName,
-      this.email,
-      this.type,
-      this.token,
-      this.tokenFuture}) {
-    getUserToken();
-  }
+//   MyUser(
+//       {this.userId,
+//       this.firstName,
+//       this.lastName,
+//       this.email,
+//       this.type,
+//       this.token,
+//       this.tokenFuture}) {
+//     getUserToken();
+//   }
 
-  getUserToken() async {
-    if (this.tokenFuture != null) {
-      this.token = await this.tokenFuture;
-    }
-  }
+//   getUserToken() async {
+//     if (this.tokenFuture != null) {
+//       this.token = await this.tokenFuture;
+//     }
+//   }
 
-  factory MyUser.fromJson(Map<String, dynamic> map) {
-    return MyUser(
-      userId: map['id'] ?? 1,
-      firstName: map['firstName'] ?? "beto",
-      lastName: map['lastName'] ?? "sicardi",
-      email: map['email'] ?? "beto@gmail.com",
-      type: map['type'] ?? "regular",
-      token: map['token'] ?? 0,
-    );
-  }
+//   factory MyUser.fromJson(Map<String, dynamic> map) {
+//     return MyUser(
+//       userId: map['id'] ?? 1,
+//       firstName: map['firstName'] ?? "beto",
+//       lastName: map['lastName'] ?? "sicardi",
+//       email: map['email'] ?? "beto@gmail.com",
+//       type: map['type'] ?? "regular",
+//       token: map['token'] ?? 0,
+//     );
+//   }
 
-  toJSON() {
-    return {'userType': "ecollector", 'lastName': "TERMEKH"};
-  }
-}
+//   toJSON() {
+//     return {'userType': "ecollector", 'lastName': "TERMEKH"};
+//   }
+// }
 
 class AppUrl {
   static const String baseUrl =
@@ -97,7 +98,7 @@ enum AuthStatus {
 }
 
 abstract class AuthProvider implements ChangeNotifier {
-  Stream<MyUser> onAuthStateChanged();
+  Stream<User> onAuthStateChanged();
   Future<String> emailLogin(String email, String password);
   Future<String> registerWithEmailAndPassword(String email, String password);
   Future<UserCredential> signInWithGoogle();
@@ -113,21 +114,22 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
   String _token;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  MyUser _userFromFirebase(User firebaseUser) {
-    print("FIREBASE USER ===== " + firebaseUser.toString());
-    return firebaseUser == null
-        ? null
-        : MyUser(
-            email: firebaseUser.email,
-            userId: firebaseUser.uid,
-            tokenFuture: firebaseUser.getIdToken());
-  }
+  // MyUser _userFromFirebase(User firebaseUser) {
+  //   print("FIREBASE USER ===== " + firebaseUser.toString());
+  //   return firebaseUser == null
+  //       ? null
+  //       : MyUser(
+  //           firebaseUser.displayName,
+  //           firebaseUser.email,
+  //         );
+  // }
 
   @override
-  Stream<MyUser> onAuthStateChanged() {
+  Stream<User> onAuthStateChanged() {
     return _firebaseAuth
         .authStateChanges()
-        .map((user) => _userFromFirebase(user));
+        // .map((user) => _userFromFirebase(user)
+        ;
   }
 
   @override
