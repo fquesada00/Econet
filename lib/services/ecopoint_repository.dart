@@ -1,8 +1,12 @@
 import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/my_user.dart';
 import 'package:econet/services/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-abstract class EcopointProvider{
+abstract class EcopointProvider implements ChangeNotifier{
   Future<Ecopoint> getEcopoint(String ecopointId);
   Future<List<Ecopoint>> getEcopointsByRadius(double radius, double lat, double long);
   Future<List<Ecopoint>> getEcopointsByMaterials(List<String> materials);
@@ -11,16 +15,36 @@ abstract class EcopointProvider{
   Future updateEcopoint(Ecopoint ecopoint);
 }
 
-class FirebaseEcopointProvider implements EcopointProvider{
+class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier{
 
-  FirebaseEcopointProvider(MyUser userProvider){
+  String _ecopointUrl = "https://us-central1-econet-8552d.cloudfunctions.net/ecopoint";
+
+  FirebaseEcopointProvider(){
 
   }
 
   @override
-  Future createEcopoint(Ecopoint ecopoint) {
-    // TODO: implement createEcopoint
-    throw UnimplementedError();
+  Future createEcopoint(Ecopoint ecopoint) async{
+    if(ecopoint == null){
+      print("ECOPOINT ES NULL");
+      //TODO: verificar campos dentro de la clase
+    }else{
+      try{
+        print("DEBUG:Empezamos");
+        final user = await getCurrentUser();
+        final token = await user.getIdToken();
+        print("DEBUG: Antes del request");
+        final response = await http.post(_ecopointUrl+"?email="+ user.email,
+        body: ecopoint.toJSON(),
+        headers: {
+        'Authorization': 'Bearer $token',
+        },);
+        print("DEBUG: Despues del request del request");
+
+      }catch(e){
+        print( e.toString()); // TODO ver si podemos manejar mejor el error
+      }
+    }
   }
 
   @override
@@ -52,6 +76,17 @@ class FirebaseEcopointProvider implements EcopointProvider{
       ) {
     // TODO: implement updateEcopoint
     throw UnimplementedError();
+  }
+
+  Future<User> getCurrentUser() async{
+      final user = await FirebaseAuth.instance.currentUser;
+
+      return user;
+      // final idToken = await user.getIdToken();
+      
+
+    // Create authorization header
+    // final header = { "authorization": 'Bearer $token' };
   }
 
 }

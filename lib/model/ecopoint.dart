@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:econet/model/timeslot.dart';
 import 'package:econet/model/residue.dart';
-import 'package:econet/model/user.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'my_user.dart';
 
 class Ecopoint {
   String _id;
-  User _ecollector;
+  MyUser _ecollector;
   bool _isPlant;
   List<Residue> _residues;
   String _plantId;
@@ -40,4 +44,26 @@ class Ecopoint {
       this._name,
       this._address,
       this._coordinates);
+
+  String toJSON() {
+    return json.encode({
+      'latitude': this._coordinates.latitude,
+      'longitude': this._coordinates.longitude,
+      'isPlant': this._isPlant,
+      'openHours': this._openHours,
+      'deadline': this._deadline,
+      'address': this._address,
+      'residues': this._residues
+    });
+  }
+
+  double getLatitude(){
+    return this._coordinates.latitude;
+  }
+
+   double getLongitude(){
+    return this._coordinates.longitude;
+  }
+
+
 }

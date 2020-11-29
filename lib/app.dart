@@ -1,15 +1,17 @@
 import 'package:econet/auth_widget.dart';
+import 'package:econet/model/ecopoint.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/ecopoint_repository.dart';
 import 'package:econet/views/GMap/filter_testing.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
-import 'package:econet/views/Gmap/EcopointInfo.dart';
+// import 'package:econet/views/Gmap/EcopointInfo.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:econet/views/GMap/Ecopoint.dart';
+// import 'package:econet/views/GMap/Ecopoint.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
@@ -20,6 +22,9 @@ import 'package:econet/services/user.dart';
 
 import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickTime.dart';
+
+import 'model/my_user.dart';
+import 'model/residue.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -106,6 +111,15 @@ class _MyHomePageState extends State<MyHomePage> {
               '##Para testing##',
             ),
             RaisedButton(
+              child: Text("Create ecopoint"),
+              onPressed: (){
+                MyUser user = MyUser.complete("agustintormakh", "agustormakh@gmail.com", "11740590", "hola", true);
+                final ecopoint = Ecopoint(user, false,[Residue.paper, Residue.glass], null, null, null, null, null, null, null);
+                final repository = Provider.of<EcopointProvider>(context);
+                repository.createEcopoint(ecopoint);
+              },
+            ),
+            RaisedButton(
               child: Text("maps"),
               onPressed: () {
                 Navigator.pushNamed(context, '/GMap');
@@ -135,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemBuilder: (context, index) {
                         Ecopoint aux = ecopoints[index];
                         return ListTile(
-                          title: Text('${aux.latitude},${aux.longitude}'),
+                          title: Text('${aux.getLatitude()},${aux.getLongitude()}'),
                         );
                       },
                     ),

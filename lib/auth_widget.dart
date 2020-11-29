@@ -1,6 +1,7 @@
 import 'package:econet/app.dart';
 import 'package:econet/services/user.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +12,7 @@ class AuthWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context, listen: false);
     return Container(
-      child: StreamBuilder<MyUser>(
+      child: StreamBuilder<User>(
           stream: auth.onAuthStateChanged(),
           builder: (BuildContext context, AsyncSnapshot snap) {
             print(
