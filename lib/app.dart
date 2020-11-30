@@ -1,5 +1,6 @@
 import 'package:econet/auth_widget.dart';
 import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/timeslot.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/services/ecopoint_repository.dart';
 import 'package:econet/views/GMap/filter_testing.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:provider/provider.dart';
 import 'package:econet/services/user.dart';
@@ -33,7 +35,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<AuthProvider>(
-              create: (_) => FirebaseAuthProvider())
+              create: (_) => FirebaseAuthProvider()),
+          ChangeNotifierProvider<EcopointProvider>(
+              create: (_) => FirebaseEcopointProvider()),
         ],
         child: MaterialApp(
           initialRoute: '/auth',
@@ -99,6 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     //Widget para variar las configuraciones del status bar entre las views
+    final ecopointRepository =
+        Provider.of<EcopointProvider>(context, listen: false);
+    final userRepository = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -111,12 +118,34 @@ class _MyHomePageState extends State<MyHomePage> {
               '##Para testing##',
             ),
             RaisedButton(
+              child: Text("GET ECOPOINTS"),
+              onPressed: () {
+                print("HOLAAAAAAAAAAAAAAAA 1");
+                ecopointRepository.getEcopoint("09y5DtUsuTbOkiAFjAsM");
+                print("HOLAAAAAAAAAAAAAAAA 2");
+              },
+            ),
+            RaisedButton(
               child: Text("Create ecopoint"),
-              onPressed: (){
-                MyUser user = MyUser.complete("agustintormakh", "agustormakh@gmail.com", "11740590", "hola", true);
-                final ecopoint = Ecopoint(user, false,[Residue.paper, Residue.glass], null, null, null, null, null, null, null);
-                final repository = Provider.of<EcopointProvider>(context);
-                repository.createEcopoint(ecopoint);
+              onPressed: () {
+                MyUser user = MyUser.complete("agustintormakh",
+                    "agustormakh@gmail.com", "11740590", "hola", true);
+                final ecopoint = Ecopoint(
+                    user,
+                    false,
+                    [Residue.paper, Residue.glass],
+                    "",
+                    new DateTime.now(),
+                    [new TimeSlot(5), new TimeSlot(3)],
+                    "",
+                    "testing create",
+                    "chacras del mar",
+                    LatLng(20.04, 30.04));
+
+                ecopointRepository
+                    .createEcopoint(ecopoint)
+                    .catchError((error) => print(error.toString()))
+                    .then((value) => print(value.toString()));
               },
             ),
             RaisedButton(
@@ -149,7 +178,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemBuilder: (context, index) {
                         Ecopoint aux = ecopoints[index];
                         return ListTile(
-                          title: Text('${aux.getLatitude()},${aux.getLongitude()}'),
+                          title: Text(
+                              '${aux.getLatitude()},${aux.getLongitude()}'),
                         );
                       },
                     ),

@@ -50,20 +50,18 @@ class Ecopoint {
       'latitude': this._coordinates.latitude,
       'longitude': this._coordinates.longitude,
       'isPlant': this._isPlant,
-      'openHours': this._openHours,
-      'deadline': this._deadline,
+      'openHours': this._openHours.toString(),
+      'deadline': this._deadline.toString(),
       'address': this._address,
-      'residues': this._residues
+      'residues': this._residues.toString()
     });
   }
 
-  double getLatitude(){
+  double getLatitude() {
     return this._coordinates.latitude;
   }
 
-   double getLongitude(){
+  double getLongitude() {
     return this._coordinates.longitude;
   }
-
-
 }
