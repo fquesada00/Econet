@@ -45,16 +45,18 @@ class Ecopoint {
       this._address,
       this._coordinates);
 
-  String toJSON() {
-    return json.encode({
-      'latitude': this._coordinates.latitude,
-      'longitude': this._coordinates.longitude,
-      'isPlant': this._isPlant,
+  Map<String,dynamic> toJSON() {
+
+    return {
+      'latitude': this._coordinates.latitude.toString(),
+      'longitude': this._coordinates.longitude.toString(),
+      'isPlant': this._isPlant.toString(),
       'openHours': this._openHours.toString(),
       'deadline': this._deadline.toString(),
       'address': this._address,
-      'residues': this._residues.toString()
-    });
+      'residues': this._residues.toString(),
+      'plantId' : 0.toString()
+    };
   }
 
   double getLatitude() {

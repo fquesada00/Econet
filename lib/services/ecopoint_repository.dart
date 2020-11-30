@@ -29,10 +29,11 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
       //TODO: verificar campos dentro de la clase
     } else {
       try {
-        print("DEBUG:Empezamos");
+       //print("DEBUG:Empezamos");
         final user = await getCurrentUser();
         final token = await user.getIdToken();
-        print("DEBUG: Antes del request");
+        //print("DEBUG: Antes del request");
+        print(ecopoint.toJSON());
         final response = await http.post(
           _ecopointUrl + "?email=" + user.email,
           body: ecopoint.toJSON(),
@@ -40,8 +41,8 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
             'Authorization': 'Bearer $token',
           },
         );
-        print("RESPONSE = " + response.toString());
-        print("DEBUG: Despues del request " + ecopoint.toJSON());
+        print("RESPONSE = " + response.body.toString());
+        //print("DEBUG: Despues del request " + ecopoint.toJSON());
       } catch (e) {
         print(e.toString()); // TODO ver si podemos manejar mejor el error
       }
