@@ -27,7 +27,7 @@ class PositiveNegativeButtons extends StatelessWidget {
         children: <Widget>[
           Button1(
             btnData: ButtonData(
-              'SAVE',
+              positiveButtonTExt,
               positiveButtonFunction,
               backgroundColor: GREEN_LIGHT,
               adjust: true,
@@ -39,7 +39,7 @@ class PositiveNegativeButtons extends StatelessWidget {
           ),
           Button1(
             btnData: ButtonData(
-              'DISCARD',
+              negativeButtonText,
               negativeButtonFunction,
               backgroundColor: RED_MEDIUM,
               adjust: true,

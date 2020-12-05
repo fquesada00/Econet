@@ -5,7 +5,7 @@ import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MyDeliveryDetails extends StatelessWidget {
+class PendingDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EcopointDelivery ecopointDelivery =
@@ -13,7 +13,7 @@ class MyDeliveryDetails extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: GREEN_LIGHT,
+      backgroundColor: BROWN_LIGHT,
       body: Column(
         children: <Widget>[
           Container(
@@ -21,13 +21,17 @@ class MyDeliveryDetails extends StatelessWidget {
             child: NavBar(
               text: ecopointDelivery.user.fullName,
               withBack: true,
-              backgroundColor: GREEN_LIGHT,
-              textColor: GREEN_DARK,
+              backgroundColor: BROWN_LIGHT,
+              textColor: BROWN_DARK,
+              rightIcon: Icons.delete_forever,
+              onPressedRightIcon: () {
+                print("BORRARRRRR");
+              },
             ),
           ),
           Expanded(
             child: SingleChildScrollView(
-              child: DeliveryInfoList(ecopointDelivery, GREEN_DARK),
+              child: DeliveryInfoList(ecopointDelivery, BROWN_DARK),
             ),
           ),
         ],

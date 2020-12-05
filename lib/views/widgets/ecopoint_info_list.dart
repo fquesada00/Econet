@@ -25,6 +25,7 @@ class EcopointInfoList extends StatelessWidget {
               null,
               "assets/icons/econet-circle.svg",
               "Ecopoint name",
+              GREEN_DARK,
               Text(
                 ecopoint.name,
                 textAlign: TextAlign.center,
@@ -38,7 +39,7 @@ class EcopointInfoList extends StatelessWidget {
         if (!withoutPicture)
           Column(
             children: <Widget>[
-              EcollectorInfo(ecopoint.ecollector.fullName),
+              EcollectorInfo(ecopoint.ecollector.fullName, GREEN_DARK),
               if (button != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
@@ -50,6 +51,7 @@ class EcopointInfoList extends StatelessWidget {
             Icons.room,
             null,
             "Address",
+            GREEN_DARK,
             Text(
               ecopoint.address,
               textAlign: TextAlign.center,
@@ -64,6 +66,7 @@ class EcopointInfoList extends StatelessWidget {
             FaIcon(FontAwesomeIcons.recycle).icon,
             null,
             "Collects",
+            GREEN_DARK,
             Container(
               height: 30,
               alignment: Alignment.center,
@@ -89,6 +92,7 @@ class EcopointInfoList extends StatelessWidget {
             Icons.calendar_today,
             null,
             "Delivers on",
+            GREEN_DARK,
             Text(
               ecopoint.deadline.toIso8601String().substring(0, 10),
               textAlign: TextAlign.center,
@@ -104,6 +108,7 @@ class EcopointInfoList extends StatelessWidget {
             null,
             null,
             "Available at",
+            GREEN_DARK,
             Column(
               children: List.from(
                 ecopoint.openHours
@@ -155,6 +160,7 @@ class EcopointInfoList extends StatelessWidget {
             null,
             null,
             "Additional information",
+            GREEN_DARK,
             Text(
               ecopoint.additionalInfo,
               textAlign: TextAlign.center,

@@ -7,13 +7,17 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
   final Color textColor;
   final double height;
+  final IconData rightIcon;
+  final Function onPressedRightIcon;
 
   NavBar(
       {this.text,
       this.withBack,
       this.backgroundColor,
       this.textColor,
-      this.height = 120});
+      this.height = 120,
+      this.rightIcon,
+      this.onPressedRightIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +40,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             )
           else
-            (Spacer()),
+            Spacer(),
           Expanded(
             flex: 4,
             child: Padding(
@@ -53,7 +57,19 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          Spacer(),
+          if (rightIcon != null)
+            Expanded(
+              child: GestureDetector(
+                onTap: onPressedRightIcon,
+                child: Icon(
+                  rightIcon,
+                  size: 40,
+                  color: Colors.red,
+                ),
+              ),
+            )
+          else
+            Spacer(),
         ],
       ),
     );

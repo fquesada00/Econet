@@ -9,14 +9,15 @@ import 'button1.dart';
 import 'ecollector_info.dart';
 
 class DeliveryInfoList extends StatelessWidget {
-  EcopointDelivery ecopointDelivery;
+  final EcopointDelivery ecopointDelivery;
+  final Color backgroundColor;
 
-  DeliveryInfoList(this.ecopointDelivery);
+  DeliveryInfoList(this.ecopointDelivery, this.backgroundColor);
 
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      EcollectorInfo(ecopointDelivery.user.fullName),
+      EcollectorInfo(ecopointDelivery.user.fullName, backgroundColor),
       Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: Button1(
@@ -25,7 +26,7 @@ class DeliveryInfoList extends StatelessWidget {
             () {
               print("no se que se deberia hacer aca");
             },
-            backgroundColor: GREEN_DARK,
+            backgroundColor: backgroundColor,
             adjust: true,
             height: 60,
             width: 190,
@@ -37,6 +38,7 @@ class DeliveryInfoList extends StatelessWidget {
           Icons.room,
           null,
           "Ecopoint address",
+          backgroundColor,
           Text(
             "Avenida siempreviva 1234",
             //TODO: DEBERIA BUSCAR EL ECOPOINT CON EL ID Y SACAR EL ADDRESS
@@ -52,6 +54,7 @@ class DeliveryInfoList extends StatelessWidget {
           Icons.calendar_today,
           null,
           "Deliver scheduled for",
+          backgroundColor,
           Text(
             ecopointDelivery.date.toIso8601String().substring(0, 10),
             textAlign: TextAlign.center,
@@ -68,6 +71,7 @@ class DeliveryInfoList extends StatelessWidget {
             null,
             null,
             "Bags/Objects",
+            backgroundColor,
             ConstrainedBox(
               constraints: BoxConstraints(maxHeight: 330),
               child: ListView.separated(

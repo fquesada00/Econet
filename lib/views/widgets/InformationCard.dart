@@ -7,11 +7,12 @@ class InformationCard extends StatelessWidget {
   IconData icon;
   String svgUrl;
   String name;
+  Color nameColor;
   Widget content;
   bool editable;
 
-  InformationCard(
-      this.icon, this.svgUrl, this.name, this.content, this.editable);
+  InformationCard(this.icon, this.svgUrl, this.name, this.nameColor,
+      this.content, this.editable);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class InformationCard extends StatelessWidget {
                     name,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: GREEN_DARK,
+                      color: nameColor,
                       fontSize: 22,
                       fontFamily: 'SFProDisplay',
                       fontWeight: FontWeight.w500,

@@ -8,12 +8,13 @@ import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:econet/views/ecopoint/ecopoint_details.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/ecopoint_overview.dart';
-import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickDeliveryDate.dart';
 import 'package:econet/views/ecopoint/pickLocation.dart';
 import 'package:econet/views/ecopoint/pickMaterials.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
 import 'package:econet/views/my_ecopoint/my_ecopoint.dart';
+import 'package:econet/views/my_ecopoint/pending_details.dart';
+import 'package:econet/views/my_ecopoint/request_details.dart';
 import 'package:econet/views/my_recycling/my_delivery_details.dart';
 import 'package:econet/views/my_recycling/my_recycling.dart';
 import 'package:econet/views/settings/settings.dart';
@@ -66,6 +67,8 @@ class MyApp extends StatelessWidget {
           '/ecopoint_overview': (context) => EcopointOveriew(),
           '/ecopoint_details': (context) => EcopointDetails(),
           '/my_delivery_details': (context) => MyDeliveryDetails(),
+          '/request_delivery_details': (context) => RequestDetails(),
+          '/pending_delivery_details': (context) => PendingDetails(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -152,22 +155,23 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                   child: Text("ecopointExpanded"),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/ecopointExpanded', arguments: {
-                      'ecopointName': "Plant 1",
-                      'address': "Adress 1234",
-                      'distance': 0.2,
-                      'residues': [
-                        'Paper',
-                        'Plastic',
-                        'Glass',
-                        'Metal',
-                        'Electronics',
-                        'Wood',
-                        'Textile'
-                      ],
-                      'ecollector': "ecollector",
-                      'deliveryDate': new DateTime.utc(2020, 10, 26),
-                    });
+                    Navigator.pushNamed(context, '/ecopointExpanded',
+                        arguments: {
+                          'ecopointName': "Plant 1",
+                          'address': "Adress 1234",
+                          'distance': 0.2,
+                          'residues': [
+                            'Paper',
+                            'Plastic',
+                            'Glass',
+                            'Metal',
+                            'Electronics',
+                            'Wood',
+                            'Textile'
+                          ],
+                          'ecollector': "ecollector",
+                          'deliveryDate': new DateTime.utc(2020, 10, 26),
+                        });
                   }),
               RaisedButton(
                   child: Text("pickWeekday"),

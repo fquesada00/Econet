@@ -1,5 +1,6 @@
 import 'package:econet/model/bag.dart';
 import 'package:econet/model/ecopoint_delivery.dart';
+import 'package:econet/model/timerange.dart';
 import 'package:econet/model/user.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -97,7 +98,7 @@ class MyRecyclingDeliveriesTab extends StatelessWidget {
                         ),
                         Chip(
                           label: Text(
-                            getRemainingDeliverTime(ecopointsList[index].date),
+                            TimeRange.getRemainingDeliverTime(ecopointsList[index].date),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
@@ -133,18 +134,5 @@ class MyRecyclingDeliveriesTab extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String getRemainingDeliverTime(DateTime from) {
-    int aux;
-
-    aux = from.difference(DateTime.now()).inDays;
-    if (aux != 0) return aux.toString() + " days";
-
-    aux = from.difference(DateTime.now()).inHours;
-    if (aux != 0) return aux.toString() + " hours";
-
-    aux = from.difference(DateTime.now()).inMinutes;
-    return aux.toString() + " minutes";
   }
 }
