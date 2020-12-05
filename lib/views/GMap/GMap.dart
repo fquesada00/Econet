@@ -4,13 +4,13 @@ import 'dart:ui';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
 import 'package:econet/views/settings/settings_app_tab.dart';
+import 'package:econet/views/widgets/EconetButton.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'Ecopoint.dart';
-import 'EconetButton.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:econet/views/widgets/GMapNavBar.dart';
@@ -90,7 +90,7 @@ class GMapState extends State<GMap> {
               margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
               child: EconetButton(onPressed: () {
                 print("HOLA");
-              }),
+              }, backgroundColor: GREEN_LIGHT,),
               alignment: Alignment.bottomRight,
             ),
         ],

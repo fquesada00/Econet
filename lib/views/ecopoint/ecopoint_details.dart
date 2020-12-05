@@ -3,14 +3,14 @@ import 'package:econet/model/residue.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:econet/model/user.dart';
 import 'package:econet/presentation/constants.dart';
-import 'package:econet/views/widgets/accept_reject_bottom.dart';
+import 'package:econet/views/widgets/EconetButton.dart';
 import 'package:econet/views/widgets/ecopoint_info_list.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class EcopointOveriew extends StatelessWidget {
+class EcopointDetails extends StatelessWidget {
   Ecopoint ecopoint = new Ecopoint(
       new User("jerusa jerusalinsky", "", "", "0303456", true),
       false,
@@ -43,28 +43,25 @@ class EcopointOveriew extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(bottom: 15),
             child: NavBar(
-              text: 'Ecopoint overview',
+              text: ecopoint.name,
               withBack: true,
               backgroundColor: GREEN_LIGHT,
               textColor: GREEN_DARK,
             ),
           ),
           Expanded(
-            child: Stack(
-              children: <Widget>[
-                SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 100),  //tamanio del widget inferior
-                  child: EcopointInfoList(ecopoint, true, null),
+            child: SingleChildScrollView(
+              child: EcopointInfoList(
+                ecopoint,
+                false,
+                SizedBox(
+                  height: 60,
+                  width: 220,
+                  child: EconetButton(onPressed: () {
+                    print("HOLA");
+                  }, backgroundColor: GREEN_DARK,),
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: AcceptOrRejectBottom("Confirm", "Discard", () {
-                    print("hmhm");
-                  }, () {
-                    print("hmhmn't");
-                  }),
-                ),
-              ],
+              ),
             ),
           ),
         ],

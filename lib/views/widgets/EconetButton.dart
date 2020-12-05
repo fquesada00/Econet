@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EconetButton extends StatelessWidget {
-  EconetButton({@required this.onPressed});
   final GestureTapCallback onPressed;
+  Color backgroundColor;
+
+  EconetButton({@required this.onPressed, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-
       padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -31,7 +32,7 @@ class EconetButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(62.0),
       ),
-      color: Color(0xFFA3CB8F),
+      color: backgroundColor,
       onPressed: onPressed,
     );
   }

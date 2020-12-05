@@ -33,7 +33,7 @@ class MyEcopointDetailsTab extends StatelessWidget {
     //----------------------------------------------------
 
     return SingleChildScrollView(
-      child: EcopointInfoList(ecopoint),
+      child: EcopointInfoList(ecopoint, true, null),
     );
   }
 }

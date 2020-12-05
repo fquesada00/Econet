@@ -5,6 +5,7 @@ import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/add_bags.dart';
+import 'package:econet/views/ecopoint/ecopoint_details.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/ecopoint_overview.dart';
 import 'package:econet/views/ecopoint/pickDelivery.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
           '/add_bags': (context) => AddBags(),
           '/my_ecopoint': (context) => MyEcopoint(),
           '/ecopoint_overview': (context) => EcopointOveriew(),
+          '/ecopoint_details': (context) => EcopointDetails(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -97,125 +99,133 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '##Para testing##',
-            ),
-            RaisedButton(
-              child: Text("maps"),
-              onPressed: () {
-                Navigator.pushNamed(context, '/GMap');
-              },
-            ),
-            RaisedButton(
-              child: Text('Login screen'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/loginsignup');
-              },
-            ),
-            RaisedButton(
-              child: Text("filters"),
-              onPressed: () {
-                Navigator.pushNamed(context, '/filter_testing');
-              },
-            ),
-            RaisedButton(
-                child: Text("pickMaterials"),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '##Para testing##',
+              ),
+              RaisedButton(
+                child: Text("maps"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/pickDeliveryMaterials');
-                }),
-            RaisedButton(
-                child: Text("sheduleTrip"),
+                  Navigator.pushNamed(context, '/GMap');
+                },
+              ),
+              RaisedButton(
+                child: Text('Login screen'),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/createEcopoint', arguments: {
-                    'plantName': "Plant 1",
-                    'address': "Adress 1234",
-                    'distance': 0.2,
-                    'residues': [
-                      'Paper',
-                      'Plastic',
-                      'Glass',
-                      'Metal',
-                      'Electronics',
-                      'Wood',
-                      'Textile'
-                    ],
-                  });
-                }),
-            RaisedButton(
-                child: Text("ecopointExpanded"),
+                  Navigator.pushNamed(context, '/loginsignup');
+                },
+              ),
+              RaisedButton(
+                child: Text("filters"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/ecopointExpanded', arguments: {
-                    'ecopointName': "Plant 1",
-                    'address': "Adress 1234",
-                    'distance': 0.2,
-                    'residues': [
-                      'Paper',
-                      'Plastic',
-                      'Glass',
-                      'Metal',
-                      'Electronics',
-                      'Wood',
-                      'Textile'
-                    ],
-                    'ecollector': "ecollector",
-                    'deliveryDate': new DateTime.utc(2020, 10, 26),
-                  });
-                }),
-            RaisedButton(
-                child: Text("pickWeekday"),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/pickWeekday');
-                }),
-            RaisedButton(
-              child: Text("pickTimeCreateEcopoint"),
-              onPressed: () {
-                Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
-                    arguments: {
-                      "daysAvailable": [
-                        false,
-                        true,
-                        false,
-                        true,
-                        false,
-                        true,
-                        true
+                  Navigator.pushNamed(context, '/filter_testing');
+                },
+              ),
+              RaisedButton(
+                  child: Text("pickMaterials"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/pickDeliveryMaterials');
+                  }),
+              RaisedButton(
+                  child: Text("sheduleTrip"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/createEcopoint', arguments: {
+                      'plantName': "Plant 1",
+                      'address': "Adress 1234",
+                      'distance': 0.2,
+                      'residues': [
+                        'Paper',
+                        'Plastic',
+                        'Glass',
+                        'Metal',
+                        'Electronics',
+                        'Wood',
+                        'Textile'
                       ],
-                      "currentDay": "TUESDAY",
                     });
-              },
-            ),
-            RaisedButton(
-                child: Text("settings"),
+                  }),
+              RaisedButton(
+                  child: Text("ecopointExpanded"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/ecopointExpanded', arguments: {
+                      'ecopointName': "Plant 1",
+                      'address': "Adress 1234",
+                      'distance': 0.2,
+                      'residues': [
+                        'Paper',
+                        'Plastic',
+                        'Glass',
+                        'Metal',
+                        'Electronics',
+                        'Wood',
+                        'Textile'
+                      ],
+                      'ecollector': "ecollector",
+                      'deliveryDate': new DateTime.utc(2020, 10, 26),
+                    });
+                  }),
+              RaisedButton(
+                  child: Text("pickWeekday"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/pickWeekday');
+                  }),
+              RaisedButton(
+                child: Text("pickTimeCreateEcopoint"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/settings');
-                }),
-            RaisedButton(
-                child: Text("my recycling"),
+                  Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+                      arguments: {
+                        "daysAvailable": [
+                          false,
+                          true,
+                          false,
+                          true,
+                          false,
+                          true,
+                          true
+                        ],
+                        "currentDay": "TUESDAY",
+                      });
+                },
+              ),
+              RaisedButton(
+                  child: Text("settings"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/settings');
+                  }),
+              RaisedButton(
+                  child: Text("my recycling"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/my_recycling');
+                  }),
+              RaisedButton(
+                child: Text("Add Bags"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/my_recycling');
-                }),
-            RaisedButton(
-              child: Text("Add Bags"),
-              onPressed: () {
-                Navigator.pushNamed(context, '/add_bags');
-              },
-            ),
-            RaisedButton(
-              child: Text("My ecopoint"),
-              onPressed: () {
-                Navigator.pushNamed(context, '/my_ecopoint');
-              },
-            ),
-            RaisedButton(
-              child: Text("ecopoint overview"),
-              onPressed: () {
-                Navigator.pushNamed(context, '/ecopoint_overview');
-              },
-            ),
-          ],
+                  Navigator.pushNamed(context, '/add_bags');
+                },
+              ),
+              RaisedButton(
+                child: Text("My ecopoint"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/my_ecopoint');
+                },
+              ),
+              RaisedButton(
+                child: Text("ecopoint overview"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/ecopoint_overview');
+                },
+              ),
+              RaisedButton(
+                child: Text("ecopoint details"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/ecopoint_details');
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
