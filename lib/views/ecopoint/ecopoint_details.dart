@@ -57,9 +57,12 @@ class EcopointDetails extends StatelessWidget {
                 SizedBox(
                   height: 60,
                   width: 220,
-                  child: EconetButton(onPressed: () {
-                    print("HOLA");
-                  }, backgroundColor: GREEN_DARK,),
+                  child: EconetButton(
+                    onPressed: () {
+                      print("HOLA");
+                    },
+                    backgroundColor: GREEN_DARK,
+                  ),
                 ),
               ),
             ),

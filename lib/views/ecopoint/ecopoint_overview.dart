@@ -3,7 +3,7 @@ import 'package:econet/model/residue.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:econet/model/user.dart';
 import 'package:econet/presentation/constants.dart';
-import 'package:econet/views/widgets/accept_reject_bottom.dart';
+import 'package:econet/views/widgets/positive_negative_buttons.dart';
 import 'package:econet/views/widgets/ecopoint_info_list.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,7 +58,7 @@ class EcopointOveriew extends StatelessWidget {
                 ),
                 Positioned(
                   bottom: 0,
-                  child: AcceptOrRejectBottom("Confirm", "Discard", () {
+                  child: PositiveNegativeButtons("Confirm", "Discard", () {
                     print("hmhm");
                   }, () {
                     print("hmhmn't");

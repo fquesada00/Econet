@@ -2,13 +2,13 @@ import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:flutter/cupertino.dart';
 
-class AcceptOrRejectBottom extends StatelessWidget {
+class PositiveNegativeButtons extends StatelessWidget {
   String positiveButtonTExt;
   String negativeButtonText;
   Function positiveButtonFunction;
   Function negativeButtonFunction;
 
-  AcceptOrRejectBottom(this.positiveButtonTExt, this.negativeButtonText,
+  PositiveNegativeButtons(this.positiveButtonTExt, this.negativeButtonText,
       this.positiveButtonFunction, this.negativeButtonFunction);
 
   @override

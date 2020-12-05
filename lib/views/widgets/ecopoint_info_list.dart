@@ -1,11 +1,12 @@
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/widgets/ecollector_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'InformationCard.dart';
 import 'econet_filter_chip.dart';
 
 class EcopointInfoList extends StatelessWidget {
@@ -20,7 +21,7 @@ class EcopointInfoList extends StatelessWidget {
     return Column(
       children: <Widget>[
         if (withoutPicture)
-          EditInformationCard(
+          InformationCard(
               null,
               "assets/icons/econet-circle.svg",
               "Ecopoint name",
@@ -37,44 +38,7 @@ class EcopointInfoList extends StatelessWidget {
         if (!withoutPicture)
           Column(
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(left: 10, right: 10, bottom: 15),
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  color: GREEN_DARK,
-                ),
-                child: Column(children: <Widget>[
-                  Text(
-                    "Ecollector",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontFamily: 'SFProDisplay',
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: LimitedBox(
-                      child: SvgPicture.asset(
-                          'assets/artwork/profile-default.svg'),
-                    ),
-                  ),
-                  Chip(
-                    backgroundColor: Colors.white,
-                    label: Text(
-                      ecopoint.ecollector.fullName,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: GREEN_DARK,
-                        fontSize: 20,
-                        fontFamily: 'SFProDisplay',
-                      ),
-                    ),
-                  ),
-                ]),
-              ),
+              EcollectorInfo(ecopoint.ecollector.fullName),
               if (button != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
@@ -82,7 +46,7 @@ class EcopointInfoList extends StatelessWidget {
                 ),
             ],
           ),
-        EditInformationCard(
+        InformationCard(
             Icons.room,
             null,
             "Address",
@@ -96,7 +60,7 @@ class EcopointInfoList extends StatelessWidget {
               ),
             ),
             withoutPicture),
-        EditInformationCard(
+        InformationCard(
             FaIcon(FontAwesomeIcons.recycle).icon,
             null,
             "Collects",
@@ -121,7 +85,7 @@ class EcopointInfoList extends StatelessWidget {
               ),
             ),
             withoutPicture),
-        EditInformationCard(
+        InformationCard(
             Icons.calendar_today,
             null,
             "Delivers on",
@@ -136,7 +100,7 @@ class EcopointInfoList extends StatelessWidget {
               ),
             ),
             withoutPicture),
-        EditInformationCard(
+        InformationCard(
             null,
             null,
             "Available at",
@@ -187,7 +151,7 @@ class EcopointInfoList extends StatelessWidget {
               ),
             ),
             withoutPicture),
-        EditInformationCard(
+        InformationCard(
             null,
             null,
             "Additional information",
@@ -202,109 +166,6 @@ class EcopointInfoList extends StatelessWidget {
             ),
             withoutPicture),
       ],
-    );
-  }
-}
-
-class EditInformationCard extends StatelessWidget {
-  IconData icon;
-  String svgUrl;
-  String name;
-  Widget content;
-  bool editable;
-
-  EditInformationCard(
-      this.icon, this.svgUrl, this.name, this.content, this.editable);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 10, right: 10, bottom: 15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        color: Colors.white,
-      ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Row(
-              children: <Widget>[
-                Spacer(),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    name,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: GREEN_DARK,
-                      fontSize: 22,
-                      fontFamily: 'SFProDisplay',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: (!editable)
-                      ? Container()
-                      : Container(
-                          alignment: Alignment.center,
-                          height: 33,
-                          width: 33,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey,
-                          ),
-                          child: Icon(
-                            Icons.edit,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-            child: Row(
-              children: <Widget>[
-                if (icon != null)
-                  Expanded(
-                    flex: 1,
-                    child: Icon(
-                      icon,
-                      size: 30,
-                    ),
-                  ),
-                if (svgUrl != null)
-                  Expanded(
-                    flex: 1,
-                    child: SvgPicture.asset(
-                      svgUrl,
-                      height: 30,
-                      color: Colors.black,
-                    ),
-                  ),
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    margin: EdgeInsets.only(left: 10, right: 10, top: 5),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                    child: Padding(
-                        padding: const EdgeInsets.all(10), child: content),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -8,13 +8,41 @@ import 'package:flutter/material.dart';
 class MyRecyclingDeliveriesTab extends StatelessWidget {
   List<EcopointDelivery> ecopointsList = [
     // TODO: RECIBIR ESTOS DATOS DE LA API
-    EcopointDelivery("PEPE", new DateTime(2020, 12, 12), new List<Bag>(),
+    EcopointDelivery(
+        "PEPE",
+        new DateTime(2020, 12, 12),
+        [
+          Bag(BagSize.large, BagWeight.light, 3),
+          Bag(BagSize.small, BagWeight.heavy, 1),
+          Bag(BagSize.medium, BagWeight.veryHeavy, 3)
+        ],
         new User("pepe1pepe1pepe", "pepe@gmail.com", "", "0303456", true)),
-    EcopointDelivery("PEPE", new DateTime(2020, 12, 5), new List<Bag>(),
+    EcopointDelivery(
+        "PEPE",
+        new DateTime(2020, 12, 5),
+        [
+          Bag(BagSize.large, BagWeight.light, 3),
+          Bag(BagSize.small, BagWeight.heavy, 1),
+          Bag(BagSize.medium, BagWeight.veryHeavy, 3)
+        ],
         new User("pepe2", "pepe@gmail.com", "", "0303456", true)),
-    EcopointDelivery("PEPE", new DateTime(2020, 11, 27, 18), new List<Bag>(),
+    EcopointDelivery(
+        "PEPE",
+        new DateTime(2020, 11, 27, 18),
+        [
+          Bag(BagSize.large, BagWeight.light, 3),
+          Bag(BagSize.small, BagWeight.heavy, 1),
+          Bag(BagSize.medium, BagWeight.veryHeavy, 3)
+        ],
         new User("pepe3", "pepe@gmail.com", "", "0303456", true)),
-    EcopointDelivery("PEPE", new DateTime(2020, 11, 27, 16), new List<Bag>(),
+    EcopointDelivery(
+        "PEPE",
+        new DateTime(2020, 11, 27, 16),
+        [
+          Bag(BagSize.large, BagWeight.light, 3),
+          Bag(BagSize.small, BagWeight.heavy, 1),
+          Bag(BagSize.medium, BagWeight.veryHeavy, 3)
+        ],
         new User("pepe4", "pepe@gmail.com", "", "0303456", true)),
   ];
 
@@ -84,11 +112,17 @@ class MyRecyclingDeliveriesTab extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 1,
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.chevron_right,
-                        size: 36,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/my_delivery_details',
+                            arguments: ecopointsList[index]);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.chevron_right,
+                          size: 36,
+                        ),
                       ),
                     ),
                   ),
@@ -103,7 +137,6 @@ class MyRecyclingDeliveriesTab extends StatelessWidget {
 
   String getRemainingDeliverTime(DateTime from) {
     int aux;
-    if (aux != 0) return aux.toString() + " days";
 
     aux = from.difference(DateTime.now()).inDays;
     if (aux != 0) return aux.toString() + " days";

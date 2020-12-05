@@ -88,9 +88,12 @@ class GMapState extends State<GMap> {
           if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
             Container(
               margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
-              child: EconetButton(onPressed: () {
-                print("HOLA");
-              }, backgroundColor: GREEN_LIGHT,),
+              child: EconetButton(
+                onPressed: () {
+                  print("HOLA");
+                },
+                backgroundColor: GREEN_LIGHT,
+              ),
               alignment: Alignment.bottomRight,
             ),
         ],
