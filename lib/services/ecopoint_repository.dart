@@ -4,6 +4,7 @@ import 'package:econet/services/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 abstract class EcopointProvider implements ChangeNotifier {
@@ -29,7 +30,7 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
       //TODO: verificar campos dentro de la clase
     } else {
       try {
-       //print("DEBUG:Empezamos");
+        //print("DEBUG:Empezamos");
         final user = await getCurrentUser();
         final token = await user.getIdToken();
         //print("DEBUG: Antes del request");
@@ -38,6 +39,7 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
           _ecopointUrl + "?email=" + user.email,
           body: ecopoint.toJSON(),
           headers: {
+            'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
           },
         );
