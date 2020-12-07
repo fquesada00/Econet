@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'InformationCard.dart';
 import 'econet_filter_chip.dart';
 
-class EcopointInfoList extends StatelessWidget {
+class EcopointInfoList extends StatefulWidget {
   final Ecopoint ecopoint;
   final bool withoutPicture;
   final Widget button;
@@ -17,43 +17,70 @@ class EcopointInfoList extends StatelessWidget {
   EcopointInfoList(this.ecopoint, this.withoutPicture, this.button);
 
   @override
+  _EcopointInfoListState createState() => _EcopointInfoListState();
+}
+
+class _EcopointInfoListState extends State<EcopointInfoList> {
+  TextEditingController name_controller = new TextEditingController();
+
+  FocusNode name_focus_node = FocusNode();
+
+  @override
+  void dispose() {
+    name_focus_node.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    name_controller.text = widget.ecopoint.name;
     return Column(
       children: <Widget>[
-        if (withoutPicture)
+        if (widget.withoutPicture)
           InformationCard(
-              null,
-              "assets/icons/econet-circle.svg",
-              "Ecopoint name",
-              GREEN_DARK,
-              Text(
-                ecopoint.name,
+            svgUrl: "assets/icons/econet-circle.svg",
+            name: "Ecopoint name",
+            nameColor: GREEN_DARK,
+            content: Container(
+              height: 28,
+              child: TextField(
+                maxLength: 20,
+                controller: name_controller,
+                focusNode: name_focus_node,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                   fontFamily: 'SFProDisplay',
                 ),
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                ),
               ),
-              withoutPicture),
-        if (!withoutPicture)
+            ),
+            editable: widget.withoutPicture,
+            edit: () {
+              FocusScope.of(context).requestFocus(name_focus_node);
+            },
+          ),
+        if (!widget.withoutPicture)
           Column(
             children: <Widget>[
-              EcollectorInfo(ecopoint.ecollector.fullName, GREEN_DARK),
-              if (button != null)
+              EcollectorInfo(widget.ecopoint.ecollector.fullName, GREEN_DARK),
+              if (widget.button != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
-                  child: button,
+                  child: widget.button,
                 ),
             ],
           ),
         InformationCard(
-            Icons.room,
-            null,
-            "Address",
-            GREEN_DARK,
-            Text(
-              ecopoint.address,
+            icon: Icons.room,
+            name: "Address",
+            nameColor: GREEN_DARK,
+            content: Text(
+              widget.ecopoint.address,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
@@ -61,13 +88,12 @@ class EcopointInfoList extends StatelessWidget {
                 fontFamily: 'SFProDisplay',
               ),
             ),
-            withoutPicture),
+            editable: widget.withoutPicture),
         InformationCard(
-            FaIcon(FontAwesomeIcons.recycle).icon,
-            null,
-            "Collects",
-            GREEN_DARK,
-            Container(
+            icon: FaIcon(FontAwesomeIcons.recycle).icon,
+            name: "Collects",
+            nameColor: GREEN_DARK,
+            content: Container(
               height: 30,
               alignment: Alignment.center,
               child: ListView(
@@ -75,7 +101,7 @@ class EcopointInfoList extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 children: List.from(
                   CHIP_DATA.keys
-                      .where((element) => ecopoint.residues
+                      .where((element) => widget.ecopoint.residues
                           .contains(residueFromString(element)))
                       .map(
                         (k) => Padding(
@@ -87,14 +113,13 @@ class EcopointInfoList extends StatelessWidget {
                 ),
               ),
             ),
-            withoutPicture),
+            editable: widget.withoutPicture),
         InformationCard(
-            Icons.calendar_today,
-            null,
-            "Delivers on",
-            GREEN_DARK,
-            Text(
-              ecopoint.deadline.toIso8601String().substring(0, 10),
+            icon: Icons.calendar_today,
+            name: "Delivers on",
+            nameColor: GREEN_DARK,
+            content: Text(
+              widget.ecopoint.deadline.toIso8601String().substring(0, 10),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
@@ -103,15 +128,13 @@ class EcopointInfoList extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            withoutPicture),
+            editable: widget.withoutPicture),
         InformationCard(
-            null,
-            null,
-            "Available at",
-            GREEN_DARK,
-            Column(
+            name: "Available at",
+            nameColor: GREEN_DARK,
+            content: Column(
               children: List.from(
-                ecopoint.openHours
+                widget.ecopoint.openHours
                     .map((e) => Container(
                           margin: EdgeInsets.only(top: 3, bottom: 3, right: 15),
                           child: Row(
@@ -155,14 +178,12 @@ class EcopointInfoList extends StatelessWidget {
                     .toList(),
               ),
             ),
-            withoutPicture),
+            editable: widget.withoutPicture),
         InformationCard(
-            null,
-            null,
-            "Additional information",
-            GREEN_DARK,
-            Text(
-              ecopoint.additionalInfo,
+            name: "Additional information",
+            nameColor: GREEN_DARK,
+            content: Text(
+              widget.ecopoint.additionalInfo,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black,
@@ -170,7 +191,7 @@ class EcopointInfoList extends StatelessWidget {
                 fontFamily: 'SFProDisplay',
               ),
             ),
-            withoutPicture),
+            editable: widget.withoutPicture),
       ],
     );
   }

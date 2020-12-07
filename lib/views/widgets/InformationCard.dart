@@ -10,9 +10,10 @@ class InformationCard extends StatelessWidget {
   Color nameColor;
   Widget content;
   bool editable;
+  Function edit;
 
-  InformationCard(this.icon, this.svgUrl, this.name, this.nameColor,
-      this.content, this.editable);
+  InformationCard({this.icon, this.svgUrl, this.name, this.nameColor,
+      this.content, this.editable = false, this.edit});
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +55,13 @@ class InformationCard extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: Colors.grey,
                           ),
-                          child: Icon(
-                            Icons.edit,
-                            size: 30,
-                            color: Colors.white,
+                          child: GestureDetector(
+                            onTap: edit,
+                            child: Icon(
+                              Icons.edit,
+                              size: 30,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                 )
