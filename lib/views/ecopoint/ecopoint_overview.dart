@@ -53,7 +53,8 @@ class EcopointOveriew extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 SingleChildScrollView(
-                  padding: EdgeInsets.only(bottom: 100),  //tamanio del widget inferior
+                  padding: EdgeInsets.only(bottom: 100),
+                  //tamanio del widget inferior
                   child: EcopointInfoList(ecopoint, true, null),
                 ),
                 Positioned(

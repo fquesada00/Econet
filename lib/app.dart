@@ -135,6 +135,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.pushNamed(context, '/pickDeliveryMaterials');
                   }),
               RaisedButton(
+                  child: Text("pickLocation"),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/pickLocation');
+                  }),
+              RaisedButton(
                   child: Text("sheduleTrip"),
                   onPressed: () {
                     Navigator.pushNamed(context, '/createEcopoint', arguments: {

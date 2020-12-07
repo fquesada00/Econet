@@ -35,27 +35,25 @@ class DeliveryInfoList extends StatelessWidget {
         ),
       ),
       InformationCard(
-          Icons.room,
-          null,
-          "Ecopoint address",
-          backgroundColor,
-          Text(
-            "Avenida siempreviva 1234",
-            //TODO: DEBERIA BUSCAR EL ECOPOINT CON EL ID Y SACAR EL ADDRESS
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontFamily: 'SFProDisplay',
-            ),
+        icon: Icons.room,
+        name: "Ecopoint address",
+        nameColor: backgroundColor,
+        content: Text(
+          "Avenida siempreviva 1234",
+          //TODO: DEBERIA BUSCAR EL ECOPOINT CON EL ID Y SACAR EL ADDRESS
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontFamily: 'SFProDisplay',
           ),
-          false),
+        ),
+      ),
       InformationCard(
-          Icons.calendar_today,
-          null,
-          "Deliver scheduled for",
-          backgroundColor,
-          Text(
+          icon: Icons.calendar_today,
+          name: "Deliver scheduled for",
+          nameColor: backgroundColor,
+          content: Text(
             ecopointDelivery.date.toIso8601String().substring(0, 10),
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -65,14 +63,12 @@ class DeliveryInfoList extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          true),
+          editable: true),
       if (ecopointDelivery.bags != null)
         InformationCard(
-            null,
-            null,
-            "Bags/Objects",
-            backgroundColor,
-            ConstrainedBox(
+            name: "Bags/Objects",
+            nameColor: backgroundColor,
+            content: ConstrainedBox(
               constraints: BoxConstraints(maxHeight: 330),
               child: ListView.separated(
                 padding: EdgeInsets.all(15),
@@ -84,7 +80,7 @@ class DeliveryInfoList extends StatelessWidget {
                     SizedBox(height: 8),
               ),
             ),
-            true),
+            editable: true),
     ]);
   }
 }

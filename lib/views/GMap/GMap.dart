@@ -70,8 +70,6 @@ class GMapState extends State<GMap> {
             GoogleMap(
               //Con esto sacamos el logo de Google: Cuidado que si
               //queremos subir esto al Play Store nos hacen quilombo
-              padding: EdgeInsets.symmetric(horizontal: 500),
-
               markers: markers.toSet(),
               zoomControlsEnabled: false,
               initialCameraPosition: CameraPosition(
@@ -111,7 +109,7 @@ class GMapState extends State<GMap> {
             latitude.toString() +
             '&longitude=' +
             longitude.toString();
-    print("REQUEST:     " + request);
+    print("REQUEST: " + request);
     final response = await http.get(request);
     print(
         "RESPONSE BODY =========================================================== " +
@@ -150,14 +148,14 @@ class GMapState extends State<GMap> {
 
   Future<void> changeLocation(double newLatitude, double newLongitude) async {
     markers.add(createMarker("positionMarker", newLatitude, newLongitude,
-        newLatitude.toString() + newLongitude.toString(), context));
+        newLatitude.toString() + newLongitude.toString(), context, markerIcon));
 
     await getEcopoints(newLatitude, newLongitude, ECOPOINT_RADIUS)
         .then((value) {
       value.forEach((element) {
         print("MARKER ADDED: " + element.toString());
         markers.add(createMarker(element.toString(), element.latitude,
-            element.longitude, element.adress, context));
+            element.longitude, element.adress, context, markerIcon));
       });
     });
 
@@ -166,9 +164,11 @@ class GMapState extends State<GMap> {
   }
 
   void getLocation() async {
+    await Geolocator.requestPermission();
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
+      print("NO HAY PERMISOS DE UBICACION, PERMISOS " + permission.toString());
       return;
     }
 
@@ -203,30 +203,32 @@ class GMapState extends State<GMap> {
     markerIcon = await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
   }
 
-  Marker createMarker(
-      String id, double latitude, double longitude, String adress, context) {
+  static Marker createMarker(String id, double latitude, double longitude,
+      String adress, context, BitmapDescriptor auxMarkerIcon) {
     LatLng latlng = LatLng(latitude, longitude);
     BitmapDescriptor icon;
     if (id == "positionMarker")
       icon = BitmapDescriptor.defaultMarker;
     else
-      icon = markerIcon; // icono de ecopoint
+      icon = auxMarkerIcon; // icono de ecopoint
 
     //marcador de la posicion en la que se encontraba al abrir la app
     return Marker(
-        markerId: MarkerId(id),
-        position: latlng,
-        icon: icon,
-        draggable: false,
-        zIndex: 1,
-        //Calling the function that does the popup
-        onTap: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (builder) {
-                return EcopointInfo();
-              });
-        });
+      markerId: MarkerId(id),
+      position: latlng,
+      icon: icon,
+      draggable: false,
+      zIndex: 1,
+      //Calling the function that does the popup
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (builder) {
+            return EcopointInfo();
+          },
+        );
+      },
+    );
   }
 }
 
