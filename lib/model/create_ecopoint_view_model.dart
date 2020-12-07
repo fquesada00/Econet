@@ -25,26 +25,29 @@ class CreateEcopointModel{
   List<String> selectedResidues;
   DateTime deliveryDate;
   TimeOfDay deliveryTime;
-  List<TimeSlot> _timeslotsWeekdays = List.filled(7, null, growable: false);
-  List<bool> chosenWeekdays = List.filled(7, false, growable: false);
+  List<TimeSlot> timeslotsWeekdays = List();
+  List<DateTime> chosenWeekdays = List();
   List<bool>
   
   addTimeslot(int day,int fromHour, int fromMinute, int toHour,int toMinute){
-    chosenWeekdays[day] = true;
-    if(_timeslotsWeekdays[day] == null){
-      _timeslotsWeekdays[day] = new TimeSlot(day);
+    if(timeslotsWeekdays[day] == null){
+      timeslotsWeekdays[day] = new TimeSlot(day);
     }
     final from = fromHour.toString().padLeft(2, '0') + ":" + fromMinute.toString().padLeft(2, '0');
     final to = toHour.toString().padLeft(2, '0') + ":" + toMinute.toString().padLeft(2, '0');
-    _timeslotsWeekdays[day].addRange(from,to);
+    timeslotsWeekdays[day].addRange(from,to);
 
   }
 
   List getRangesOfDay(int day) {
-    if (_timeslotsWeekdays[day] == null) {
+    day = day%6;
+    print("getRangesOfDays length");
+    print(timeslotsWeekdays.length);
+    print(day);
+    if (timeslotsWeekdays[day] == null) {
       return List(0);
     } else {
-      return _timeslotsWeekdays[day].ranges;
+      return timeslotsWeekdays[day].ranges;
     }
   }
 
@@ -60,8 +63,8 @@ class CreateEcopointModel{
     selectedResidues = null;
     deliveryDate = null;
     deliveryTime = null;
-    _timeslotsWeekdays = List.filled(7, null, growable: false);
-    chosenWeekdays = List.filled(7, false, growable: false);
+    timeslotsWeekdays = List();
+    chosenWeekdays = List();
 
     //do this for every relevant fieldd
   }

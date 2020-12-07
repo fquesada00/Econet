@@ -9,34 +9,46 @@ import 'package:flutter/src/widgets/framework.dart';
 
 
 class PickWeekday extends StatelessWidget {
-  final List<bool> isWeekdayAllowed = List.filled(7, false, growable: false);
+  final List<bool> isWeekdayAllowed = List();
   final createEcopointModel = CreateEcopointModel.instance;
+  var numberOfDays;
   DateTime _actual = DateTime.now();
   @override
+
+
   Widget build(BuildContext context) {
 
     DateTime deliveryDate = createEcopointModel.deliveryDate;
-    var numberOfDays = deliveryDate.difference(_actual).inDays + 1;
-    print("numberOfDays");
-    print(numberOfDays);
-    if (numberOfDays>6){
-      numberOfDays = 6;
+    this.numberOfDays = deliveryDate.difference(_actual).inDays + 1;
+
+    if (this.numberOfDays>6){
+      this.numberOfDays = 6;
     }
     final dayList = WEEKLIST;
-    List<String> availableDays = List();
-    for (int i = 0; i<numberOfDays+1; i++){
-      int daysBack = numberOfDays - i;
+    List<DateTime> availableDays = List();
+    print(this.numberOfDays);
+    for (int i = 0; i<(this.numberOfDays+1); i++){
+      int daysBack = this.numberOfDays - i;
       var currentDay = deliveryDate.subtract(new Duration(days:daysBack));
-      availableDays.add(
-          dayList[(deliveryDate.weekday-daysBack+6)%6] + " "+
-          currentDay.day.toString() +
-          "/" +
-          currentDay.month.toString()
-      );
+      availableDays.add(currentDay);
+      this.isWeekdayAllowed.add(false);
     }
     print("availableDays");
-    print(availableDays);
+    print(availableDays.length);
 
+    /*dayList[(deliveryDate.weekday-daysBack+6)%6] + " "+
+        currentDay.day.toString() +
+        "/" +
+        currentDay.month.toString()*/
+    List<DateTime> getChosenWeekdays(){
+      List<DateTime> chosenDays = List();
+      for(int i = 0;i<this.numberOfDays+1;i++){
+        if(this.isWeekdayAllowed[i]){
+          chosenDays.add(availableDays[i]);
+        }
+      }
+      return chosenDays;
+    };
     return Scaffold(
       backgroundColor: BROWN_DARK,
       appBar: NavBar(
@@ -65,10 +77,13 @@ class PickWeekday extends StatelessWidget {
                   btnData: ButtonData(
                     'CONTINUE',
                         () {
-                          createEcopointModel.chosenWeekdays = this.isWeekdayAllowed;
+                          List<DateTime> chosenWeekdays = getChosenWeekdays();
+                          createEcopointModel.chosenWeekdays = chosenWeekdays;
+                          createEcopointModel.timeslotsWeekdays = List.filled(chosenWeekdays.length, null, growable: false);
                           Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
                           arguments: {
-                            "currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
+                            //"currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
+                            "currentDay": 0,
                             "daysAvailable": this.isWeekdayAllowed
 
                         });},
@@ -85,7 +100,7 @@ class PickWeekday extends StatelessWidget {
 
 class TimeslotCard extends StatefulWidget {
 
-  final List<String> timeslots;
+  final List<DateTime> timeslots;
   final List<bool> pickWeekday;
 
   TimeslotCard(this.timeslots, this.pickWeekday);
@@ -96,7 +111,7 @@ class TimeslotCard extends StatefulWidget {
 
 class TimeslotCardState extends State<TimeslotCard> {
 
-  final List<String> timeslots;
+  final List<DateTime> timeslots;
   final List<bool> pickWeekday;
 
 
@@ -134,7 +149,10 @@ class TimeslotCardState extends State<TimeslotCard> {
                   height: 40,
                   child:
                   Center(child: Text(
-                    this.timeslots[index],
+                    WEEKLIST[this.timeslots[index].weekday-1] + " " +
+                        this.timeslots[index].day.toString()+
+                        "/"+
+                        this.timeslots[index].month.toString(),
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18,

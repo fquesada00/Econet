@@ -61,13 +61,10 @@ class PickTimeCreateEcopoint extends StatelessWidget {
                     'CONTINUE',
                         () {
                           int i = arguments["currentDay"]+1;
-                          bool nextDay = false;
-                          for(i;i<7;i++){
-                            if(arguments["daysAvailable"][i]) {
-                              nextDay = true;
-                              break;
-                            }
-                          }
+                          bool nextDay = createEcopointModel.chosenWeekdays.length>= i;
+                          print(createEcopointModel.chosenWeekdays.length);
+                          print(i);
+                          print("hey");
                           if(nextDay){
                             Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
                                 arguments: {
@@ -113,9 +110,13 @@ class TimeslotCardState extends State<TimeslotCard> {
 
   @override
   Widget build(BuildContext context) {
+    int currentDay = this.arguments["currentDay"];
+    List<DateTime> chosenWeekdays = CreateEcopointModel.instance.chosenWeekdays;
     Size size = MediaQuery.of(context).size;
     CreateEcopointModel createEcopointModel = CreateEcopointModel.instance;
-    int numberOfRanges = createEcopointModel.getRangesOfDay(arguments["currentDay"]).length;
+    print("currentDay");
+    print(createEcopointModel.timeslotsWeekdays.length);
+    int numberOfRanges = createEcopointModel.getRangesOfDay(currentDay).length;
     print(this.arguments);
     return Container(
         width: size.width * 0.8,
@@ -138,10 +139,13 @@ class TimeslotCardState extends State<TimeslotCard> {
             children:[
               SizedBox(height: 10),
               Text(
-              WEEKLIST[this.arguments["currentDay"]],
+                  WEEKLIST[chosenWeekdays[currentDay].weekday-1] + " " +
+                      chosenWeekdays[currentDay].day.toString()+
+                      "/"+
+                      chosenWeekdays[currentDay].month.toString(),
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 42,
+                fontSize: 30,
                 color: Colors.black,
               ),
               ),
@@ -213,7 +217,6 @@ class TimeslotCardState extends State<TimeslotCard> {
                                     numberOfRanges = createEcopointModel.getRangesOfDay(arguments["currentDay"]).length;
                                     print(numberOfRanges);
                                     print("afterNumberOfRanges");
-
                                   });
                                 }
                               });
