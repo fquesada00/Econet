@@ -12,7 +12,8 @@ class MyRecycling extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[

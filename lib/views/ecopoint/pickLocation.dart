@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:econet/model/ecopoint.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
 import 'package:econet/views/GMap/GMap.dart';
@@ -20,14 +21,29 @@ class PickLocation extends StatefulWidget {
 class _PickLocationState extends State<PickLocation> {
   static bool loadingPosition = false;
   Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController controller;
   TextEditingController text_controller = new TextEditingController();
   List<Marker> markers = List();
   static LatLng _initialPosition;
+  Ecopoint ecopoint;
 
   @override
   Future<void> initState() {
-    //asigno variable de icono a marcadores de ecopoints
-    getLocation();
+    Future.delayed(Duration.zero, () {
+      setState(() async {
+        ecopoint = ModalRoute.of(context).settings.arguments;
+        if (ecopoint != null) {
+          // me muevo al nuevo punto
+          controller = await _controller.future;
+          controller.animateCamera(CameraUpdate.newLatLng(new LatLng(
+              ecopoint.coordinates.latitude, ecopoint.coordinates.longitude)));
+          changeLocation(
+              ecopoint.coordinates.latitude, ecopoint.coordinates.longitude);
+        } else {
+          getLocation();
+        }
+      });
+    });
     super.initState();
   }
 
@@ -149,7 +165,13 @@ class _PickLocationState extends State<PickLocation> {
                         bottom: 0,
                         child:
                             PositiveNegativeButtons("Confirm", "Discard", () {
-                          print("hmhm");
+                              if(ecopoint != null){
+                                //TODO: POSTEAR A API EL CAMBIO DE DIRECCION
+
+                              }else{
+                                //TODO: ESTA CREANDO UN ECOPOINT, SEGUIR EL CAMINO
+
+                              }
                         }, () {
                           print("hmhmn't");
                         }),
@@ -213,7 +235,6 @@ class _PickLocationState extends State<PickLocation> {
       print("NEW ADDRESS FROM NAVBAR: " +
           "${newAddress.featureName} : ${newAddress.addressLine}");
 
-      final GoogleMapController controller = await _controller.future;
       // me muevo al nuevo punto
       controller.animateCamera(CameraUpdate.newLatLng(new LatLng(
           newAddress.coordinates.latitude, newAddress.coordinates.longitude)));

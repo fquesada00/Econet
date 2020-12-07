@@ -15,7 +15,8 @@ class MyEcopoint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       backgroundColor: BROWN_LIGHT,
       body: Column(
         children: <Widget>[
