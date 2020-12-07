@@ -29,6 +29,8 @@ class TimePickerState extends State<TimePicker>{
   int _endMinute;
   bool _isLowTime = false;
   bool _isHighTime = false;
+  bool _isLowHour = false;
+  bool _isHighHour = false;
   final bool isStartTime;
   final bool isEndTime;
   int weekday;
@@ -37,26 +39,76 @@ class TimePickerState extends State<TimePicker>{
   String _timeType = "";
   String _buttonText = "";
   TimePickerState(this.isStartTime,this.isEndTime,this.weekday,this._startHour,this._startMinute);
-  void addTime() {
+  updateStates(){
+    bool _isLowMinute = false;
+    bool _isHighMinute = false;
+    bool _isLowHour = false;
+    bool _isHighHour = false;
+    if (!(_currentHour < _endHour)){
+      if (!(_currentHour+1 < _endHour)){
+        _isLowHour = true;
+      }else if (!(_currentHour+1 == _endHour) && (_currentMinute<=_endMinute)){
+        _isLowHour = true;
+      }
+    }
+    if (!(_currentHour > _startHour)) {
+      if (!(_currentHour - 1 > _startHour)) {
+        _isLowHour = true;
+      }
+      else if (!(_currentHour - 1 == _startHour) &&
+          (_currentMinute <= _startMinute)) {
+        _isLowHour = true;
+      }
+    }
+    if ((_currentHour == _endHour) && (_currentMinute == _endMinute)) {
+      print("is highTime!");
+      _isHighMinute = true;
+    }
+    if ((_currentHour == _startHour) && (_currentMinute == _startMinute)) {
+      _isLowMinute = true;
+    }
+    setState(() {});
+  }
+
+  void addHour() {
+    print("addHour");
+    if ((_currentHour) < _endHour){
+      if ((_currentHour+1) < _endHour){
+        _currentHour += 1;
+      }else if ((_currentHour+1 == _endHour) && (_currentMinute<=_endMinute)){
+        _currentHour += 1;
+      }
+    }
+    updateStates();
+  }
+  void removeHour() {
+    print("RemoveHour");
+    if (_currentHour > _startHour){
+      if (_currentHour-1 > _startHour){
+        _currentHour -= 1;
+      }else if ((_currentHour-1 == _startHour) && (_currentMinute>=_startMinute)){
+        _currentHour -= 1;
+      }
+    }
+
+    updateStates();
+
+  }
+
+  void addMinutes() {
     print("addTime");
     if (!((_currentHour == _endHour) && (_currentMinute == _endMinute))) {
-      _isLowTime = false;
       _currentMinute = (_currentMinute + 1) % 4;
       if (_currentMinute == 0) {
         _currentHour += 1;
       }
     }
-    if ((_currentHour == _endHour) && (_currentMinute == _endMinute)) {
-      print("is highTime!");
-      _isHighTime = true;
-    }
-    setState(() {});
+    updateStates();
   }
 
-  void removeTime() {
+  void removeMinutes() {
     print("removeTime");
     if (!((_currentHour == _startHour) && (_currentMinute == _startMinute))) {
-      _isHighTime = false;
       _currentMinute = _currentMinute - 1;
       if (_currentMinute < 0) {
         print("is lowTime!");
@@ -65,11 +117,8 @@ class TimePickerState extends State<TimePicker>{
         _currentMinute = 3;
       }
     }
+    updateStates();
 
-    if ((_currentHour == _startHour) && (_currentMinute == _startMinute)) {
-      _isLowTime = true;
-    }
-    setState(() {});
   }
 
   void firstLoad(){
@@ -118,22 +167,41 @@ class TimePickerState extends State<TimePicker>{
             mainAxisAlignment:
             MainAxisAlignment.spaceEvenly,
             children: [
-              IconButton(
-                splashRadius: 27,
-                splashColor: BLUE_MEDIUM,
-                disabledColor: Colors.grey,
-                icon: Icon(CustomIcons.plus_circle),
-                constraints: BoxConstraints(
-                  minWidth: 60,
-                  minHeight: 60,
-                ),
-                onPressed: _isHighTime ? null : () {
-                  print("high is pressed, isHighTime");
-                  print(_isHighTime);
-                  addTime();
-                  setState(() {});
-                },
-                iconSize: 35,
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
+                IconButton(
+                  splashRadius: 27,
+                  splashColor: BLUE_MEDIUM,
+                  disabledColor: Colors.grey,
+                  icon: Icon(CustomIcons.plus_circle),
+                  constraints: BoxConstraints(
+                    minWidth: 60,
+                    minHeight: 60,
+                  ),
+                  onPressed: _isHighHour ? null : () {
+                    print("high is pressed, isHighTime");
+                    print(_isHighTime);
+                    addHour();
+                    setState(() {});
+                  },
+                  iconSize: 35,
+                ),IconButton(
+                    splashRadius: 27,
+                    splashColor: BLUE_MEDIUM,
+                    disabledColor: Colors.grey,
+                    icon: Icon(CustomIcons.plus_circle),
+                    constraints: BoxConstraints(
+                      minWidth: 60,
+                      minHeight: 60,
+                    ),
+                    onPressed: _isHighTime ? null : () {
+                      print("high is pressed, isHighTime");
+                      print(_isHighTime);
+                      addMinutes();
+                      setState(() {});
+                    },
+                    iconSize: 35,
+                  ),]
+
               ),
               Text(
                   _currentHour.toString().padLeft(2, '0') +
@@ -145,18 +213,32 @@ class TimePickerState extends State<TimePicker>{
                       fontSize: 63,
                       fontWeight: FontWeight.w700)
               ),
-              IconButton(
-                splashRadius: 27,
-                splashColor: BLUE_MEDIUM,
-                disabledColor: Colors.grey,
-                icon: Icon(CustomIcons.minus_circle),
-                onPressed:_isLowTime ? null :() {
-                  print("low is pressed, isLowTime");
-                  print(_isLowTime);
-                  removeTime();
-                  setState(() {});
-                },
-                iconSize: 35,
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
+                IconButton(
+                  splashRadius: 27,
+                  splashColor: BLUE_MEDIUM,
+                  disabledColor: Colors.grey,
+                  icon: Icon(CustomIcons.minus_circle),
+                  onPressed:_isLowHour ? null :() {
+                    print("low is pressed, isLowTime");
+                    print(_isLowTime);
+                    removeHour();
+                    setState(() {});
+                  },
+                  iconSize: 35,
+                ),IconButton(
+                  splashRadius: 27,
+                  splashColor: BLUE_MEDIUM,
+                  disabledColor: Colors.grey,
+                  icon: Icon(CustomIcons.minus_circle),
+                  onPressed:_isLowTime ? null :() {
+                    print("low is pressed, isLowTime");
+                    print(_isLowTime);
+                    removeMinutes();
+                    setState(() {});
+                  },
+                  iconSize: 35,
+                ),]
               ),
               SizedBox(height: 5),
               Button1(
