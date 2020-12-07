@@ -139,10 +139,7 @@ class TimeslotCardState extends State<TimeslotCard> {
             children:[
               SizedBox(height: 10),
               Text(
-                  WEEKLIST[chosenWeekdays[currentDay].weekday-1] + " " +
-                      chosenWeekdays[currentDay].day.toString()+
-                      "/"+
-                      chosenWeekdays[currentDay].month.toString(),
+                  WEEKLIST[chosenWeekdays[currentDay].weekday-1],
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 30,

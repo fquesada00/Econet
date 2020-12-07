@@ -149,10 +149,7 @@ class TimeslotCardState extends State<TimeslotCard> {
                   height: 40,
                   child:
                   Center(child: Text(
-                    WEEKLIST[this.timeslots[index].weekday-1] + " " +
-                        this.timeslots[index].day.toString()+
-                        "/"+
-                        this.timeslots[index].month.toString(),
+                    WEEKLIST[this.timeslots[index].weekday-1],
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18,
