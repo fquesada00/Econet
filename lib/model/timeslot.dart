@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:econet/model/timerange.dart';
 
 class TimeSlot implements Comparable<TimeSlot> {
-  List<TimeRange> ranges;
+  List<TimeRange> ranges = List();
   int weekDay;
   int overlapPos;
 
   TimeSlot(int weekDay) {
     this.weekDay = weekDay;
-    this.ranges = List();
   }
 
   Future<void> okBtn() async {
@@ -35,6 +34,7 @@ class TimeSlot implements Comparable<TimeSlot> {
         last: TimeOfDay(hour: secondHour, minute: secondMinutes)));
     ranges.sort();
   }
+
 
   @override
   int compareTo(TimeSlot other) {

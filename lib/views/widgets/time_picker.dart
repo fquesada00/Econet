@@ -4,20 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/model/create_ecopoint_view_model.dart';
 
 class TimePicker extends StatefulWidget{
   bool isStartTime;
   bool isEndTime;
-  TimePicker({this.isStartTime,this.isEndTime});
+  int weekday;
+  int startHour;
+  int startMinute;
+  TimePicker({this.isStartTime,this.isEndTime,@required this.weekday,this.startHour,this.startMinute});
 
   @override
-  State<StatefulWidget> createState() => TimePickerState(this.isStartTime,this.isEndTime);
+  State<StatefulWidget> createState() => TimePickerState(this.isStartTime,this.isEndTime,this.weekday,this.startHour,this.startMinute);
 
 }
 
 class TimePickerState extends State<TimePicker>{
+  CreateEcopointModel ecopointModel = CreateEcopointModel.instance;
   int _currentMinute = 0;
-  int _currentHour = 17;
+  int _currentHour = 0;
   int _startHour;
   int _startMinute;
   int _endHour;
@@ -26,10 +31,12 @@ class TimePickerState extends State<TimePicker>{
   bool _isHighTime = false;
   final bool isStartTime;
   final bool isEndTime;
+  int weekday;
+  bool _hasLoaded = false;
 
   String _timeType = "";
   String _buttonText = "";
-  TimePickerState(this.isStartTime,this.isEndTime);
+  TimePickerState(this.isStartTime,this.isEndTime,this.weekday,this._startHour,this._startMinute);
   void addTime() {
     print("addTime");
     if (!((_currentHour == _endHour) && (_currentMinute == _endMinute))) {
@@ -39,8 +46,6 @@ class TimePickerState extends State<TimePicker>{
         _currentHour += 1;
       }
     }
-    print((_currentHour == _endHour));
-    print((_currentMinute == _endMinute));
     if ((_currentHour == _endHour) && (_currentMinute == _endMinute)) {
       print("is highTime!");
       _isHighTime = true;
@@ -64,11 +69,12 @@ class TimePickerState extends State<TimePicker>{
     if ((_currentHour == _startHour) && (_currentMinute == _startMinute)) {
       _isLowTime = true;
     }
-    print((_currentHour == _endHour));
-    print((_currentMinute == _endMinute));
     setState(() {});
   }
-  Widget build(BuildContext context) {
+
+  void firstLoad(){
+    DateTime deliveryTime = ecopointModel.deliveryDate;
+
     if (this.isStartTime != null){
       _timeType = "start-time";
       _buttonText = "Next";
@@ -76,10 +82,30 @@ class TimePickerState extends State<TimePicker>{
       _timeType = "end-time";
       _buttonText = "Add timeslot";
     }
-    _startHour = 17; //Should be something like _arguments["timeStart"]
-    _startMinute = 0;
-    _endHour = 20;
+    _endHour = 24;
     _endMinute = 0;
+    if(ecopointModel.getRangesOfDay(weekday).length != 0 && (_startHour == null || _startMinute == null)){
+      final dayList = ecopointModel.getRangesOfDay(weekday);
+      _startHour = dayList[dayList.length-1].last.hour;
+      _startMinute = (dayList[dayList.length-1].last.minute/15).toInt();
+      _currentHour = _startHour;
+      _currentMinute = _startMinute;
+    }else if(_startHour != null && _startMinute != null){
+      _currentHour = _startHour;
+      _currentMinute = _startMinute;
+    }else{
+      _startHour = 0;
+      _startMinute = 0;
+      _currentHour = 7;
+      _currentMinute = _startMinute;
+    }
+    _hasLoaded = true;
+  }
+  Widget build(BuildContext context) {
+    if(!_hasLoaded){
+      firstLoad();
+      print("First load of time_picker");
+    }
 
     return AlertDialog(
         title: Text("Pick your "+_timeType),
@@ -110,7 +136,7 @@ class TimePickerState extends State<TimePicker>{
                 iconSize: 35,
               ),
               Text(
-                  _currentHour.toString() +
+                  _currentHour.toString().padLeft(2, '0') +
                       ":" +
                       (_currentMinute * 15)
                           .toString()
@@ -140,8 +166,25 @@ class TimePickerState extends State<TimePicker>{
                     if(this.isStartTime!=null) {
                       showDialog(
                         context: context,
-                        builder: (BuildContext DialogContext){return TimePicker(isEndTime: true);},);
+                        builder: (BuildContext DialogContext){
+                          return TimePicker(isEndTime: true,weekday: weekday,startHour: _currentHour,startMinute: _currentMinute);})
+                      .then((value){
+                        if(value){
+                          Navigator.pop(context, true);
+                        }
+                      });
                     }else{
+                      //It comes here after both times has been picked
+                      if (!((_startHour == _currentHour && _startMinute == _currentMinute))) {
+
+                        ecopointModel.addTimeslot(
+                            weekday, _startHour, _startMinute * 15,
+                            _currentHour, _currentMinute * 15);
+
+                        Navigator.pop(context, true);
+                      }else{
+                        print("Timeslot has to be at least 15 minutes long");
+                      }
                       print("poporquitorsmth");
                     }
                   },

@@ -46,7 +46,7 @@ class PickWeekday extends StatelessWidget {
                   btnData: ButtonData(
                     'CONTINUE',
                         () {
-                          createEcopointModel.availableWeekdays = this.isWeekdayAllowed;
+                          createEcopointModel.chosenWeekdays = this.isWeekdayAllowed;
                           Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
                           arguments: {
                             "currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
