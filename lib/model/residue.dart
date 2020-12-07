@@ -19,6 +19,7 @@ String residueToString(Residue residue) {
   }
 }
 
+
 Residue residueFromString(String residueName) {
   switch (residueName.toLowerCase()) {
     case 'paper':

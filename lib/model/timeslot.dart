@@ -92,4 +92,19 @@ class TimeSlot implements Comparable<TimeSlot> {
         "${infRange} to ${topRange} with ${value} result: ${infRange <= value && topRange >= value}");
     return infRange <= value && topRange >= value;
   }
+
+  Map<String, dynamic> toJson(){
+    return {
+      'ranges':this.ranges,
+      'weekday': this.weekDay,
+      'overlapPos': this.overlapPos,
+    };
+  }
+
+  TimeSlot.fromJson(Map<String, dynamic> map){
+    List<dynamic> rgs = map['ranges'];
+    this.ranges = rgs.map((e) => TimeRange.fromJson(e)).toList();
+    this.weekDay = map['weekday'];
+    this.overlapPos = map['overlapPos'];
+  }
 }

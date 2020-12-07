@@ -27,24 +27,20 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
   Future createEcopoint(Ecopoint ecopoint) async {
     if (ecopoint == null) {
       print("ECOPOINT ES NULL");
-      //TODO: verificar campos dentro de la clase
     } else {
       try {
-        //print("DEBUG:Empezamos");
+ 
         final user = await getCurrentUser();
         final token = await user.getIdToken();
-        //print("DEBUG: Antes del request");
-        print(ecopoint.toJSON());
         final response = await http.post(
-          _ecopointUrl + "?email=" + user.email,
-          body: ecopoint.toJSON(),
+          _ecopointUrl + "?email=" + user.email.trim(),
+          body: jsonEncode(ecopoint),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
           },
         );
         print("RESPONSE = " + response.body.toString());
-        //print("DEBUG: Despues del request " + ecopoint.toJSON());
       } catch (e) {
         print(e.toString()); // TODO ver si podemos manejar mejor el error
       }
@@ -62,10 +58,13 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
           "&ecopointId=" +
           ecopointId,
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
-    print("RESPONSE ================ " + response.toString());
+    print("RESPONSE ================ " + response.body.toString());
+    //  print("RESPONSE ================ " + Ecopoint.fromJson(jsonDecode(response.body)).toString());
+    return Ecopoint.fromJson(jsonDecode(response.body));
   }
 
   @override
