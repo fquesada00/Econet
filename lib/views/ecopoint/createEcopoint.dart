@@ -39,14 +39,7 @@ class CreateEcopoint extends StatelessWidget {
                   createEcopointModel.reset();
                   createEcopointModel.name = arguments["plantName"];
                   createEcopointModel.address = arguments["address"];
-                  Navigator.pushNamed(context, '/pickDeliveryMaterials', arguments: {
-                    'ecopointName': "ecopointName",
-                    'address': "address",
-                    'distance': "distance",
-                    'residues': "residues",
-                    'ecollector': "ecollector",
-                    'deliveryDate': "deliveryDate",
-                  });
+                  Navigator.pushNamed(context, '/pickDeliveryMaterials');
                 },
                 backgroundColor: GREEN_DARK,
                 fontSize: 24,

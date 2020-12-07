@@ -1,21 +1,33 @@
 enum Residue { paper, plastic, glass, electronics, textile, wood, metal }
 
+const List<String> RESIDUES = [
+  'Paper',
+  'Plastic',
+  'Glass',
+  'Electronics',
+  'Textile',
+  'Wood',
+  'Metal'
+];
+
 String residueToString(Residue residue) {
   switch (residue) {
     case Residue.paper:
-      return 'Paper';
+      return RESIDUES[0];
     case Residue.plastic:
-      return 'Plastic';
+      return RESIDUES[1];
     case Residue.glass:
-      return 'Glass';
+      return RESIDUES[2];
     case Residue.electronics:
-      return 'Electronics';
+      return RESIDUES[3];
     case Residue.textile:
-      return 'Textile';
+      return RESIDUES[4];
     case Residue.wood:
-      return 'Wood';
+      return RESIDUES[5];
+    case Residue.metal:
+      return RESIDUES[6];
     default:
-      return 'Metal';
+      return '';
   }
 }
 

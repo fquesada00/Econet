@@ -183,24 +183,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     Navigator.pushNamed(context, '/pickWeekday');
                   }),
-              RaisedButton(
-                child: Text("pickTimeCreateEcopoint"),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
-                      arguments: {
-                        "daysAvailable": [
-                          false,
-                          true,
-                          false,
-                          true,
-                          false,
-                          true,
-                          true
-                        ],
-                        "currentDay": "TUESDAY",
-                      });
-                },
-              ),
+              // RaisedButton(
+              //   child: Text("pickTimeCreateEcopoint"),
+              //   onPressed: () {
+              //     Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+              //         arguments: {
+              //           "daysAvailable": [
+              //             false,
+              //             true,
+              //             false,
+              //             true,
+              //             false,
+              //             true,
+              //             true
+              //           ],
+              //           "currentDay": "TUESDAY",
+              //         });
+              //   },
+              // ),
               RaisedButton(
                   child: Text("settings"),
                   onPressed: () {

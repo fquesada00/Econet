@@ -4,6 +4,7 @@ import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/ecollector_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'InformationCard.dart';
@@ -22,18 +23,22 @@ class EcopointInfoList extends StatefulWidget {
 
 class _EcopointInfoListState extends State<EcopointInfoList> {
   TextEditingController name_controller = new TextEditingController();
-
   FocusNode name_focus_node = FocusNode();
+  TextEditingController additional_info_controller =
+      new TextEditingController();
+  FocusNode additional_info_focus_node = FocusNode();
 
   @override
   void dispose() {
     name_focus_node.dispose();
+    additional_info_focus_node.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     name_controller.text = widget.ecopoint.name;
+    additional_info_controller.text = widget.ecopoint.additionalInfo;
     return Column(
       children: <Widget>[
         if (widget.withoutPicture)
@@ -54,14 +59,17 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
                   fontFamily: 'SFProDisplay',
                 ),
                 decoration: InputDecoration(
-                  isDense: true,
-                  border: InputBorder.none,
-                ),
+                    isDense: true,
+                    border: InputBorder.none,
+                    counterStyle: TextStyle(
+                      height: double.minPositive,
+                    ),
+                    counterText: ""),
               ),
             ),
             editable: widget.withoutPicture,
             edit: () {
-              FocusScope.of(context).requestFocus(name_focus_node);
+              name_focus_node.requestFocus();
             },
           ),
         if (!widget.withoutPicture)
@@ -76,19 +84,22 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
             ],
           ),
         InformationCard(
-            icon: Icons.room,
-            name: "Address",
-            nameColor: GREEN_DARK,
-            content: Text(
-              widget.ecopoint.address,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontFamily: 'SFProDisplay',
-              ),
+          icon: Icons.room,
+          name: "Address",
+          nameColor: GREEN_DARK,
+          content: Text(
+            widget.ecopoint.address,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'SFProDisplay',
             ),
-            editable: widget.withoutPicture),
+          ),
+          editable: widget.withoutPicture,
+          edit: () {
+            Navigator.pushNamed(context, '/pickLocation', arguments: widget.ecopoint);},
+        ),
         InformationCard(
             icon: FaIcon(FontAwesomeIcons.recycle).icon,
             name: "Collects",
@@ -113,7 +124,10 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
                 ),
               ),
             ),
-            editable: widget.withoutPicture),
+            editable: widget.withoutPicture,
+            edit: () {
+              Navigator.pushNamed(context, '/pickDeliveryMaterials', arguments: widget.ecopoint);
+            },),
         InformationCard(
             icon: Icons.calendar_today,
             name: "Delivers on",
@@ -180,18 +194,27 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
             ),
             editable: widget.withoutPicture),
         InformationCard(
-            name: "Additional information",
-            nameColor: GREEN_DARK,
-            content: Text(
-              widget.ecopoint.additionalInfo,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontFamily: 'SFProDisplay',
-              ),
+          name: "Additional information",
+          nameColor: GREEN_DARK,
+          content: TextField(
+            controller: additional_info_controller,
+            focusNode: additional_info_focus_node,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'SFProDisplay',
             ),
-            editable: widget.withoutPicture),
+            decoration: InputDecoration(
+              isDense: true,
+              border: InputBorder.none,
+            ),
+          ),
+          editable: widget.withoutPicture,
+          edit: () {
+            additional_info_focus_node.requestFocus();
+          },
+        ),
       ],
     );
   }
