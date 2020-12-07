@@ -79,14 +79,20 @@ class PickWeekday extends StatelessWidget {
                         () {
                           List<DateTime> chosenWeekdays = getChosenWeekdays();
                           createEcopointModel.chosenWeekdays = chosenWeekdays;
-                          createEcopointModel.timeslotsWeekdays = List.filled(chosenWeekdays.length, null, growable: false);
-                          Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
-                          arguments: {
-                            //"currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
-                            "currentDay": 0,
-                            "daysAvailable": this.isWeekdayAllowed
+                          print(createEcopointModel.chosenWeekdays.length);
+                          if(createEcopointModel.chosenWeekdays.length > 0) {
 
-                        });},
+                            createEcopointModel.timeslotsWeekdays = List.filled(
+                                chosenWeekdays.length, null, growable: false);
+                            Navigator.pushNamed(
+                                context, '/pickTimeCreateEcopoint',
+                                arguments: {
+                                  //"currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
+                                  "currentDay": 0,
+                                  "daysAvailable": this.isWeekdayAllowed
+                                });
+                          }
+                          },
                     backgroundColor: BROWN_MEDIUM,
                   ),
                 ),

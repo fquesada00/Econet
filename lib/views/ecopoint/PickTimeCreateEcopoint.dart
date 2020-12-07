@@ -61,7 +61,7 @@ class PickTimeCreateEcopoint extends StatelessWidget {
                     'CONTINUE',
                         () {
                           int i = arguments["currentDay"]+1;
-                          bool nextDay = createEcopointModel.chosenWeekdays.length>= i;
+                          bool nextDay = createEcopointModel.chosenWeekdays.length> i && createEcopointModel.chosenWeekdays.length > 0;
                           print(createEcopointModel.chosenWeekdays.length);
                           print(i);
                           print("hey");

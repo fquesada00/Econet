@@ -44,10 +44,14 @@ class CreateEcopointModel{
     print("getRangesOfDays length");
     print(timeslotsWeekdays.length);
     print(day);
-    if (timeslotsWeekdays[day] == null) {
+    if (timeslotsWeekdays.length > 0) {
+      if (timeslotsWeekdays[day] == null){
+        return List(0);
+      } else {
+        return timeslotsWeekdays[day].ranges;
+      }
+    }else{
       return List(0);
-    } else {
-      return timeslotsWeekdays[day].ranges;
     }
   }
 

@@ -12,10 +12,12 @@ class TimePicker extends StatefulWidget{
   int weekday;
   int startHour;
   int startMinute;
-  TimePicker({this.isStartTime,this.isEndTime,@required this.weekday,this.startHour,this.startMinute});
+  int chosenMinute;
+  int chosenHour;
+  TimePicker({this.isStartTime,this.isEndTime,@required this.weekday,this.startHour,this.startMinute,this.chosenHour,this.chosenMinute});
 
   @override
-  State<StatefulWidget> createState() => TimePickerState(this.isStartTime,this.isEndTime,this.weekday,this.startHour,this.startMinute);
+  State<StatefulWidget> createState() => TimePickerState(this.isStartTime,this.isEndTime,this.weekday,this.startHour,this.startMinute,this.chosenHour,this.chosenMinute);
 
 }
 
@@ -23,6 +25,8 @@ class TimePickerState extends State<TimePicker>{
   CreateEcopointModel ecopointModel = CreateEcopointModel.instance;
   int _currentMinute = 0;
   int _currentHour = 0;
+  int _chosenMinute;
+  int _chosenHour;
   int _startHour;
   int _startMinute;
   int _endHour;
@@ -38,7 +42,8 @@ class TimePickerState extends State<TimePicker>{
 
   String _timeType = "";
   String _buttonText = "";
-  TimePickerState(this.isStartTime,this.isEndTime,this.weekday,this._startHour,this._startMinute);
+  TimePickerState(this.isStartTime,this.isEndTime,
+      this.weekday,this._startHour,this._startMinute,this._chosenHour,this._chosenMinute);
   updateStates(){
     bool _isLowMinute = false;
     bool _isHighMinute = false;
@@ -133,21 +138,24 @@ class TimePickerState extends State<TimePicker>{
     }
     _endHour = 24;
     _endMinute = 0;
-    if(ecopointModel.getRangesOfDay(weekday).length != 0 && (_startHour == null || _startMinute == null)){
+    if(ecopointModel.getRangesOfDay(weekday).length != 0 &&
+        (_chosenHour == null || _chosenMinute == null)){
       final dayList = ecopointModel.getRangesOfDay(weekday);
-      _startHour = dayList[dayList.length-1].last.hour;
-      _startMinute = (dayList[dayList.length-1].last.minute/15).toInt();
-      _currentHour = _startHour;
-      _currentMinute = _startMinute;
-    }else if(_startHour != null && _startMinute != null){
-      _currentHour = _startHour;
-      _currentMinute = _startMinute;
+      _chosenHour = dayList[dayList.length-1].last.hour;
+      _chosenMinute = (dayList[dayList.length-1].last.minute/15).toInt();
+      _currentHour = _chosenHour;
+      _currentMinute = _chosenMinute;
+    }else if(_chosenHour != null && _chosenMinute != null){
+      _currentHour = _chosenHour;
+      _currentMinute = _chosenMinute;
+      print("chosenhour and minutes exists");
     }else{
-      _startHour = 0;
-      _startMinute = 0;
       _currentHour = 7;
-      _currentMinute = _startMinute;
+      _currentMinute = 0;
     }
+    //If you remove the startHour and startMinute from below there will be restricions on chosable times
+    _startHour = 0;
+    _startMinute = 0;
     _hasLoaded = true;
   }
   Widget build(BuildContext context) {
@@ -249,7 +257,7 @@ class TimePickerState extends State<TimePicker>{
                       showDialog(
                         context: context,
                         builder: (BuildContext DialogContext){
-                          return TimePicker(isEndTime: true,weekday: weekday,startHour: _currentHour,startMinute: _currentMinute);})
+                          return TimePicker(isEndTime: true,weekday: weekday,chosenHour: _currentHour,chosenMinute: _currentMinute);})
                       .then((value){
                         if(value){
                           Navigator.pop(context, true);
@@ -260,7 +268,7 @@ class TimePickerState extends State<TimePicker>{
                       if (!((_startHour == _currentHour && _startMinute == _currentMinute))) {
 
                         ecopointModel.addTimeslot(
-                            weekday, _startHour, _startMinute * 15,
+                            weekday, _chosenHour, _chosenMinute * 15,
                             _currentHour, _currentMinute * 15);
 
                         Navigator.pop(context, true);
