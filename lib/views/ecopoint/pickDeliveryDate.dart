@@ -66,9 +66,6 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          SizedBox(
-            height: 30,
-          ),
           Container(
             width: size.width * 0.8,
             height: size.height * 0.5 > 400 ? size.height * 0.5 : 400,
@@ -110,7 +107,7 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
                   padding: const EdgeInsets.fromLTRB(20.0, 90.0, 20.0, 10.0),
                   child: Button1(
                     btnData: ButtonData(
-                      "Select a date",
+                      "SELECT A DATE",
                       () {
                         showDatePicker(
                           context: context,
@@ -140,6 +137,7 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
                           });
                         });
                       },
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),

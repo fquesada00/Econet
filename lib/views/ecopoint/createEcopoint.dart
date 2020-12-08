@@ -8,12 +8,10 @@ import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/model/create_ecopoint_view_model.dart';
 
 class CreateEcopoint extends StatelessWidget {
-
   //Set the ecopoint to NULL when user clicks shedule trip!!!! Then everything else should work fine
   ScrollController _controller1 = new ScrollController();
   ScrollController _controller2 = new ScrollController();
   final createEcopointModel = CreateEcopointModel.instance;
-
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,7 @@ class CreateEcopoint extends StatelessWidget {
           children: [
             Button1(
               btnData: ButtonData(
-                'SHEDULE TRIP',
+                'SCHEDULE TRIP',
                 () {
                   createEcopointModel.reset();
                   createEcopointModel.name = arguments["plantName"];
@@ -106,8 +104,8 @@ class CreateEcopoint extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: InfoCardContainer(
-            header: 'Delivers on',
-            icon: CupertinoIcons.calendar,
+            header: 'Open hours',
+            icon: CupertinoIcons.clock,
             content: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               child: CupertinoScrollbar(

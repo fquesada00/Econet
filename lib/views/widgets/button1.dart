@@ -36,10 +36,7 @@ class ButtonData {
     this.adjust = false,
     this.enabled = true,
   });
-
-
 }
-
 
 class Button1 extends StatefulWidget {
   ButtonData btnData;
@@ -48,14 +45,14 @@ class Button1 extends StatefulWidget {
   Button1({this.btnData});
 
   @override
-  _Button1State createState()=> _Button1State(btnData);
+  _Button1State createState() => _Button1State(btnData);
 }
 
 class _Button1State extends State<Button1> {
   double minWidth;
   ButtonData data;
 
-  _Button1State(ButtonData data){
+  _Button1State(ButtonData data) {
     this.data = data;
   }
 
@@ -92,7 +89,22 @@ class _Button1State extends State<Button1> {
         highlightColor: data.backgroundColor,
         splashColor: Colors.white.withOpacity(0.4),
         textColor: data.textColor,
-        onPressed: data.enabled? data.onPressed : (){},
+        onPressed: data.enabled
+            ? data.onPressed
+            : () {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Center(
+                    heightFactor: 1,
+                    child: Text(
+                      'Please select a value',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ));
+              },
         child: Container(
           width: data.width,
           child: Row(

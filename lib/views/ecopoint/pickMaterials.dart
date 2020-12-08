@@ -21,7 +21,7 @@ class _PickMaterialsState extends State<PickMaterials> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if(!alreadyCreated){
+    if (!alreadyCreated) {
       ecopoint = ModalRoute.of(context).settings.arguments;
       if (ecopoint != null) {
         ecopoint.residues.forEach((element) {
@@ -39,70 +39,82 @@ class _PickMaterialsState extends State<PickMaterials> {
         text: 'Select the materials you can deliver',
         textColor: BROWN_DARK,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          SizedBox(
-            height: 30,
-          ),
-          Center(
-            child: Container(
-              width: size.width * 0.8,
-              height: 430 /*arguments['materialsList'].length * 110*/,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-              ),
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 10,
+      body: Builder(
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Center(
+                child: Container(
+                  width: size.width * 0.8,
+                  height: 430 /*arguments['materialsList'].length * 110*/,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ResiduesChip(
+                          onSelectedItem: (newList) {
+                            setState(() {
+                              selectedChoices = newList;
+                            });
+                          },
+                          selectedChoices: selectedChoices,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: ResiduesChip(
-                        onSelectedItem: (newList) {
-                          setState(() {
-                            selectedChoices = newList;
-                          });
-                        },
-                        selectedChoices: selectedChoices,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Button1(
-              btnData: ButtonData(
-                "CONTINUE",
-                () {
-                  if (selectedChoices.length == 0) {
-                    //TODO show snackbar
-                  } else {
-                    if (ecopoint != null) {
-                      //TODO: POST A API CON NUEVOS RESIDUOS Y CAMBIO VIEWMODEL
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Button1(
+                  btnData: ButtonData(
+                    "CONTINUE",
+                    () {
+                      if (selectedChoices.length == 0) {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Center(
+                            heightFactor: 1,
+                            child: Text(
+                              'Please select a residue type',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ));
+                      } else {
+                        if (ecopoint != null) {
+                          //TODO: POST A API CON NUEVOS RESIDUOS Y CAMBIO VIEWMODEL
 
-                      Navigator.pop(context);
-                    } else {
-                      final createEcopointModel = CreateEcopointModel.instance;
-                      createEcopointModel.selectedResidues = selectedChoices;
-                      Navigator.pushNamed(context, '/pickDeliveryDate');
-                    }
-                  }
-                },
-                backgroundColor: BROWN_MEDIUM,
-                textColor: Colors.white,
+                          Navigator.pop(context);
+                        } else {
+                          final createEcopointModel =
+                              CreateEcopointModel.instance;
+                          createEcopointModel.selectedResidues =
+                              selectedChoices;
+                          Navigator.pushNamed(context, '/pickDeliveryDate');
+                        }
+                      }
+                    },
+                    backgroundColor: BROWN_MEDIUM,
+                    textColor: Colors.white,
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
@@ -130,21 +142,26 @@ class _ResiduesChipState extends State<ResiduesChip> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          pressElevation: 0,
           label: Container(
-            width: 270,
+            width: 250,
             height: 40,
+            alignment: Alignment.center,
             child: Text(
-              item,
+              widget.selectedChoices.contains(item) ? '✓ ' + item : item,
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 27,
                 fontFamily: 'SFProDisplay',
-                color: Colors.white,
+                color: widget.selectedChoices.contains(item)
+                    ? Colors.black
+                    : Colors.white,
+                fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,
             ),
           ),
           backgroundColor: CHIP_DATA[item],
-          selectedColor: TinyColor(CHIP_DATA[item]).darken(30).color,
+          selectedColor: TinyColor(CHIP_DATA[item]).brighten(20).color,
           selected: widget.selectedChoices.contains(item),
           onSelected: (selected) {
             setState(() {

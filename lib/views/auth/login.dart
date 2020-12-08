@@ -156,10 +156,13 @@ class __LoginFormState extends State<_LoginForm> {
                         print(errorMessage);
                         if (errorMessage.trim() == "successfully logged in") {
                           print("DID IT");
-                          Navigator.popUntil(
-                              context, ModalRoute.withName('/auth'));
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/GMap', ModalRoute.withName('/'));
                         } else {
-                          print("not equal");
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                'Incorrect user and/or password. Please try again.'),
+                          ));
                         }
                         setState(() {});
                         print('FORM: OK');
@@ -180,6 +183,7 @@ class _LoginServiceData {
   Color color;
   IconData icon;
   Function onPressed;
+
   _LoginServiceData({this.color, this.icon, this.onPressed});
 }
 
