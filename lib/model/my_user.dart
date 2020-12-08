@@ -16,12 +16,16 @@ class MyUser {
     this._phone = map['phone'];
   }
 
-  toJSON() {
+  toJson() {
     return {
       'isEcollector': _isEcollector,
       'fullName': _fullName,
       'avatarUrl': _avatarUrl,
       'phone': _phone
     };
+  }
+
+  setIsEcollector(bool isEcollector) {
+    this._isEcollector = isEcollector;
   }
 }

@@ -27,12 +27,11 @@ class EcollectorOrRegular extends StatelessWidget {
             height: 120,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: _BuildEcollector(),
-          ),
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: _BuildEcollector(user, auth)),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: _BuildRegular(),
+            child: _BuildRegular(user, auth),
           ),
         ],
       ),
@@ -41,13 +40,23 @@ class EcollectorOrRegular extends StatelessWidget {
 }
 
 class _BuildEcollector extends StatelessWidget {
+  MyUser user;
+  AuthProvider auth;
+
+  _BuildEcollector(this.user, this.auth);
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(25)),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/tutorial');
+          user.setIsEcollector(true);
+          auth
+              .updateUser(user)
+              .then((value) => Navigator.pushNamed(context, '/tutorial'))
+              .catchError((e) => print(
+                  "EEEEEERRRRROOOOOOORRRRRRRRR updateando el usuario en ecollector_or_regular"));
         },
         child: Container(
           width: 309,
@@ -106,13 +115,23 @@ class _BuildEcollector extends StatelessWidget {
 }
 
 class _BuildRegular extends StatelessWidget {
+  MyUser user;
+  AuthProvider auth;
+
+  _BuildRegular(this.user, this.auth);
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(25)),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/tutorial');
+          user.setIsEcollector(false);
+          auth
+              .updateUser(user)
+              .then((value) => Navigator.pushNamed(context, '/tutorial'))
+              .catchError((e) => print(
+                  "EEEEEERRRRROOOOOOORRRRRRRRR updateando el usuario en ecollector_or_regular"));
         },
         child: Container(
           width: 309,

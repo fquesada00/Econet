@@ -29,6 +29,7 @@ abstract class AuthProvider implements ChangeNotifier {
   Future<String> registerWithEmailAndPassword(String email, String password);
   Future<UserCredential> signInWithGoogle();
   logOut();
+  Future updateUser(MyUser user);
 }
 
 class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
@@ -163,10 +164,10 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
       print("user ES NULL");
     } else {
       try {
-        final user = await getCurrentUser();
-        final token = await user.getIdToken();
+        final currentUser = await getCurrentUser();
+        final token = await currentUser.getIdToken();
         final response = await http.put(
-          _userUrl + "?email=" + user.email.trim(),
+          _userUrl + "?email=" + currentUser.email.trim(),
           body: jsonEncode(user),
           headers: {
             'Content-Type': 'application/json',
