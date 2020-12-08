@@ -44,24 +44,24 @@ class Ecopoint {
       this._name,
       this._address,
       this._coordinates);
-  Ecopoint.fromJson(Map<String, dynamic> map){
+  Ecopoint.fromJson(Map<String, dynamic> map) {
     this._id = map['id'];
     this._plantId = map['plantId'];
-    // this._ecollector = map,
+    this._ecollector = MyUser.fromJson(map['user']);
     this._isPlant = map['isPlant'];
 
     List<dynamic> residues = map['residues'];
-      this._residues = residues.map((e) => residueFromString(e)).toList();
-      this._deadline = DateTime.parse(map['deadline']);
-      List<dynamic> timeslots = map['openHours'];
-      this._openHours = timeslots.map((e) => TimeSlot.fromJson(e)).toList();
-      // this._additionalInfo,
-      // this._name,
-      this._address = map['address'];
-      // Map<String, dynamic> coords = map['coordinates'];
-  
-      this._coordinates = LatLng(map['coordinates']['geopoint']['_latitude'], map['coordinates']['geopoint']['_longitude']);
-    
+    this._residues = residues.map((e) => residueFromString(e)).toList();
+    this._deadline = DateTime.parse(map['deadline']);
+    List<dynamic> timeslots = map['openHours'];
+    this._openHours = timeslots.map((e) => TimeSlot.fromJson(e)).toList();
+    // this._additionalInfo,
+    // this._name,
+    this._address = map['address'];
+    // Map<String, dynamic> coords = map['coordinates'];
+
+    this._coordinates = LatLng(map['coordinates']['geopoint']['_latitude'],
+        map['coordinates']['geopoint']['_longitude']);
   }
   Map<String, dynamic> toJson() {
     return {
@@ -83,6 +83,4 @@ class Ecopoint {
   double getLongitude() {
     return this._coordinates.longitude;
   }
-
-
 }

@@ -1,85 +1,11 @@
+import 'dart:convert';
+
 import 'package:econet/model/my_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:http/http.dart' as http;
 import 'dart:async';
-
-// class UserApi {
-//   static String token;
-//
-//   Future<void> firebaseLogout() async {
-//     return await FirebaseAuth.instance.signOut();
-//   }
-//
-//   Future<void> getUserProfile(String email, String token) async {
-//     final response = await http.get(
-//         "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
-//         headers: {
-//           'Authorization': 'Bearer $token',
-//         });
-//     print("HTTPS RESPONSE = " + response.body);
-//   }
-//
-//   Future<void> updateUserProfile(String email, String token, User user) async {
-//     final response = await http.put(
-//       "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
-//       headers: {
-//         'Authorization': 'Bearer $token',
-//       },
-//       //body:user.toJSON()
-//       //body: {'userType':"ecollector",'lastName':"TERMEKH"},
-//     );
-//     print("HTTPS RESPONSE = " + response.body);
-//   }
-//
-//   Future<void> deleteUserProfile(String email, String token) async {
-//     final response = await http.delete(
-//         "https://us-central1-econet-8552d.cloudfunctions.net/user?email=${email}",
-//         headers: {
-//           'Authorization': 'Bearer $token',
-//         });
-//     print("HTTPS RESPONSE = " + response.body);
-//   }
-// }
-
-// class MyUser {
-//   String userId;
-//   String firstName, lastName, email, type, token;
-//   Future<String> tokenFuture;
-
-//   MyUser(
-//       {this.userId,
-//       this.firstName,
-//       this.lastName,
-//       this.email,
-//       this.type,
-//       this.token,
-//       this.tokenFuture}) {
-//     getUserToken();
-//   }
-
-//   getUserToken() async {
-//     if (this.tokenFuture != null) {
-//       this.token = await this.tokenFuture;
-//     }
-//   }
-
-//   factory MyUser.fromJson(Map<String, dynamic> map) {
-//     return MyUser(
-//       userId: map['id'] ?? 1,
-//       firstName: map['firstName'] ?? "beto",
-//       lastName: map['lastName'] ?? "sicardi",
-//       email: map['email'] ?? "beto@gmail.com",
-//       type: map['type'] ?? "regular",
-//       token: map['token'] ?? 0,
-//     );
-//   }
-
-//   toJSON() {
-//     return {'userType': "ecollector", 'lastName': "TERMEKH"};
-//   }
-// }
 
 class AppUrl {
   static const String baseUrl =
@@ -114,6 +40,8 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
   String _token;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+  String _userUrl = "https://us-central1-econet-8552d.cloudfunctions.net/user";
+
   // MyUser _userFromFirebase(User firebaseUser) {
   //   print("FIREBASE USER ===== " + firebaseUser.toString());
   //   return firebaseUser == null
@@ -126,8 +54,7 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
 
   @override
   Stream<User> onAuthStateChanged() {
-    return _firebaseAuth
-        .authStateChanges()
+    return _firebaseAuth.authStateChanges()
         // .map((user) => _userFromFirebase(user)
         ;
   }
@@ -228,5 +155,34 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
   @override
   Future<void> signOutWithGoogle() async {
     final GoogleSignInAccount googleUser = await GoogleSignIn().signOut();
+  }
+
+  @override
+  Future updateUser(MyUser user) async {
+    if (user == null) {
+      print("user ES NULL");
+    } else {
+      try {
+        final user = await getCurrentUser();
+        final token = await user.getIdToken();
+        final response = await http.put(
+          _userUrl + "?email=" + user.email.trim(),
+          body: jsonEncode(user),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+        print("RESPONSE = " + response.body.toString());
+      } catch (e) {
+        print(e.toString()); // TODO ver si podemos manejar mejor el error
+      }
+    }
+  }
+
+  Future<User> getCurrentUser() async {
+    final user = await FirebaseAuth.instance.currentUser;
+
+    return user;
   }
 }

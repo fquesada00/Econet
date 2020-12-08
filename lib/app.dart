@@ -118,11 +118,12 @@ class _MyHomePageState extends State<MyHomePage> {
               '##Para testing##',
             ),
             RaisedButton(
-              child: Text("GET ECOPOINTS"),
+              child: Text("GET ECOPOINT"),
               onPressed: () async {
                 print("HOLAAAAAAAAAAAAAAAA 1");
-                
-                final Ecopoint aux = await ecopointRepository.getEcopoint("0XMBEFRvXPqi2zNSItNL");
+
+                final Ecopoint aux = await ecopointRepository
+                    .getEcopoint("eTFWTvfjSnszbcs9k1Cb");
                 print(aux.toString());
               },
             ),

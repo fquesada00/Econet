@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:econet/services/user.dart';
+import 'package:provider/provider.dart';
 
 class EcollectorOrRegular extends StatelessWidget {
   MyUser user;
@@ -12,6 +13,7 @@ class EcollectorOrRegular extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     user = ModalRoute.of(context).settings.arguments;
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     print("ARGUMENTS RECEIVED === " + user.toString());
     return Scaffold(
       backgroundColor: Colors.white,
