@@ -17,6 +17,7 @@ import 'package:econet/views/ecopoint/pickDeliveryDate.dart';
 import 'package:econet/views/ecopoint/pickLocation.dart';
 import 'package:econet/views/ecopoint/pickMaterials.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
+import 'package:econet/views/home/home.dart';
 import 'package:econet/views/my_ecopoint/my_ecopoint.dart';
 import 'package:econet/views/my_ecopoint/pending_details.dart';
 import 'package:econet/views/my_ecopoint/request_details.dart';
@@ -55,9 +56,9 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => MyHomePage(title: 'Econet is flying high'),
+          '/home': (context) => Home(),
           '/signup_method': (context) => SignUpMethod(),
           '/loginsignup': (context) => LoginOrSignup(),
-          '/GMap': (context) => GMap(),
           '/tutorial': (context) => Tutorial(),
           '/signup_email': (context) => SignupEmail(),
           '/login': (context) => Login(),
@@ -170,9 +171,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               RaisedButton(
-                child: Text("maps"),
+                child: Text("home"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/GMap');
+                  Navigator.pushNamed(context, '/home');
                 },
               ),
               RaisedButton(

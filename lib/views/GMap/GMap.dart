@@ -8,7 +8,6 @@ import 'package:econet/views/GMap/EcopointInfo.dart';
 import 'package:econet/views/settings/settings_app_tab.dart';
 import 'package:econet/views/widgets/EconetButton.dart';
 import 'package:econet/views/widgets/GMapNavBar.dart';
-import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
@@ -21,7 +20,7 @@ class GMap extends StatefulWidget {
   State<GMap> createState() => GMapState();
 }
 
-class GMapState extends State<GMap> {
+class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
   Completer<GoogleMapController> _controller = Completer();
   TextEditingController text_controller = new TextEditingController();
   List<Marker> markers = List();
@@ -43,60 +42,56 @@ class GMapState extends State<GMap> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return new Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: GMapNavBar(
-        withBack: true,
-        searchingFlag: searchingFlag,
-        switchSearchState: switchSearchState,
-        backgroundColor: Colors.transparent,
-        textColor: GREEN_MEDIUM,
-        text_controller: text_controller,
-        onFilledAdress: () {
-          findNewAddress();
-        },
-      ),
-      drawer: AppDrawer(),
-      body: Stack(
-        children: <Widget>[
-          if (_initialPosition == null)
-            Container(
-                //la posicion actual tarda en cargar, sin este if se muestra un error
-                alignment: Alignment.center,
-                child: (!loadingPosition)
-                    ? Text("Please enable system location.")
-                    : CircularProgressIndicator())
-          else
-            GoogleMap(
-              //Con esto sacamos el logo de Google: Cuidado que si
-              //queremos subir esto al Play Store nos hacen quilombo
-              markers: markers.toSet(),
-              zoomControlsEnabled: false,
-              initialCameraPosition: CameraPosition(
-                // target: LatLng(-34.523644, -58.479677), HARDCODEADO
-                target: _initialPosition,
-                zoom: 15.4746,
-              ),
-              mapToolbarEnabled: false,
-              compassEnabled: false,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            ),
-          if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
-            Container(
-              margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
-              child: EconetButton(
-                onPressed: () {
-                  print("HOLA");
+    return _initialPosition == null
+        ? Container(
+            //la posicion actual tarda en cargar, sin este if se muestra un error
+            alignment: Alignment.center,
+            child: (!loadingPosition)
+                ? Text("Please enable system location.")
+                : CircularProgressIndicator())
+        : Stack(
+            children: <Widget>[
+              GoogleMap(
+                //Con esto sacamos el logo de Google: Cuidado que si
+                //queremos subir esto al Play Store nos hacen quilombo
+                markers: markers.toSet(),
+                zoomControlsEnabled: false,
+                initialCameraPosition: CameraPosition(
+                  // target: LatLng(-34.523644, -58.479677), HARDCODEADO
+                  target: _initialPosition,
+                  zoom: 15.4746,
+                ),
+                mapToolbarEnabled: false,
+                compassEnabled: false,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
                 },
-                backgroundColor: GREEN_MEDIUM,
               ),
-              alignment: Alignment.bottomRight,
-            ),
-        ],
-      ),
-    );
+              if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
+                Container(
+                  margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
+                  child: EconetButton(
+                    onPressed: () {
+                      print("HOLA");
+                    },
+                    backgroundColor: GREEN_MEDIUM,
+                  ),
+                  alignment: Alignment.bottomRight,
+                ),
+              if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
+                GMapNavBar(
+                  withBack: true,
+                  searchingFlag: searchingFlag,
+                  switchSearchState: switchSearchState,
+                  backgroundColor: Colors.transparent,
+                  textColor: GREEN_MEDIUM,
+                  text_controller: text_controller,
+                  onFilledAdress: () {
+                    findNewAddress();
+                  },
+                ),
+            ],
+          );
   }
 
   //
@@ -235,6 +230,9 @@ class GMapState extends State<GMap> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 Future<BitmapDescriptor> _iconToMarker(
