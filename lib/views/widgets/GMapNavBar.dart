@@ -1,4 +1,5 @@
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/widgets/notifications_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -17,14 +18,14 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
 
   const GMapNavBar(
       {Key key,
-      this.withBack,
-      this.searchingFlag,
-      this.switchSearchState,
-      this.backgroundColor,
-      this.textColor,
-      this.context,
-      this.text_controller,
-      this.onFilledAdress})
+        this.withBack,
+        this.searchingFlag,
+        this.switchSearchState,
+        this.backgroundColor,
+        this.textColor,
+        this.context,
+        this.text_controller,
+        this.onFilledAdress})
       : super(key: key);
 
   @override
@@ -136,11 +137,22 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                     padding: const EdgeInsets.only(right: 10),
                     child: MaterialButton(
                       elevation: 5,
-                      //color: (Scaffold.of(context).isDrawerOpen) ? Colors.white : BROWN_MEDIUM,
-                      //textColor: (Scaffold.of(context).isDrawerOpen) ? BROWN_MEDIUM : Colors.white,
                       color: BROWN_MEDIUM,
                       textColor: Colors.white,
-                      onPressed: () => null,
+                      onPressed: () async {
+                        switchSearchState();
+
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              NotificationsDialog(),
+                        );
+
+                        print("ABIERTO DIALOG NOTIF");
+
+                        // cuando se cierra el popup, vuelven a aparecer los widgets del mapa
+                        switchSearchState();
+                      },
                       child: Icon(
                         Icons.notifications,
                       ),

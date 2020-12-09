@@ -79,7 +79,7 @@ class _PickMaterialsState extends State<PickMaterials> {
                 child: Button1(
                   btnData: ButtonData(
                     "CONTINUE",
-                    () {
+                        () {
                       if (selectedChoices.length == 0) {
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Center(
@@ -96,6 +96,7 @@ class _PickMaterialsState extends State<PickMaterials> {
                       } else {
                         if (ecopoint != null) {
                           //TODO: POST A API CON NUEVOS RESIDUOS Y CAMBIO VIEWMODEL
+                          // la informacion del ecopoint a actualizar esta en ecopoint y los residuos seleccionados en selectedChoices
 
                           Navigator.pop(context);
                         } else {
