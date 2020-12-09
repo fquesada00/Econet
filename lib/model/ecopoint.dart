@@ -8,7 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'my_user.dart';
 
 class Ecopoint {
-  String _id;
+  String id;
   MyUser _ecollector;
   bool _isPlant;
   List<Residue> _residues;
@@ -33,7 +33,7 @@ class Ecopoint {
       this._coordinates);
 
   Ecopoint.fromFirebase(
-      this._id,
+      this.id,
       this._ecollector,
       this._isPlant,
       this._residues,
@@ -44,26 +44,43 @@ class Ecopoint {
       this._name,
       this._address,
       this._coordinates);
+  Ecopoint.fromJson(Map<String, dynamic> map) {
+    this.id = map['id'];
+    this._plantId = map['plantId'];
+    this._ecollector = MyUser.fromJson(map['user']);
+    this._isPlant = map['isPlant'];
 
-  String toJSON() {
-    return json.encode({
+    List<dynamic> residues = map['residues'];
+    this._residues = residues.map((e) => residueFromString(e)).toList();
+    this._deadline = DateTime.parse(map['deadline']);
+    List<dynamic> timeslots = map['openHours'];
+    this._openHours = timeslots.map((e) => TimeSlot.fromJson(e)).toList();
+    // this._additionalInfo,
+    // this._name,
+    this._address = map['address'];
+    // Map<String, dynamic> coords = map['coordinates'];
+
+    this._coordinates = LatLng(map['coordinates']['geopoint']['_latitude'],
+        map['coordinates']['geopoint']['_longitude']);
+  }
+  Map<String, dynamic> toJson() {
+    return {
       'latitude': this._coordinates.latitude,
       'longitude': this._coordinates.longitude,
       'isPlant': this._isPlant,
       'openHours': this._openHours,
-      'deadline': this._deadline,
+      'deadline': this._deadline.toString(),
       'address': this._address,
-      'residues': this._residues
-    });
+      'residues': this._residues.map((e) => residueToString(e)).toList(),
+      'plantId': this._plantId ?? "no-plant",
+    };
   }
 
-  double getLatitude(){
+  double getLatitude() {
     return this._coordinates.latitude;
   }
 
-   double getLongitude(){
+  double getLongitude() {
     return this._coordinates.longitude;
   }
-
-
 }

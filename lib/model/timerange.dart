@@ -15,4 +15,18 @@ class TimeRange implements Comparable<TimeRange>{
   String toString() {
     return "${first.hour}:${first.minute}-${last.hour}:${last.minute}";
   }
+
+  Map<String, dynamic> toJson(){
+    return {
+      'firstHour': this.first.hour,
+      'firstMinute': this.first.minute,
+      'lastHour': this.last.hour,
+      'lastMinute': this.last.minute,
+    };
+  }
+
+  TimeRange.fromJson(Map<String, dynamic> map){
+    this.first = TimeOfDay(hour: map['firstHour'], minute: map['firstMinute']);
+    this.last = TimeOfDay(hour: map['lastHour'], minute: map['lastMinute']);
+  }
 }
