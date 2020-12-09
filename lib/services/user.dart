@@ -181,6 +181,8 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
     }
   }
 
+  Future<MyUser> getCurrentUserFirebase() {}
+
   Future<User> getCurrentUser() async {
     final user = await FirebaseAuth.instance.currentUser;
 

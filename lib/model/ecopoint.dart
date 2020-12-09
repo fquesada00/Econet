@@ -8,7 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'my_user.dart';
 
 class Ecopoint {
-  String _id;
+  String id;
   MyUser _ecollector;
   bool _isPlant;
   List<Residue> _residues;
@@ -33,7 +33,7 @@ class Ecopoint {
       this._coordinates);
 
   Ecopoint.fromFirebase(
-      this._id,
+      this.id,
       this._ecollector,
       this._isPlant,
       this._residues,
@@ -45,7 +45,7 @@ class Ecopoint {
       this._address,
       this._coordinates);
   Ecopoint.fromJson(Map<String, dynamic> map) {
-    this._id = map['id'];
+    this.id = map['id'];
     this._plantId = map['plantId'];
     this._ecollector = MyUser.fromJson(map['user']);
     this._isPlant = map['isPlant'];

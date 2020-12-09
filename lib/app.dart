@@ -128,12 +128,22 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             RaisedButton(
+              child: Text("GET ECOPOINT BY MATERIALS"),
+              onPressed: () async {
+                print("HOLAAAAAAAAAAAAAAAA 1");
+
+                final List<Ecopoint> aux = (await ecopointRepository
+                    .getEcopointsByMaterials(['Paper']));
+                print(aux.toString());
+              },
+            ),
+            RaisedButton(
               child: Text("Create ecopoint"),
               onPressed: () {
-                MyUser user = MyUser.complete("agustintormakh",
-                    "agustormakh@gmail.com", "11740590", "hola", true);
+                // MyUser user = MyUser.complete("agustintormakh",
+                //     "agustormakh@gmail.com", "11740590", "hola", true);
                 final ecopoint = Ecopoint(
-                    user,
+                    null,
                     false,
                     [Residue.paper, Residue.glass],
                     "",

@@ -29,7 +29,6 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
       print("ECOPOINT ES NULL");
     } else {
       try {
- 
         final user = await getCurrentUser();
         final token = await user.getIdToken();
         final response = await http.post(
@@ -68,28 +67,84 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
   }
 
   @override
-  Future<List<Ecopoint>> getEcopointsByMaterials(List<String> materials) {
-    // TODO: implement getEcopointsByMaterials
-    throw UnimplementedError();
+  Future<List<Ecopoint>> getEcopointsByMaterials(List<String> materials) async {
+    final user = await getCurrentUser();
+    final token = await user.getIdToken();
+    // String materialsString = materials.reduce((value,material) =>value+ 'materials='+ material)
+    String materialsString = '?';
+    materials.forEach((element) {
+      materialsString += 'materials=' + element + '&';
+    });
+    materialsString.substring(0, materialsString.length - 1);
+    final response = await http.get(
+      _ecopointUrl + materialsString,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("RESPONSE ================ " + response.body.toString());
+
+    List ecopointsDoc = jsonDecode(response.body) as List;
+    return ecopointsDoc.map((e) => Ecopoint.fromJson(e)).toList();
   }
 
   @override
   Future<List<Ecopoint>> getEcopointsByRadius(
-      double radius, double lat, double long) {
-    // TODO: implement getEcopointsByRadius
-    throw UnimplementedError();
+      double radius, double lat, double long) async {
+    final user = await getCurrentUser();
+    final token = await user.getIdToken();
+    final response = await http.get(
+      _ecopointUrl +
+          '?radius=' +
+          radius.toString() +
+          '&latitude=' +
+          lat.toString() +
+          '&longitude=' +
+          long.toString(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("RESPONSE ================ " + response.body.toString());
+    List<String> ecopointsDoc = response.body as List<String>;
+    return ecopointsDoc.map((e) => Ecopoint.fromJson(jsonDecode(e))).toList();
   }
 
   @override
-  Future<List<Ecopoint>> getEcopointsByUser(String email) {
-    // TODO: implement getEcopointsByUser
-    throw UnimplementedError();
+  Future<List<Ecopoint>> getEcopointsByUser(String email) async {
+    final user = await getCurrentUser();
+    final token = await user.getIdToken();
+    final response = await http.get(
+      _ecopointUrl + "?email=" + user.email.trim(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    List<String> ecopointsDoc = response.body as List<String>;
+    return ecopointsDoc.map((e) => Ecopoint.fromJson(jsonDecode(e))).toList();
   }
 
   @override
-  Future updateEcopoint(Ecopoint ecopoint) {
-    // TODO: implement updateEcopoint
-    throw UnimplementedError();
+  Future updateEcopoint(Ecopoint ecopoint) async {
+    final user = await getCurrentUser();
+    final token = await user.getIdToken();
+    final response = await http.put(
+      _ecopointUrl +
+          "?email=" +
+          user.email.trim() +
+          "&ecopointId=" +
+          ecopoint.id,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("RESPONSE ================ " + response.body.toString());
+    //  print("RESPONSE ================ " + Ecopoint.fromJson(jsonDecode(response.body)).toString());
+    return Ecopoint.fromJson(jsonDecode(response.body));
   }
 
   Future<User> getCurrentUser() async {
