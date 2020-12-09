@@ -65,6 +65,7 @@ class Ecopoint {
   }
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'latitude': this._coordinates.latitude,
       'longitude': this._coordinates.longitude,
       'isPlant': this._isPlant,

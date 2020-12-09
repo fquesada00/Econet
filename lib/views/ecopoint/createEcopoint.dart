@@ -1,3 +1,5 @@
+import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/econet_display_chip.dart';
@@ -16,6 +18,7 @@ class CreateEcopoint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    Ecopoint plant = arguments['plant'];
 
     return Scaffold(
       backgroundColor: GREEN_LIGHT,
@@ -23,7 +26,9 @@ class CreateEcopoint extends StatelessWidget {
         backgroundColor: GREEN_LIGHT,
         withBack: true,
         textColor: GREEN_DARK,
-        text: arguments['plantName'],
+        text: (plant.ecollector.fullName != null)
+            ? plant.ecollector.fullName
+            : "NULL",
       ),
       body: ListView(children: <Widget>[
         SizedBox(height: 30),
@@ -35,8 +40,7 @@ class CreateEcopoint extends StatelessWidget {
                 'SCHEDULE TRIP',
                 () {
                   createEcopointModel.reset();
-                  createEcopointModel.name = arguments["plantName"];
-                  createEcopointModel.address = arguments["address"];
+                  createEcopointModel.plant = plant;
                   Navigator.pushNamed(context, '/pickDeliveryMaterials');
                 },
                 backgroundColor: GREEN_DARK,
@@ -62,7 +66,7 @@ class CreateEcopoint extends StatelessWidget {
                 color: Color(0xFFE5E2E2),
                 alignment: Alignment.center,
                 child: Text(
-                  arguments['address'],
+                  plant.address,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -92,10 +96,11 @@ class CreateEcopoint extends StatelessWidget {
                             runSpacing: 5,
                             spacing: 5,
                             alignment: WrapAlignment.center,
-                            children: List<Widget>.from((arguments['residues']
+                            children: List<Widget>.from(plant.residues
                                 .map((residue) => EconetDisplayChip(
-                                    residue, CHIP_DATA[residue]))
-                                .toList())),
+                                    residueToString(residue),
+                                    CHIP_DATA[residueToString(residue)]))
+                                .toList()),
                           )))),
             ),
           ),
@@ -121,10 +126,11 @@ class CreateEcopoint extends StatelessWidget {
                             runSpacing: 5,
                             spacing: 5,
                             alignment: WrapAlignment.center,
-                            children: List<Widget>.from((arguments['residues']
+                            children: List<Widget>.from(plant.residues
                                 .map((residue) => EconetDisplayChip(
-                                    residue, CHIP_DATA[residue]))
-                                .toList())),
+                                    residueToString(residue),
+                                    CHIP_DATA[residueToString(residue)]))
+                                .toList()),
                           )))),
             ),
           ),

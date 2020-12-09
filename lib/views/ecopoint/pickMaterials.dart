@@ -14,7 +14,7 @@ class PickMaterials extends StatefulWidget {
 }
 
 class _PickMaterialsState extends State<PickMaterials> {
-  List<String> selectedChoices = List();
+  List<Residue> selectedChoices = List();
   Ecopoint ecopoint;
   bool alreadyCreated = false;
 
@@ -26,7 +26,7 @@ class _PickMaterialsState extends State<PickMaterials> {
       if (ecopoint != null) {
         ecopoint.residues.forEach((element) {
           print("NUEVO ELEMENTO DE ID: " + element.toString());
-          selectedChoices.add(residueToString(element));
+          selectedChoices.add(element);
         });
       }
       alreadyCreated = !alreadyCreated;
@@ -79,7 +79,7 @@ class _PickMaterialsState extends State<PickMaterials> {
                 child: Button1(
                   btnData: ButtonData(
                     "CONTINUE",
-                        () {
+                    () {
                       if (selectedChoices.length == 0) {
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Center(
@@ -122,8 +122,8 @@ class _PickMaterialsState extends State<PickMaterials> {
 }
 
 class ResiduesChip extends StatefulWidget {
-  Function(List<String>) onSelectedItem;
-  List<String> selectedChoices;
+  Function(List<Residue>) onSelectedItem;
+  List<Residue> selectedChoices;
 
   ResiduesChip({this.onSelectedItem, this.selectedChoices});
 
@@ -136,7 +136,7 @@ class _ResiduesChipState extends State<ResiduesChip> {
 
   _buildChoiceList() {
     List<Widget> choices = List();
-    RESIDUES.forEach((item) {
+    CreateEcopointModel.instance.plant.residues.forEach((item) {
       choices.add(Container(
         padding: const EdgeInsets.all(4.0),
         child: ChoiceChip(
@@ -149,7 +149,9 @@ class _ResiduesChipState extends State<ResiduesChip> {
             height: 40,
             alignment: Alignment.center,
             child: Text(
-              widget.selectedChoices.contains(item) ? '✓ ' + item : item,
+              widget.selectedChoices.contains(item)
+                  ? '✓ ' + residueToString(item)
+                  : residueToString(item),
               style: TextStyle(
                 fontSize: 27,
                 fontFamily: 'SFProDisplay',
@@ -161,8 +163,9 @@ class _ResiduesChipState extends State<ResiduesChip> {
               textAlign: TextAlign.center,
             ),
           ),
-          backgroundColor: CHIP_DATA[item],
-          selectedColor: TinyColor(CHIP_DATA[item]).brighten(20).color,
+          backgroundColor: CHIP_DATA[residueToString(item)],
+          selectedColor:
+              TinyColor(CHIP_DATA[residueToString(item)]).brighten(20).color,
           selected: widget.selectedChoices.contains(item),
           onSelected: (selected) {
             setState(() {

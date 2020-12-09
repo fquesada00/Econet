@@ -1,47 +1,55 @@
 import 'dart:convert';
 
 import 'package:econet/model/bag.dart';
-import 'package:econet/model/residue.dart';
+import 'package:econet/model/ecopoint.dart';
 
 import 'my_user.dart';
 
 class EcopointDelivery {
-  String _ecopointId;
+  Ecopoint _ecopoint;
+  MyUser _user;
   DateTime _date;
   List<Bag> _bags;
-  MyUser _user;
   bool _isConfirmed; // Si el Ecollector respondio o no
+  bool _finished;
   bool
       _responseValue; // La respuesta del Ecollector (acepta=true, rechaza=false)
 
-  EcopointDelivery(ecopointId, date, bags, user, isConfirmed, response) {
-    _ecopointId = ecopointId;
+  EcopointDelivery(
+      ecopoint, date, bags, user, isConfirmed, response, finished) {
+    _ecopoint = ecopoint;
     _date = date;
     _bags = bags;
     _user = user;
     _isConfirmed = isConfirmed;
+    _finished = finished;
     _responseValue = response;
   }
 
-  factory EcopointDelivery.fromJson(String jsonString) {
-    Map<String, dynamic> json = jsonDecode(jsonString);
-
-    return EcopointDelivery(json['ecopointId'], json['date'], json['bags'],
-        json['user'], json['isConfirmed'], json['response']);
+  EcopointDelivery.fromJson(Map<String,dynamic> json) {
+    _ecopoint = Ecopoint.fromJson(json['ecopoint']);
+    _date = DateTime.parse(json['date']);
+    _bags = (json['bags'] as List).map((e) => Bag.fromJson(e)).toList();
+    _user = MyUser.fromJson(json['user']);
+    _isConfirmed = json['isConfirmed'];
+    _finished = json['finished'];
+    _responseValue = json['response'];
   }
 
-  String toJson() {
-    return jsonEncode(<String, dynamic>{
-      'ecopointId': _ecopointId,
-      'date': _date,
-      'bags': _bags,
-      'user': _user,
+
+  Map<String, dynamic> toJson(){
+    return {
+      'ecopoint': _ecopoint.toJson(),
+      'date': _date.toString(),
+      'bags': bags,
+      'user': _user.toJson(),
       'isConfirmed': _isConfirmed,
-      'response': _responseValue
-    });
+      'response': _responseValue,
+      'finished': _finished
+    };
   }
 
-  String get ecopointId => _ecopointId;
+  Ecopoint get ecopoint => _ecopoint;
 
   DateTime get date => _date;
 
@@ -50,6 +58,8 @@ class EcopointDelivery {
   MyUser get user => _user;
 
   bool get isConfirmed => _isConfirmed;
+
+  bool get finished => _finished;
 
   bool get responseValue => _responseValue;
 }

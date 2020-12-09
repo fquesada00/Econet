@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:econet/model/ecopoint.dart';
-import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:econet/views/widgets/positive_negative_buttons.dart';
 import 'package:flutter/cupertino.dart';
@@ -262,14 +261,23 @@ class _PickLocationState extends State<PickLocation> {
     });
   }
 
+  Marker createMarker(
+      String id, double latitude, double longitude, String adress, context) {
+    LatLng latlng = LatLng(latitude, longitude);
+
+    //marcador de la posicion en la que se encontraba al abrir la app
+    return Marker(
+      markerId: MarkerId(id),
+      position: latlng,
+      icon: BitmapDescriptor.defaultMarker,
+      draggable: false,
+      zIndex: 1,
+    );
+  }
+
   Future<void> changeLocation(double newLatitude, double newLongitude) async {
-    markers.add(GMapState.createMarker(
-        "positionMarker",
-        newLatitude,
-        newLongitude,
-        newLatitude.toString() + newLongitude.toString(),
-        context,
-        null));
+    markers.add(createMarker("positionMarker", newLatitude, newLongitude,
+        newLatitude.toString() + newLongitude.toString(), context));
 
     //notifico al sistema de que hubieron cambios
     setState(() {});

@@ -21,6 +21,7 @@ class MyUser {
       'isEcollector': _isEcollector,
       'fullName': _fullName,
       'avatarUrl': _avatarUrl,
+      'email': _email,
       'phone': _phone
     };
   }
