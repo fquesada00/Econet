@@ -21,6 +21,7 @@ import 'package:econet/views/ecopoint/pickDeliveryDate.dart';
 import 'package:econet/views/ecopoint/pickLocation.dart';
 import 'package:econet/views/ecopoint/pickMaterials.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
+import 'package:econet/views/home/home.dart';
 import 'package:econet/views/my_ecopoint/my_ecopoint.dart';
 import 'package:econet/views/my_ecopoint/pending_details.dart';
 import 'package:econet/views/my_ecopoint/request_details.dart';
@@ -64,9 +65,9 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => MyHomePage(title: 'Econet is flying high'),
+          '/home': (context) => Home(),
           '/signup_method': (context) => SignUpMethod(),
           '/loginsignup': (context) => LoginOrSignup(),
-          '/GMap': (context) => GMap(),
           '/tutorial': (context) => Tutorial(),
           '/signup_email': (context) => SignupEmail(),
           '/login': (context) => Login(),
@@ -187,15 +188,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   //     "agustormakh@gmail.com", "11740590", "hola", true);
                   final ecopoint = Ecopoint(
                       null,
-                      false,
+                      true,
                       [Residue.paper, Residue.glass],
                       "",
                       new DateTime.now(),
                       [new TimeSlot(5), new TimeSlot(3)],
                       "",
-                      "testing create",
-                      "chacras del mar",
-                      LatLng(-34.5236, -58.4796));
+                      "PLANTA 111a",
+                      "hmm?",
+                      LatLng(-34.5296, -58.4786));
 
                   ecopointRepository
                       .createEcopoint(ecopoint)
@@ -204,9 +205,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               RaisedButton(
-                child: Text("maps"),
+                child: Text("home"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/GMap');
+                  Navigator.pushNamed(context, '/home');
                 },
               ),
               RaisedButton(
@@ -221,11 +222,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.pushNamed(context, '/filter_testing');
                 },
               ),
-              RaisedButton(
-                  child: Text("pickMaterials"),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/pickDeliveryMaterials');
-                  }),
               RaisedButton(
                   child: Text("pickLocation"),
                   onPressed: () {

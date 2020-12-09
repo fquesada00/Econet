@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
   final bool withBack;
+  final bool withDrawer;
   final Color backgroundColor;
   final Color textColor;
   final double height;
@@ -12,7 +13,8 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
 
   NavBar(
       {this.text,
-      this.withBack,
+      this.withBack = false,
+      this.withDrawer = false,
       this.backgroundColor,
       this.textColor,
       this.height = 120,
@@ -34,6 +36,19 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
           if (withBack)
             CupertinoNavigationBarBackButton(
               color: Colors.black,
+            )
+          else if (withDrawer)
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  print(Scaffold.of(context).isDrawerOpen);
+                  Scaffold.of(context).openDrawer();
+                },
+                child: Icon(
+                  Icons.menu,
+                  size: 36,
+                ),
+              ),
             )
           else
             Spacer(),
