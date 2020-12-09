@@ -1,3 +1,4 @@
+import 'package:econet/model/residue.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class CreateEcopointModel {
 */
   String name;
   String address;
-  List<String> selectedResidues;
+  List<Residue> selectedResidues;
   Ecopoint plant;
   DateTime deliveryDate;
   TimeOfDay deliveryTime;
