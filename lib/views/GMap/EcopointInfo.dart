@@ -23,7 +23,7 @@ class EcopointInfoState extends State<EcopointInfo> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.ecopoint);
+
     return new Container(
         height: 340,
         decoration: BoxDecoration(
@@ -169,10 +169,8 @@ class EcopointInfoState extends State<EcopointInfo> {
                     List<String> auxResidues = [];
                     widget.ecopoint.residues.forEach((element) {auxResidues.add(residueToString(element));});
                     Navigator.pushNamed(context, '/createEcopoint', arguments: {
-                      'plantName': (widget.ecopoint.ecollector.fullName != null)? widget.ecopoint.ecollector.fullName : 'NULL',
-                      'address': widget.ecopoint.address,
                       'distance': widget.distance,
-                      'residues': auxResidues,
+                      'plant' : widget.ecopoint,
                     });
                   } else {
                     Navigator.pushNamed(context, '/ecopoint_expanded',

@@ -79,7 +79,7 @@ class _PickMaterialsState extends State<PickMaterials> {
                 child: Button1(
                   btnData: ButtonData(
                     "CONTINUE",
-                        () {
+                    () {
                       if (selectedChoices.length == 0) {
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Center(
@@ -136,7 +136,7 @@ class _ResiduesChipState extends State<ResiduesChip> {
 
   _buildChoiceList() {
     List<Widget> choices = List();
-    RESIDUES.forEach((item) {
+    CreateEcopointModel.instance.plant.residues.forEach((item) {
       choices.add(Container(
         padding: const EdgeInsets.all(4.0),
         child: ChoiceChip(
@@ -149,11 +149,13 @@ class _ResiduesChipState extends State<ResiduesChip> {
             height: 40,
             alignment: Alignment.center,
             child: Text(
-              widget.selectedChoices.contains(item) ? '✓ ' + item : item,
+              widget.selectedChoices.contains(residueToString(item))
+                  ? '✓ ' + residueToString(item)
+                  : residueToString(item),
               style: TextStyle(
                 fontSize: 27,
                 fontFamily: 'SFProDisplay',
-                color: widget.selectedChoices.contains(item)
+                color: widget.selectedChoices.contains(residueToString(item))
                     ? Colors.black
                     : Colors.white,
                 fontWeight: FontWeight.w500,
@@ -161,14 +163,15 @@ class _ResiduesChipState extends State<ResiduesChip> {
               textAlign: TextAlign.center,
             ),
           ),
-          backgroundColor: CHIP_DATA[item],
-          selectedColor: TinyColor(CHIP_DATA[item]).brighten(20).color,
-          selected: widget.selectedChoices.contains(item),
+          backgroundColor: CHIP_DATA[residueToString(item)],
+          selectedColor:
+              TinyColor(CHIP_DATA[residueToString(item)]).brighten(20).color,
+          selected: widget.selectedChoices.contains(residueToString(item)),
           onSelected: (selected) {
             setState(() {
-              widget.selectedChoices.contains(item)
-                  ? widget.selectedChoices.remove(item)
-                  : widget.selectedChoices.add(item);
+              widget.selectedChoices.contains(residueToString(item))
+                  ? widget.selectedChoices.remove(residueToString(item))
+                  : widget.selectedChoices.add(residueToString(item));
               widget.onSelectedItem(widget.selectedChoices);
             });
           },
