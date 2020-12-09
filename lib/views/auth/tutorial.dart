@@ -46,7 +46,8 @@ class _TutorialState extends State<Tutorial> {
           SizedBox(height: 30),
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/GMap');
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/GMap', ModalRoute.withName('/'));
             },
             child: Text(
               'Skip Tutorial',

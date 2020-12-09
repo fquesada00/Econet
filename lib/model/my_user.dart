@@ -3,9 +3,9 @@ class MyUser {
   bool _isEcollector;
 
   MyUser.complete(this._fullName, this._email, this._phone, this._avatarUrl,
-      this._isEcollector) {}
+      this._isEcollector);
 
-  MyUser.partial(this._fullName, this._email) {}
+  MyUser.partial(this._fullName, this._email);
 
   MyUser.fromJson(Map<String, dynamic> map) {
     this._fullName = map['fullName'];
@@ -28,4 +28,14 @@ class MyUser {
   setIsEcollector(bool isEcollector) {
     this._isEcollector = isEcollector;
   }
+
+  String get fullName => _fullName;
+
+  String get email => _email;
+
+  bool get isEcollector => _isEcollector;
+
+  String get phone => _phone;
+
+  String get avatarUrl => _avatarUrl;
 }

@@ -5,7 +5,6 @@ import 'package:econet/model/residue.dart';
 
 import 'my_user.dart';
 
-
 class EcopointDelivery {
   String _ecopointId;
   DateTime _date;
@@ -25,27 +24,32 @@ class EcopointDelivery {
   }
 
   factory EcopointDelivery.fromJson(String jsonString) {
+    Map<String, dynamic> json = jsonDecode(jsonString);
 
-    Map<String,dynamic> json = jsonDecode(jsonString);
-
-    return EcopointDelivery(
-      json['ecopointId'],
-      json['date'],
-      json['bags'],
-      json['user'],
-      json['isConfirmed'],
-      json['response']
-    );
+    return EcopointDelivery(json['ecopointId'], json['date'], json['bags'],
+        json['user'], json['isConfirmed'], json['response']);
   }
 
-  String toJson(){
-    return jsonEncode(<String,dynamic>{
-      'ecopointId' : _ecopointId,
-      'date' : _date,
-      'bags' : _bags,
-      'user' : _user,
-      'isConfirmed' : _isConfirmed,
-      'response' : _responseValue
+  String toJson() {
+    return jsonEncode(<String, dynamic>{
+      'ecopointId': _ecopointId,
+      'date': _date,
+      'bags': _bags,
+      'user': _user,
+      'isConfirmed': _isConfirmed,
+      'response': _responseValue
     });
   }
+
+  String get ecopointId => _ecopointId;
+
+  DateTime get date => _date;
+
+  List<Bag> get bags => _bags;
+
+  MyUser get user => _user;
+
+  bool get isConfirmed => _isConfirmed;
+
+  bool get responseValue => _responseValue;
 }

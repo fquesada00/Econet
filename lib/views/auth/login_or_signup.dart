@@ -13,6 +13,7 @@ class LoginOrSignup extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Column(
           children: <Widget>[
@@ -45,6 +46,7 @@ class LoginOrSignup extends StatelessWidget {
                 Navigator.pushNamed(context, '/signup_method');
               },
               backgroundColor: GREEN_MEDIUM,
+
             )),
             SizedBox(height: size.height * 0.03),
             Button1(

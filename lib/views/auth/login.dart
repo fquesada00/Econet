@@ -54,7 +54,6 @@ class __LoginFormState extends State<_LoginForm> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     List<_LoginServiceData> services = [
-      _LoginServiceData(color: Colors.black, icon: CustomIcons.apple),
       _LoginServiceData(
           color: Color(0xFF4285F4),
           icon: CustomIcons.google,
@@ -71,6 +70,7 @@ class __LoginFormState extends State<_LoginForm> {
                     left: 35, right: 35, bottom: 20, top: 50),
                 child: TextFormField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     labelStyle: TextStyle(
@@ -90,6 +90,7 @@ class __LoginFormState extends State<_LoginForm> {
               Padding(
                 padding: const EdgeInsets.only(left: 35, right: 35, top: 8.0),
                 child: TextFormField(
+                  keyboardType: TextInputType.visiblePassword,
                   controller: passwordController,
                   obscureText: !_passwordVisible,
                   decoration: InputDecoration(
@@ -150,6 +151,21 @@ class __LoginFormState extends State<_LoginForm> {
                     'LOG IN',
                     () async {
                       if (_formKey.currentState.validate()) {
+                        errorMessage = await auth.emailLogin(
+                            emailController.text, passwordController.text);
+                        print(errorMessage);
+                        if (errorMessage.trim() == "successfully logged in") {
+                          print("DID IT");
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/GMap', ModalRoute.withName('/'));
+                        } else {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                'Incorrect user and/or password. Please try again.'),
+                          ));
+                        }
+                        setState(() {});
+                        print('FORM: OK');
                         signInWithEmailAndPassword(context);
                         // Navigator.pushNamed(context, '/GMap');
                       }
@@ -195,6 +211,7 @@ class _LoginServiceData {
   Color color;
   IconData icon;
   Function onPressed;
+
   _LoginServiceData({this.color, this.icon, this.onPressed});
 }
 

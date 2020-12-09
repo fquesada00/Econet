@@ -13,6 +13,7 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
   final bool searchingFlag;
   final Function switchSearchState;
   final TextEditingController text_controller;
+  final Function() onFilledAdress;
 
   const GMapNavBar(
       {Key key,
@@ -22,7 +23,8 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
       this.backgroundColor,
       this.textColor,
       this.context,
-      this.text_controller})
+      this.text_controller,
+      this.onFilledAdress})
       : super(key: key);
 
   @override
@@ -35,118 +37,119 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 40),
-            child: Container(
-              color: Colors.transparent,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: MaterialButton(
-                        elevation: 5,
-                        color: GREEN_MEDIUM,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          print(Scaffold.of(context).isDrawerOpen);
-                          Scaffold.of(context).openDrawer();
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: MaterialButton(
+                      elevation: 5,
+                      color: GREEN_MEDIUM,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        print(Scaffold.of(context).isDrawerOpen);
+                        Scaffold.of(context).openDrawer();
+                      },
+                      child: Icon(
+                        Icons.menu,
+                      ),
+                      padding: EdgeInsets.all(10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(30),
+                          bottomRight: Radius.circular(30),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Material(
+                      color: Colors.transparent,
+                      elevation: 5,
+                      borderRadius: _BORDER_RADIUS,
+                      child: GestureDetector(
+                        onTap: () async {
+                          switchSearchState();
+                          // mientras esta abierto el dialog esta "buscando"
+                          await showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                SearchDialog(text_controller),
+                          );
+
+                          // cuando se cierra el popup, vuelven a aparecer los widgets del mapa
+                          switchSearchState();
+                          // si se ingreso una direccion
+                          if (text_controller.value.text.length > 0)
+                            onFilledAdress();
                         },
-                        child: Icon(
-                          Icons.menu,
-                        ),
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          height: 50,
+                          width: 250,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 6,
+                                offset: Offset(0, 3),
+                              )
+                            ],
+                            color: Colors.white,
+                            borderRadius: _BORDER_RADIUS,
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.search,
+                                  size: 25,
+                                ),
+                              ),
+                              Text(
+                                (text_controller.text == '')
+                                    ? "Search locations, filters"
+                                    : text_controller.text,
+                                style: TextStyle(
+                                  fontFamily: 'SFProDisplay',
+                                  fontSize: 17,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Material(
-                        color: Colors.transparent,
-                        elevation: 5,
-                        borderRadius: _BORDER_RADIUS,
-                        child: GestureDetector(
-                          onTap: () async {
-                            switchSearchState();
-                            // mientras esta abierto el dialog esta "buscando"
-                            await showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  SearchDialog(text_controller),
-                            );
-                            // cuando se cierra el popup, vuelven a aparecer los widgets del mapa
-                            switchSearchState();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            height: 50,
-                            width: 250,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 6,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                              color: Colors.white,
-                              borderRadius: _BORDER_RADIUS,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 25,
-                                  ),
-                                ),
-                                Text(
-                                  (text_controller.text == '')
-                                      ? "Search locations, filters"
-                                      : text_controller.text,
-                                  style: TextStyle(
-                                    fontFamily: 'SFProDisplay',
-                                    fontSize: 17,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: MaterialButton(
+                      elevation: 5,
+                      //color: (Scaffold.of(context).isDrawerOpen) ? Colors.white : BROWN_MEDIUM,
+                      //textColor: (Scaffold.of(context).isDrawerOpen) ? BROWN_MEDIUM : Colors.white,
+                      color: BROWN_MEDIUM,
+                      textColor: Colors.white,
+                      onPressed: () => null,
+                      child: Icon(
+                        Icons.notifications,
                       ),
+                      padding: EdgeInsets.all(10),
+                      shape: CircleBorder(),
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: MaterialButton(
-                        elevation: 5,
-                        //color: (Scaffold.of(context).isDrawerOpen) ? Colors.white : BROWN_MEDIUM,
-                        //textColor: (Scaffold.of(context).isDrawerOpen) ? BROWN_MEDIUM : Colors.white,
-                        color: BROWN_MEDIUM,
-                        textColor: Colors.white,
-                        onPressed: () => null,
-                        child: Icon(
-                          Icons.notifications,
-                        ),
-                        padding: EdgeInsets.all(10),
-                        shape: CircleBorder(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -158,6 +161,5 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(75);
+  Size get preferredSize => Size.fromHeight(100);
 }

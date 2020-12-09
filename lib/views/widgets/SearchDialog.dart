@@ -88,6 +88,9 @@ class _SearchBoxState extends State<SearchBox> {
             child: TextField(
               autofocus: true, // apenas se abre el layout se focusea el search
               controller: _controller,
+              onSubmitted: (String s) {
+                Navigator.of(context).pop();
+              },
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(vertical: 0),
                 enabledBorder: OutlineInputBorder(

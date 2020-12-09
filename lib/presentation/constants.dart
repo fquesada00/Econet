@@ -9,6 +9,9 @@ const Color GREEN_DARK = Color.fromRGBO(100, 154, 59, 1);
 const Color BROWN_DARK = Color.fromRGBO(179, 129, 110, 1);
 const Color BROWN_MEDIUM = Color.fromRGBO(199, 162, 107, 1);
 const Color BROWN_LIGHT = Color.fromRGBO(222, 210, 170, 1);
+const Color BLUE_MEDIUM = Color(0xFF8F9CDF);
+const Color RED_MEDIUM = Color(0xFFFF6868);
+const Color RED_DARK = Color(0xFFBF4040);
 
 //Colores de tags (residuos, filtros, etc)
 const Color PAPER_COLOR = BROWN_MEDIUM;
@@ -18,6 +21,12 @@ const Color METAL_COLOR = Color(0xFFA8A8A8);
 const Color ELECTRONICS_COLOR = Color(0xFF4EA77D);
 const Color WOOD_COLOR = Color(0xFFB3816E);
 const Color TEXTILE_COLOR = Color(0xFFC76BC7);
+
+//Otros
+const Color WARNING_COLOR = Color(0xFFFFA826);
+const Color ERROR_COLOR = Color(0xFFAF0000);
+const Color EDIT_COLOR = Color(0xFF9B9B9B);
+const Color INFO_COLOR = Color(0xFFA8A8A8);
 
 const Map<String, Color> CHIP_DATA = {
   'Paper': PAPER_COLOR,
@@ -37,3 +46,14 @@ const List<String> RECENT_SEARCHES_DATA = [
   'Address 1111',
   'Recycling Plant Z'
 ];
+
+const WEEKLIST = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY"
+];
+

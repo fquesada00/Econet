@@ -1,11 +1,11 @@
 import 'package:econet/model/my_user.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/user.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:econet/services/user.dart';
 
 class SignupEmail extends StatefulWidget {
   @override
@@ -38,8 +38,13 @@ class _FieldTemplateData {
   final String labelText;
   final Icon icon;
   TextEditingController controller;
+  final TextInputType keyboardType;
 
-  _FieldTemplateData({@required this.labelText, this.icon, this.controller});
+  _FieldTemplateData(
+      {@required this.labelText,
+      this.icon,
+      this.controller,
+      this.keyboardType});
 }
 
 class _EmailRegisterForm extends StatefulWidget {
@@ -55,21 +60,25 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
 
   List<_FieldTemplateData> fieldData = [
     _FieldTemplateData(
-        labelText: 'First Name',
+        labelText: 'Full Name',
         icon: Icon(Icons.person),
-        controller: nameController),
-    _FieldTemplateData(
-        labelText: 'Last Name',
-        icon: Icon(Icons.person),
-        controller: lastNameController),
+        controller: nameController,
+        keyboardType: TextInputType.name),
     _FieldTemplateData(
         labelText: 'Email Address',
         icon: Icon(Icons.email),
-        controller: emailController),
+        controller: emailController,
+        keyboardType: TextInputType.emailAddress),
+    _FieldTemplateData(
+        labelText: 'Phone Number',
+        icon: Icon(Icons.phone),
+        controller: lastNameController,
+        keyboardType: TextInputType.phone),
     _FieldTemplateData(
         labelText: 'Password',
         icon: Icon(Icons.lock),
-        controller: passwordController),
+        controller: passwordController,
+        keyboardType: TextInputType.visiblePassword),
   ];
 
   String errorMessage = "";
@@ -99,6 +108,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 35, vertical: 5),
                       child: TextFormField(
+                        keyboardType: field.keyboardType,
                         controller: field.controller,
                         textInputAction: field.labelText.toLowerCase() ==
                                 'password' // Si es el ultimo field, tiene que dar la opcion de Done
@@ -122,8 +132,8 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                                   ? IconButton(
                                       icon: Icon(
                                         _passwordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
                                       ),
                                       onPressed: () {
                                         setState(() {

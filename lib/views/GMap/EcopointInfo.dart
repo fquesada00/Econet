@@ -1,6 +1,6 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
-import 'package:econet/views/widgets/econet_chip.dart';
+import 'package:econet/views/widgets/econet_display_chip.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,15 @@ class EcopointInfo extends StatefulWidget {
 class EcopointInfoState extends State<EcopointInfo> {
   //EcopointInfoState({this.adress});
   //String adress;
-  List<String> residues = ['Paper', 'Plastic', 'Glass','Metal','Electronics','Wood','Textile'];
+  List<String> residues = [
+    'Paper',
+    'Plastic',
+    'Glass',
+    'Metal',
+    'Electronics',
+    'Wood',
+    'Textile'
+  ];
   String ecopointName = "Beto's Ecopoint";
   double distance = 0.2;
   String address = 'Address 1234';
@@ -42,6 +50,7 @@ class EcopointInfoState extends State<EcopointInfo> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
                       children: [
                         SizedBox(width: 10),
                         Padding(
@@ -131,25 +140,26 @@ class EcopointInfoState extends State<EcopointInfo> {
                     isAlwaysShown: true,
                     controller: _controller,
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Color(0xFFe5e2e2),
-                        //color: Colors.grey,
-                      ),
-                      height: 76,
-                      width: 285,
-                      alignment: Alignment(0, 0),
-                      child: SingleChildScrollView(controller: _controller,child:Wrap(
-                            runSpacing: 0,
-                            spacing: 5,
-                            alignment: WrapAlignment.center,
-                            children: residues
-                                .map((residue) =>
-                                    EconetChip(residue, CHIP_DATA[residue], false))
-                                .toList(),
-                        ))
-                      ),
+                        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Color(0xFFe5e2e2),
+                          //color: Colors.grey,
+                        ),
+                        height: 76,
+                        width: 285,
+                        alignment: Alignment(0, 0),
+                        child: SingleChildScrollView(
+                            controller: _controller,
+                            child: Wrap(
+                              runSpacing: -7,
+                              spacing: 5,
+                              alignment: WrapAlignment.center,
+                              children: residues
+                                  .map((residue) => EconetDisplayChip(
+                                      residue, CHIP_DATA[residue]))
+                                  .toList(),
+                            ))),
                   )
                 ],
               ),

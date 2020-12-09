@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ButtonData {
   String text;
+
   //El boton acepta tantos iconos como svg, pero no ambos al mismo tiempo
   //Si se le llega a pasar los 2 campos, se le asigna solo el icono
   Icon icon;
@@ -16,8 +17,10 @@ class ButtonData {
   double height;
   double fontSize;
   FontWeight fontWeight;
+
   //Propiedad para hacer que el boton se ajuste al width
   bool adjust;
+  bool enabled;
 
   ButtonData(
     this.text,
@@ -31,11 +34,12 @@ class ButtonData {
     this.fontSize = 20,
     this.fontWeight = FontWeight.w500,
     this.adjust = false,
+    this.enabled = true,
   });
 }
 
 class Button1 extends StatefulWidget {
-  final ButtonData btnData;
+  ButtonData btnData;
 
   //Constructor
   Button1({this.btnData});
@@ -48,12 +52,13 @@ class _Button1State extends State<Button1> {
   double minWidth;
   ButtonData data;
 
-  _Button1State(this.data);
+  _Button1State(ButtonData data) {
+    this.data = data;
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     if (data.width == null || data.width == 0) {
       data.width = size.width * 0.7;
     }
@@ -84,7 +89,22 @@ class _Button1State extends State<Button1> {
         highlightColor: data.backgroundColor,
         splashColor: Colors.white.withOpacity(0.4),
         textColor: data.textColor,
-        onPressed: data.onPressed,
+        onPressed: data.enabled
+            ? data.onPressed
+            : () {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Center(
+                    heightFactor: 1,
+                    child: Text(
+                      'Please select a value',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ));
+              },
         child: Container(
           width: data.width,
           child: Row(
