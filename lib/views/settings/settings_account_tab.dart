@@ -23,7 +23,7 @@ class SettingDetails extends StatelessWidget {
               name,
               textAlign: TextAlign.left,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontFamily: 'SFProText',
                 color: Colors.black,
               ),
@@ -41,7 +41,6 @@ class SettingDetails extends StatelessWidget {
 }
 
 class SettingsAccountTab extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Column(

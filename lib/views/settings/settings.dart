@@ -28,7 +28,7 @@ class Settings extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 26, right: 26, top: 26),
+                    padding: EdgeInsets.only(left: 26, right: 26, top: 0),
                     child: TabSlideChoose(
                         tabNames, Colors.grey.withOpacity(0.5), GREEN_DARK),
                   ),

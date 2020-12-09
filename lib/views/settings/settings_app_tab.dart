@@ -13,7 +13,8 @@ class SwitchInformation {
 }
 
 class SettingsAppTab extends StatefulWidget {
-  double ecopoint_finder_radius = 16.0; //valor default TODO: DEBERIA SER UN LIVEDATA O ALGO ASI PARA QUE PERMANEZCA EN CONFIGURACION DEL USUARIO
+  double ecopoint_finder_radius =
+      16.0; //valor default TODO: DEBERIA SER UN LIVEDATA O ALGO ASI PARA QUE PERMANEZCA EN CONFIGURACION DEL USUARIO
   static final double SLIDER_MAX_VALUE = 200;
   static final double SLIDER_MIN_VALUE = 1;
 
@@ -55,9 +56,9 @@ class _SettingsAppTabState extends State<SettingsAppTab> {
         Column(
           children: List.generate(
             switchList.length,
-                (index) {
+            (index) {
               return Container(
-                margin: EdgeInsets.only(top: 15),
+                margin: EdgeInsets.only(top: 10),
                 width: double.infinity,
                 height: 56,
                 color: Colors.grey.withOpacity(0.5),
@@ -69,7 +70,7 @@ class _SettingsAppTabState extends State<SettingsAppTab> {
                         switchList[index].name,
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontFamily: 'SFProText',
                           color: Colors.black,
                         ),
@@ -124,10 +125,14 @@ class _SettingsAppTabState extends State<SettingsAppTab> {
                     Padding(
                       padding: EdgeInsets.only(left: 26),
                       child: Text(
-                        "Ecopoint visibility radius: " + widget.ecopoint_finder_radius.truncate().toString() + " km",
+                        "Ecopoint visibility radius: " +
+                            widget.ecopoint_finder_radius
+                                .truncate()
+                                .toString() +
+                            " km",
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontFamily: 'SFProText',
                           color: Colors.black,
                         ),
@@ -166,8 +171,10 @@ class _SettingsAppTabState extends State<SettingsAppTab> {
                         min: 0,
                         max: 200,
                         divisions: 40,
-                        label: widget.ecopoint_finder_radius.truncate()
-                            .toString() + " km",
+                        label: widget.ecopoint_finder_radius
+                                .truncate()
+                                .toString() +
+                            " km",
                         activeColor: Colors.white,
                         inactiveColor: Colors.white,
                       ),
