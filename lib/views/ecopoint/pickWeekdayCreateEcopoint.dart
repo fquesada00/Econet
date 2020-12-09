@@ -14,11 +14,13 @@ class PickWeekday extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime deliveryDate = createEcopointModel.deliveryDate;
-    this.numberOfDays = deliveryDate.difference(_actual).inDays + 1;
+    this.numberOfDays = (deliveryDate.difference(_actual).inHours/24).round();
 
     if (this.numberOfDays > 6) {
       this.numberOfDays = 6;
     }
+    print("numberofDays");
+    print(numberOfDays);
     final dayList = WEEKLIST;
     List<DateTime> availableDays = List();
     print(this.numberOfDays);
@@ -27,9 +29,10 @@ class PickWeekday extends StatelessWidget {
       var currentDay = deliveryDate.subtract(new Duration(days: daysBack));
       availableDays.add(currentDay);
       this.isWeekdayAllowed.add(false);
+      print("i");
+      print(i);
     }
-    print("availableDays");
-    print(availableDays.length);
+
 
     /*dayList[(deliveryDate.weekday-daysBack+6)%6] + " "+
         currentDay.day.toString() +

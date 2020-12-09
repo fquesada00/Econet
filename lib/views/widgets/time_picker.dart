@@ -52,7 +52,6 @@ class TimePickerState extends State<TimePicker> {
   final bool isEndTime;
   int weekday;
   bool _hasLoaded = false;
-
   String _timeType = "";
   String _buttonText = "";
   TimePickerState(this.isStartTime, this.isEndTime, this.weekday,
@@ -312,6 +311,10 @@ class TimePickerState extends State<TimePicker> {
                           backgroundColor: BROWN_MEDIUM,
                         ),
                       ),
-                    ]))));
+                    ]
+                )
+            )
+        )
+    );
   }
 }
