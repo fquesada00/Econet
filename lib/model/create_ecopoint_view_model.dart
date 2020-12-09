@@ -57,7 +57,8 @@ class CreateEcopointModel {
     }
   }
 
-  removeTimeslot(int day, TimeSlot timeslot) {
+  removeTimeslot(int day, int index) {
+    timeslotsWeekdays[day].removeRange(index: index);
     //Doesn't seem to be implemented yet in class timeslot.dart
   }
 

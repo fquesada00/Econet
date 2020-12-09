@@ -1,5 +1,6 @@
 import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -147,22 +148,28 @@ class TimeslotCardState extends State<TimeslotCard> {
               ),
               ),
               Container(height: 288,child:
+              //This is the list of timeslots that you add
               ListView(
                   children: List<Widget>.generate(numberOfRanges, (int index) {
-                    return Column(children:[SizedBox(height: 10,),
+                    return Column(children:[
+                      SizedBox(height: 10,),
                       ChoiceChip(
                         label: Container(
                             width: 240,
                             height: 40,
-                            child:
-                            Center(child: Text(
-                              createEcopointModel.getRangesOfDay(arguments["currentDay"])[index].toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                                color: Colors.black,
+                            child:Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                              SizedBox(width: 40),
+                              Container(alignment: Alignment.centerRight, child: Text(
+                                createEcopointModel.getRangesOfDay(arguments["currentDay"])[index].toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
+                              ),
+                              Icon(CustomIcons.pen),
+                              ]
                             )
                         ),
 
@@ -176,12 +183,23 @@ class TimeslotCardState extends State<TimeslotCard> {
                         ),
                         pressElevation: 0,
                         onSelected: (bool selected) {
-                          setState(() {
-                            //_value = selected ? index : null;
-                            print("OPEN TIMEPICKER HERE");
-                          });
-                        },
-                      )
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext DialogContext){return
+                              TimePicker(
+                                isStartTime: true,
+                                isReplacement: index,
+                                weekday: arguments["currentDay"],
+                                chosenHour: createEcopointModel.getRangesOfDay(arguments["currentDay"])[index].first.hour,
+                                chosenMinute: (createEcopointModel.getRangesOfDay(arguments["currentDay"])[index].first.minute/15).toInt());},)
+                              .then((value){
+                            if(value != null){
+                              setState(() {
+                                numberOfRanges = createEcopointModel.getRangesOfDay(arguments["currentDay"]).length;
+                              });
+                            }
+                          });}
+                        ),
                     ]
                     );
                   }
@@ -208,12 +226,7 @@ class TimeslotCardState extends State<TimeslotCard> {
                                   .then((value){
                                 if(value != null){
                                   setState(() {
-                                    //_value = selected ? index : null;
-                                    print("TIMESLOT ADDED");
-                                    print(numberOfRanges);
                                     numberOfRanges = createEcopointModel.getRangesOfDay(arguments["currentDay"]).length;
-                                    print(numberOfRanges);
-                                    print("afterNumberOfRanges");
                                   });
                                 }
                               });

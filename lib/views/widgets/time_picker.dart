@@ -14,6 +14,7 @@ class TimePicker extends StatefulWidget {
   int startMinute;
   int chosenMinute;
   int chosenHour;
+  int isReplacement;
   TimePicker(
       {this.isStartTime,
       this.isEndTime,
@@ -21,7 +22,8 @@ class TimePicker extends StatefulWidget {
       this.startHour,
       this.startMinute,
       this.chosenHour,
-      this.chosenMinute});
+      this.chosenMinute,
+      this.isReplacement});
 
   @override
   State<StatefulWidget> createState() => TimePickerState(
@@ -31,7 +33,8 @@ class TimePicker extends StatefulWidget {
       this.startHour,
       this.startMinute,
       this.chosenHour,
-      this.chosenMinute);
+      this.chosenMinute,
+      this.isReplacement);
 }
 
 class TimePickerState extends State<TimePicker> {
@@ -50,12 +53,13 @@ class TimePickerState extends State<TimePicker> {
   bool _isHighHour = false;
   final bool isStartTime;
   final bool isEndTime;
+  final int isReplacement;
   int weekday;
   bool _hasLoaded = false;
   String _timeType = "";
   String _buttonText = "";
   TimePickerState(this.isStartTime, this.isEndTime, this.weekday,
-      this._startHour, this._startMinute, this._chosenHour, this._chosenMinute);
+      this._startHour, this._startMinute, this._chosenHour, this._chosenMinute,this.isReplacement);
   updateStates() {
     bool _isLowMinute = false;
     bool _isHighMinute = false;
@@ -145,9 +149,12 @@ class TimePickerState extends State<TimePicker> {
     if (this.isStartTime != null) {
       _timeType = "start-time";
       _buttonText = "NEXT";
-    } else if (this.isEndTime != null) {
+    } else if (this.isEndTime != null && this.isReplacement == null) {
       _timeType = "end-time";
       _buttonText = "ADD TIMESLOT";
+    }else{
+      _timeType = "end-time";
+      _buttonText = "EDIT TIMESLOT";
     }
     _endHour = 24;
     _endMinute = 0;
@@ -161,7 +168,7 @@ class TimePickerState extends State<TimePicker> {
     } else if (_chosenHour != null && _chosenMinute != null) {
       _currentHour = _chosenHour;
       _currentMinute = _chosenMinute;
-      print("chosenhour and minutes exists");
+      print("chosenhour and minutes exists: " + _currentMinute.toString() + _chosenMinute.toString());
     } else {
       _currentHour = 7;
       _currentMinute = 0;
@@ -281,31 +288,34 @@ class TimePickerState extends State<TimePicker> {
                                   builder: (BuildContext DialogContext) {
                                     return TimePicker(
                                         isEndTime: true,
+                                        isReplacement: this.isReplacement,
                                         weekday: weekday,
                                         chosenHour: _currentHour,
                                         chosenMinute: _currentMinute);
                                   }).then((value) {
-                                if (value) {
-                                  Navigator.pop(context, true);
-                                }
-                              });
+                                    Navigator.pop(context, true);
+                                  });
                             } else {
                               //It comes here after both times has been picked
-                              if (!((_startHour == _currentHour &&
-                                  _startMinute == _currentMinute))) {
-                                ecopointModel.addTimeslot(
-                                    weekday,
-                                    _chosenHour,
-                                    _chosenMinute * 15,
-                                    _currentHour,
-                                    _currentMinute * 15);
-
-                                Navigator.pop(context, true);
-                              } else {
-                                print(
-                                    "Timeslot has to be at least 15 minutes long");
+                              if (_currentHour >= _chosenHour) {
+                                if (_chosenHour != _currentHour ||
+                                    _currentMinute > _chosenMinute) {
+                                  if(this.isReplacement != null){
+                                    CreateEcopointModel.instance.removeTimeslot(weekday, this.isReplacement);
+                                  }
+                                  ecopointModel.addTimeslot(
+                                      weekday,
+                                      _chosenHour,
+                                      _chosenMinute * 15,
+                                      _currentHour,
+                                      _currentMinute * 15);
+                                  Navigator.pop(context, true);
+                                }
+                                else {
+                                  print(
+                                      "Timeslot has to be at least 15 minutes long");
+                                }
                               }
-                              print("poporquitorsmth");
                             }
                           },
                           backgroundColor: BROWN_MEDIUM,

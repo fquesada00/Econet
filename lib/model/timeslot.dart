@@ -35,6 +35,24 @@ class TimeSlot implements Comparable<TimeSlot> {
     ranges.sort();
   }
 
+  void removeRange({int index,TimeRange timerange}){
+    if(index != null) {
+      try {
+        ranges.removeAt(index);
+        print("Removed timerange at index " + index.toString() + ranges.toString());
+      } on RangeError {
+        print(
+            "The index:" +index.toString() +  " you're trying to remove in timeslot.dart does not exist");
+      }
+    }else if(timerange != null){
+      try {
+        ranges.remove(timerange);
+      } on RangeError {
+        print(
+            "The timerange you're trying to remove in timeslot.dart does not exist");
+      }
+    }
+  }
 
   @override
   int compareTo(TimeSlot other) {
