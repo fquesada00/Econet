@@ -55,7 +55,8 @@ class _AddBagsState extends State<AddBags> {
                         padding: EdgeInsets.all(15),
                         itemCount: bagList.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return BagInfoRow(bagList, index, true);
+                          return BagInfoRow(bagList, index, true,
+                              setAncestorState: () => setState(() {}));
                         },
                         separatorBuilder: (BuildContext context, int index) =>
                             SizedBox(height: 8),
@@ -125,8 +126,10 @@ class BagInfoRow extends StatefulWidget {
   final List<Bag> bagList;
   final int index;
   final bool isEditable;
+  final Function setAncestorState;
 
-  BagInfoRow(this.bagList, this.index, this.isEditable);
+  BagInfoRow(this.bagList, this.index, this.isEditable,
+      {this.setAncestorState});
 
   @override
   _BagInfoRowState createState() =>
@@ -230,8 +233,11 @@ class _BagInfoRowState extends State<BagInfoRow> {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => _BagDialog(_EditBagDialogContent(
-                        bagList, index, () => setState(() {}))),
+                    builder: (context) =>
+                        _BagDialog(_EditBagDialogContent(bagList, index, () {
+                      setState(() {});
+                      widget.setAncestorState();
+                    })),
                   );
                 },
               ),
@@ -335,7 +341,11 @@ class __EditBagDialogContentState extends State<_EditBagDialogContent> {
               color: ERROR_COLOR,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(7)),
-              onPressed: () {},
+              onPressed: () {
+                widget.bagList.removeAt(widget.index);
+                widget.setAncestorState();
+                Navigator.pop(context);
+              },
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
