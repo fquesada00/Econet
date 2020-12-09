@@ -27,14 +27,39 @@ class NotificationsDialog extends StatelessWidget {
 class NotificationBox extends StatelessWidget {
   List<EcopointDelivery> pendingDeliveries = [
     // TODO: RECIBIR ESTOS DATOS DE LA API
-    EcopointDelivery("PEPE", new DateTime(2020, 12, 12), null,
-        new MyUser.complete("pepe1pepe1pepe", "pepe@gmail.com", "0303456", "", true), false, false),
-    EcopointDelivery("PEPE", new DateTime(2020, 12, 5), null,
-        new MyUser.complete("pepe2", "pepe@gmail.com", "0303456", "", true), false, false),
-    EcopointDelivery("PEPE", new DateTime(2020, 11, 27, 18), null,
-        new MyUser.complete("pepe3", "pepe@gmail.com", "0303456", "", true), false, false),
-    EcopointDelivery("PEPE", new DateTime(2020, 11, 27, 16), null,
-        new MyUser.complete("pepe4", "pepe@gmail.com", "0303456", "", true), false, false),
+    EcopointDelivery(
+        "PEPE",
+        new DateTime(2020, 12, 12),
+        null,
+        new MyUser.complete(
+            "pepe1pepe1pepe", "pepe@gmail.com", "0303456", "", true),
+        false,
+        false,
+        false),
+    EcopointDelivery(
+        "PEPE",
+        new DateTime(2020, 12, 5),
+        null,
+        new MyUser.complete("pepe2", "pepe@gmail.com", "0303456", "", true),
+        false,
+        false,
+        false),
+    EcopointDelivery(
+        "PEPE",
+        new DateTime(2020, 11, 27, 18),
+        null,
+        new MyUser.complete("pepe3", "pepe@gmail.com", "0303456", "", true),
+        false,
+        false,
+        false),
+    EcopointDelivery(
+        "PEPE",
+        new DateTime(2020, 11, 27, 16),
+        null,
+        new MyUser.complete("pepe4", "pepe@gmail.com", "0303456", "", true),
+        false,
+        false,
+        false),
   ];
 
   @override
@@ -56,74 +81,74 @@ class NotificationBox extends StatelessWidget {
       ),
       child: (pendingDeliveries.length == 0)
           ? Container(
-        child: Text(
-          "No pending deliveries",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontFamily: 'SFProDisplay',
-          ),
-        ),
-      )
-          : ListView(
-        children: List.generate(
-          pendingDeliveries.length,
-              (index) {
-            return Container(
-              margin: EdgeInsets.only(bottom: 10),
-              width: 290,
-              height: 90,
-              decoration: BoxDecoration(
-                color: GREEN_LIGHT,
-                borderRadius: BorderRadius.circular(25),
+              child: Text(
+                "No pending deliveries",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 28,
+                  fontFamily: 'SFProDisplay',
+                ),
               ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Row(
+            )
+          : ListView(
+              children: List.generate(
+                pendingDeliveries.length,
+                (index) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    width: 290,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      color: GREEN_LIGHT,
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: Column(
                       children: <Widget>[
                         Expanded(
-                          flex: 1,
-                          child: Center(
-                            child: Icon(
-                              Icons.calendar_today,
-                              size: 45,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: Center(
-                              child: Text(
-                                "Deliver to " +
-                                    pendingDeliveries[index]
-                                        .user
-                                        .fullName +
-                                    " in " +
-                                    TimeRange.getRemainingDeliverTime(
-                                        pendingDeliveries[index].date),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontFamily: 'SFProDisplay',
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.calendar_today,
+                                    size: 45,
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
                               ),
-                            ),
+                              Expanded(
+                                flex: 3,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: Center(
+                                    child: Text(
+                                      "Deliver to " +
+                                          pendingDeliveries[index]
+                                              .user
+                                              .fullName +
+                                          " in " +
+                                          TimeRange.getRemainingDeliverTime(
+                                              pendingDeliveries[index].date),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontFamily: 'SFProDisplay',
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
+            ),
     );
   }
 }

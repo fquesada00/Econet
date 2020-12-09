@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-abstract class DeliveryProvider {
+abstract class DeliveryProvider implements ChangeNotifier {
   Future<EcopointDelivery> getDelivery(String id);
 
   Future<List<EcopointDelivery>> getDeliveriesInEcopoint(String ecopointId);
@@ -23,57 +23,64 @@ abstract class DeliveryProvider {
 final deliveryUrl =
     "https://us-central1-econet-8552d.cloudfunctions.net/delivery";
 
-class FirebaseDeliveryProvider extends ChangeNotifier
-    implements DeliveryProvider {
+class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
   @override
   Future<bool> createDelivery(EcopointDelivery delivery) async {
-    final user = await FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
-    final email = await user.email;
+    final email = user.email;
     final response = await http.post("$deliveryUrl?email=$email",
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: delivery.toJson());
-
+        body: jsonEncode(delivery));
     return response.statusCode == 200;
   }
 
   @override
   Future<List<EcopointDelivery>> getDeliveriesCustomFilter(
       Map<String, String> filters) async {
-    final user = await FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
-    final email = await user.email;
-    String arguments;
+    String arguments = "";
     filters.forEach((key, value) {
       arguments += key + "=" + value + "&";
     });
-    final response = await http.post("$deliveryUrl?$arguments", headers: {
+    final response = await http.get("$deliveryUrl?$arguments", headers: {
       'Authorization': 'Bearer $token',
     });
     List list = jsonDecode(response.body);
-    return list.map((e) => EcopointDelivery.fromJson(e));
+    return list.map((e) => EcopointDelivery.fromJson(e)).toList();
   }
 
   @override
-  Future<List<EcopointDelivery>> getDeliveriesInEcopoint(String ecopointId) {}
+  Future<List<EcopointDelivery>> getDeliveriesInEcopoint(String ecopointId) {
+    return getDeliveriesCustomFilter({ecopointId: ecopointId});
+  }
 
   @override
   Future<List<EcopointDelivery>> getDeliveriesOfUser(String email) {
-    // TODO: implement getDeliveriesOfUser
-    throw UnimplementedError();
+    return getDeliveriesCustomFilter({email: email});
   }
 
   @override
   Future<EcopointDelivery> getDelivery(String id) {
-    // TODO: implement getDelivery
-    throw UnimplementedError();
+    return getDeliveriesCustomFilter({id: id}).then((value) => value.first);
   }
 
   @override
-  Future<bool> updateDelivery(EcopointDelivery delivery) {
-    // TODO: implement updateDelivery
-    throw UnimplementedError();
+  Future<bool> updateDelivery(EcopointDelivery delivery) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final token = await user.getIdToken();
+    final email = user.email;
+    final response = await http.put("$deliveryUrl?email=$email",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(delivery));
+
+    return response.statusCode == 200;
   }
 }

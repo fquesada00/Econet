@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:econet/auth_widget.dart';
 import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/ecopoint_delivery.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/delivery_repository.dart';
 import 'package:econet/services/ecopoint_repository.dart';
 import 'package:econet/views/GMap/filter_testing.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
@@ -23,6 +27,7 @@ import 'package:econet/views/my_ecopoint/request_details.dart';
 import 'package:econet/views/my_recycling/my_delivery_details.dart';
 import 'package:econet/views/my_recycling/my_recycling.dart';
 import 'package:econet/views/settings/settings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart' as EcopointView;
 import 'package:flutter/material.dart';
@@ -37,8 +42,10 @@ import 'package:econet/services/user.dart';
 import 'package:econet/views/ecopoint/pickTime.dart';
 import 'package:econet/views/ecopoint/createEcopoint.dart';
 
+import 'model/bag.dart';
 import 'model/my_user.dart';
 import 'model/residue.dart';
+import 'model/user.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -48,6 +55,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthProvider>(
             create: (_) => FirebaseAuthProvider()),
+        ChangeNotifierProvider<DeliveryProvider>(
+            create: (_) => FirebaseDeliveryProvider()),
         ChangeNotifierProvider<EcopointProvider>(
             create: (_) => FirebaseEcopointProvider()),
       ],
@@ -113,6 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
     //Widget para variar las configuraciones del status bar entre las views
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
+    final deliveryRepository =
+    Provider.of<DeliveryProvider>(context, listen: false);
     final userRepository = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -125,6 +136,29 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Text(
                 '##Para testing##',
+              ),
+              RaisedButton(
+                child: Text("create deliveries"),
+                onPressed: () async {
+                  Ecopoint ecopoint = await ecopointRepository
+                      .getEcopoint("7InbYpB082TVYczzoZeH");
+                  DateTime date = DateTime.now();
+                  List<Bag> bags = new List();
+                  bags.add(new Bag(BagSize.large, BagWeight.light, 2));
+                  final firebase_user = FirebaseAuth.instance.currentUser;
+                  MyUser user =  new MyUser.complete(firebase_user.displayName, firebase_user.email, null, null, false);
+                  EcopointDelivery delivery = new EcopointDelivery(
+                      ecopoint, date, bags, user, false, false, false);
+                  deliveryRepository.createDelivery(delivery);
+                },
+              ),
+              RaisedButton(
+                child: Text("GET deliveries"),
+                onPressed: () async {
+
+                  List<EcopointDelivery> deliveries = await deliveryRepository.getDeliveriesOfUser(FirebaseAuth.instance.currentUser.email);
+                  print(jsonEncode(deliveries.first));
+                },
               ),
               RaisedButton(
                 child: Text("GET ECOPOINT"),
