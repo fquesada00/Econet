@@ -1,4 +1,5 @@
 import 'package:econet/model/create_ecopoint_view_model.dart';
+import 'package:econet/model/ecopoint.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,8 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
   TimeOfDay _time;
   ButtonData btnDataContinue;
   CreateEcopointModel createEcopointModel = CreateEcopointModel.instance;
+  Ecopoint ecopoint;
+  bool alreadyCreated = false;
 
   String getWeekDay(int number) {
     switch (number) {
@@ -40,21 +43,35 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     DateTime _actual = DateTime.now().toLocal();
-    print("testing create ecopointModel in pickDeliveryDate.dart - residues:");
-    print(createEcopointModel.selectedResidues);
+
+    if (!alreadyCreated) {
+      ecopoint = ModalRoute.of(context).settings.arguments;
+      if (ecopoint != null) {
+        _date = ecopoint.deadline;
+        _time = TimeOfDay.fromDateTime(_date);
+      }
+      alreadyCreated = !alreadyCreated;
+    }
 
     //TODO show snackbar cuando no hay fecha seleccionada
     btnDataContinue = ButtonData(
       "CONTINUE",
       () {
-        createEcopointModel.deliveryTime = _time;
-        createEcopointModel.deliveryDate = _date;
-        Navigator.pushNamed(context, '/pickWeekday');
+        if (ecopoint != null) {
+          //TODO: POST A API CON LOS CAMBIOS DE LA FECHA DE ENTREGA, DIA EN _DATE y HORA EN _TIME
+          // LA INFORMACION DE ECOPOINT ESTA EN ecopoint
+          Navigator.pop(context);
+        } else {
+          createEcopointModel.deliveryTime = _time;
+          createEcopointModel.deliveryDate = _date;
+          Navigator.pushNamed(context, '/pickWeekday');
+        }
       },
       enabled: false,
       textColor: Colors.white,
       backgroundColor: Colors.indigo[400],
     );
+
     return Scaffold(
       backgroundColor: Colors.indigo[200],
       appBar: NavBar(

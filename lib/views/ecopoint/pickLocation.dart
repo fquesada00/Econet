@@ -16,7 +16,7 @@ class PickLocation extends StatefulWidget {
 }
 
 class _PickLocationState extends State<PickLocation> {
-  static bool loadingPosition = false;
+  static bool loadingInitialPosition = false, loadingNewPosition = false;
   Completer<GoogleMapController> _controller = Completer();
   GoogleMapController controller;
   TextEditingController text_controller = new TextEditingController();
@@ -38,6 +38,7 @@ class _PickLocationState extends State<PickLocation> {
               ecopoint.coordinates.latitude, ecopoint.coordinates.longitude);
         } else {
           getLocation();
+          controller = await _controller.future;
         }
       });
     });
@@ -54,131 +55,137 @@ class _PickLocationState extends State<PickLocation> {
       backgroundColor: Colors.white,
       body: (_initialPosition == null)
           ? Container(
-        //la posicion actual tarda en cargar, sin este if se muestra un error
-          alignment: Alignment.center,
-          child: (!loadingPosition)
-              ? Text("Please enable system location.")
-              : CircularProgressIndicator())
+              //la posicion actual tarda en cargar, sin este if se muestra un error
+              alignment: Alignment.center,
+              child: (!loadingInitialPosition)
+                  ? Text("Please enable system location.")
+                  : CircularProgressIndicator())
           : Column(
-        children: <Widget>[
-          NavBar(
-            text: 'Pick a location for your Ecopoint',
-            withBack: true,
-            backgroundColor: Colors.white,
-            textColor: Colors.black,
-          ),
-          Expanded(
-            child: Stack(
               children: <Widget>[
-                GoogleMap(
-                  //Con esto sacamos el logo de Google: Cuidado que si
-                  //queremos subir esto al Play Store nos hacen quilombo
-
-                  markers: markers.toSet(),
-                  zoomControlsEnabled: false,
-                  initialCameraPosition: CameraPosition(
-                    // target: LatLng(-34.523644, -58.479677), HARDCODEADO
-                    target: _initialPosition,
-                    zoom: 15.4746,
-                  ),
-                  mapToolbarEnabled: false,
-                  compassEnabled: false,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
+                NavBar(
+                  text: 'Pick a location for your Ecopoint',
+                  withBack: true,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.black,
                 ),
-                Positioned(
-                  top: 0,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 10),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    width: MediaQuery.of(context).size.width,
-                    child: Material(
-                      color: Colors.transparent,
-                      elevation: 5,
-                      borderRadius: _BORDER_RADIUS,
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        height: 50,
-                        width: 250,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 6,
-                              offset: Offset(0, 3),
-                            )
-                          ],
-                          color: Colors.white,
-                          borderRadius: _BORDER_RADIUS,
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      GoogleMap(
+                        //Con esto sacamos el logo de Google: Cuidado que si
+                        //queremos subir esto al Play Store nos hacen quilombo
+
+                        markers: markers.toSet(),
+                        zoomControlsEnabled: false,
+                        initialCameraPosition: CameraPosition(
+                          // target: LatLng(-34.523644, -58.479677), HARDCODEADO
+                          target: _initialPosition,
+                          zoom: 15.4746,
                         ),
-                        child: Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.search,
-                                size: 25,
+                        mapToolbarEnabled: false,
+                        compassEnabled: false,
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                      ),
+                      Positioned(
+                        top: 0,
+                        child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          width: MediaQuery.of(context).size.width,
+                          child: Material(
+                            color: Colors.transparent,
+                            elevation: 5,
+                            borderRadius: _BORDER_RADIUS,
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              height: 50,
+                              width: 250,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                                color: Colors.white,
+                                borderRadius: _BORDER_RADIUS,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 3),
+                                    height: 30,
+                                    width: 30,
+                                    child: Icon(
+                                      Icons.search,
+                                      size: 25,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: TextField(
+                                      controller: text_controller,
+                                      onSubmitted: (String s) {
+                                        // si se ingreso una direccion
+                                        if (text_controller.text.length > 0)
+                                          findNewAddress();
+                                      },
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 0),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent),
+                                          borderRadius: _BORDER_RADIUS,
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent),
+                                          borderRadius: _BORDER_RADIUS,
+                                        ),
+                                        hintText: "Search locations, filters",
+                                        hintStyle: TextStyle(
+                                          fontFamily: 'SFProDisplay',
+                                          fontSize: 17,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (loadingNewPosition)
+                                    Padding(
+                                        padding: EdgeInsets.only(right: 15),
+                                        child: CircularProgressIndicator()),
+                                ],
                               ),
                             ),
-                            Flexible(
-                              child: TextField(
-                                controller: text_controller,
-                                onSubmitted: (String s) {
-                                  // si se ingreso una direccion
-                                  if (text_controller.value.text.length >
-                                      0) findNewAddress();
-                                },
-                                decoration: InputDecoration(
-                                  contentPadding:
-                                  EdgeInsets.symmetric(vertical: 0),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.transparent),
-                                    borderRadius: _BORDER_RADIUS,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.transparent),
-                                    borderRadius: _BORDER_RADIUS,
-                                  ),
-                                  hintText: "Search locations, filters",
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'SFProDisplay',
-                                    fontSize: 17,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child:
-                  PositiveNegativeButtons("Confirm", "Discard", () {
-                    if (ecopoint != null) {
-                      //TODO: POSTEAR A API EL CAMBIO DE DIRECCION
-                      // la informacion del ecopoint a actualizar esta en ecopoint y la direccion del ecopoint en _initialposition
+                      Positioned(
+                        bottom: 0,
+                        child:
+                            PositiveNegativeButtons("Confirm", "Discard", () {
+                          if (ecopoint != null) {
+                            //TODO: POSTEAR A API EL CAMBIO DE DIRECCION
+                            // la informacion del ecopoint a actualizar esta en ecopoint y la direccion del ecopoint en _initialposition
 
-                    } else {
-                      //TODO: ESTA CREANDO UN ECOPOINT, SEGUIR EL CAMINO
-                      // la direccion del ecopoint en _initialposition
-                    }
-                  }, () {
-                    print("hmhmn't");
-                  }),
+                          } else {
+                            //TODO: ESTA CREANDO UN ECOPOINT, SEGUIR EL CAMINO
+                            // la direccion del ecopoint en _initialposition
+                          }
+                        }, () {
+                          print("hmhmn't");
+                        }),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -195,7 +202,7 @@ class _PickLocationState extends State<PickLocation> {
     }
 
     setState(() {
-      loadingPosition = true;
+      loadingInitialPosition = true;
       print("LOADING POSITION");
     });
 
@@ -210,7 +217,7 @@ class _PickLocationState extends State<PickLocation> {
     }
     // posicion inicial del mapa
     _initialPosition =
-    new LatLng(currentPosition.latitude, currentPosition.longitude);
+        new LatLng(currentPosition.latitude, currentPosition.longitude);
 
     await changeLocation(currentPosition.latitude, currentPosition.longitude);
 
@@ -219,12 +226,18 @@ class _PickLocationState extends State<PickLocation> {
 
   void findNewAddress() async {
     var addresses;
+    setState(() {
+      loadingNewPosition = true;
+    });
     print("TEXTO A BUSCAR: " + text_controller.value.text);
     try {
       addresses = await Geocoder.local
           .findAddressesFromQuery(text_controller.value.text);
     } catch (error) {
       print(error);
+      setState(() {
+        loadingNewPosition = false;
+      });
       return;
     }
 
@@ -243,6 +256,10 @@ class _PickLocationState extends State<PickLocation> {
       _initialPosition = new LatLng(
           newAddress.coordinates.latitude, newAddress.coordinates.longitude);
     }
+
+    setState(() {
+      loadingNewPosition = false;
+    });
   }
 
   Future<void> changeLocation(double newLatitude, double newLongitude) async {

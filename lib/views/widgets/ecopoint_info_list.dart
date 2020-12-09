@@ -98,51 +98,60 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
           ),
           editable: widget.withoutPicture,
           edit: () {
-            Navigator.pushNamed(context, '/pickLocation', arguments: widget.ecopoint);},
+            Navigator.pushNamed(context, '/pickLocation',
+                arguments: widget.ecopoint);
+          },
         ),
         InformationCard(
-            icon: FaIcon(FontAwesomeIcons.recycle).icon,
-            name: "Collects",
-            nameColor: GREEN_DARK,
-            content: Container(
-              height: 30,
-              alignment: Alignment.center,
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                children: List.from(
-                  CHIP_DATA.keys
-                      .where((element) => widget.ecopoint.residues
-                          .contains(residueFromString(element)))
-                      .map(
-                        (k) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2),
-                          child: EconetFilterChip(k, CHIP_DATA[k]),
-                        ),
-                      )
-                      .toList(),
-                ),
+          icon: FaIcon(FontAwesomeIcons.recycle).icon,
+          name: "Collects",
+          nameColor: GREEN_DARK,
+          content: Container(
+            height: 30,
+            alignment: Alignment.center,
+            child: ListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              children: List.from(
+                CHIP_DATA.keys
+                    .where((element) => widget.ecopoint.residues
+                        .contains(residueFromString(element)))
+                    .map(
+                      (k) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: EconetFilterChip(k, CHIP_DATA[k]),
+                      ),
+                    )
+                    .toList(),
               ),
             ),
-            editable: widget.withoutPicture,
-            edit: () {
-              Navigator.pushNamed(context, '/pickDeliveryMaterials', arguments: widget.ecopoint);
-            },),
+          ),
+          editable: widget.withoutPicture,
+          edit: () {
+            Navigator.pushNamed(context, '/pickDeliveryMaterials',
+                arguments: widget.ecopoint);
+          },
+        ),
         InformationCard(
-            icon: Icons.calendar_today,
-            name: "Delivers on",
-            nameColor: GREEN_DARK,
-            content: Text(
-              widget.ecopoint.deadline.toIso8601String().substring(0, 10),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontFamily: 'SFProDisplay',
-                fontWeight: FontWeight.w600,
-              ),
+          icon: Icons.calendar_today,
+          name: "Delivers on",
+          nameColor: GREEN_DARK,
+          content: Text(
+            widget.ecopoint.deadline.toIso8601String().substring(0, 10),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'SFProDisplay',
+              fontWeight: FontWeight.w600,
             ),
-            editable: widget.withoutPicture),
+          ),
+          editable: widget.withoutPicture,
+          edit: () {
+            Navigator.pushNamed(context, '/pickDeliveryDate',
+                arguments: widget.ecopoint);
+          },
+        ),
         InformationCard(
             name: "Available at",
             nameColor: GREEN_DARK,

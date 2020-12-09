@@ -50,20 +50,22 @@ class DeliveryInfoList extends StatelessWidget {
         ),
       ),
       InformationCard(
-          icon: Icons.calendar_today,
-          name: "Deliver scheduled for",
-          nameColor: backgroundColor,
-          content: Text(
-            ecopointDelivery.date.toIso8601String().substring(0, 10),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontFamily: 'SFProDisplay',
-              fontWeight: FontWeight.w600,
-            ),
+        icon: Icons.calendar_today,
+        name: "Deliver scheduled for",
+        nameColor: backgroundColor,
+        content: Text(
+          ecopointDelivery.date.toIso8601String().substring(0, 10),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontFamily: 'SFProDisplay',
+            fontWeight: FontWeight.w600,
           ),
-          editable: true),
+        ),
+        editable: true,
+        //TODO: EDICION DE FECHA DE ENTREGA
+      ),
       if (ecopointDelivery.bags != null)
         InformationCard(
             name: "Bags/Objects",
@@ -80,7 +82,9 @@ class DeliveryInfoList extends StatelessWidget {
                     SizedBox(height: 8),
               ),
             ),
-            editable: true),
+            editable: true
+            //TODO: EDICION DE BOLSAS A ENTREGAR
+            ),
     ]);
   }
 }
