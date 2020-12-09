@@ -108,8 +108,8 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
       },
     );
     print("RESPONSE ================ " + response.body.toString());
-    List<String> ecopointsDoc = response.body as List<String>;
-    return ecopointsDoc.map((e) => Ecopoint.fromJson(jsonDecode(e))).toList();
+    List ecopointsDoc = jsonDecode(response.body) as List;
+    return ecopointsDoc.map((e) => Ecopoint.fromJson(e)).toList();
   }
 
   @override
@@ -123,8 +123,8 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
         'Authorization': 'Bearer $token',
       },
     );
-    List<String> ecopointsDoc = response.body as List<String>;
-    return ecopointsDoc.map((e) => Ecopoint.fromJson(jsonDecode(e))).toList();
+    List ecopointsDoc = jsonDecode(response.body) as List;
+    return ecopointsDoc.map((e) => Ecopoint.fromJson(e)).toList();
   }
 
   @override

@@ -161,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       "",
                       "testing create",
                       "chacras del mar",
-                      LatLng(20.04, 30.04));
+                      LatLng(-34.5236, -58.4796));
 
                   ecopointRepository
                       .createEcopoint(ecopoint)

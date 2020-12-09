@@ -73,12 +73,14 @@ class DrawerState extends State<AppDrawer> {
                 });
               }),
           _createDrawerItem(
-              text: 'My recycling',
+              text: 'My Recycling',
               active: states[1],
               onTap: () {
                 setState(() {
                   changeState(1);
                 });
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/my_recycling', ModalRoute.withName('/'));
               }),
           _createDrawerItem(
               text: 'News',

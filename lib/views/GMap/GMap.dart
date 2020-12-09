@@ -1,20 +1,20 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui';
+
+import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/services/ecopoint_repository.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
 import 'package:econet/views/settings/settings_app_tab.dart';
 import 'package:econet/views/widgets/EconetButton.dart';
+import 'package:econet/views/widgets/GMapNavBar.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
-import 'Ecopoint.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:econet/views/widgets/GMapNavBar.dart';
-import 'package:econet/presentation/constants.dart';
+import 'package:provider/provider.dart';
 
 class GMap extends StatefulWidget {
   @override
@@ -99,25 +99,26 @@ class GMapState extends State<GMap> {
     );
   }
 
-  Future<List<Ecopoint>> getEcopoints(
-      double latitude, double longitude, double radius) async {
-    String request =
-        'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?' +
-            'radius=' +
-            radius.toString() +
-            '&latitude=' +
-            latitude.toString() +
-            '&longitude=' +
-            longitude.toString();
-    print("REQUEST: " + request);
-    final response = await http.get(request);
-    print(
-        "RESPONSE BODY =========================================================== " +
-            response.body);
-    final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-
-    return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
-  }
+  //
+  // Future<List<Ecopoint>> getEcopoints(
+  //     double latitude, double longitude, double radius) async {
+  //   String request =
+  //       'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?' +
+  //           'radius=' +
+  //           radius.toString() +
+  //           '&latitude=' +
+  //           latitude.toString() +
+  //           '&longitude=' +
+  //           longitude.toString();
+  //   print("REQUEST: " + request);
+  //   final response = await http.get(request);
+  //   print(
+  //       "RESPONSE BODY =========================================================== " +
+  //           response.body);
+  //   final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+  //
+  //   return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
+  // }
 
   void findNewAddress() async {
     var addresses;
@@ -150,12 +151,16 @@ class GMapState extends State<GMap> {
     markers.add(createMarker("positionMarker", newLatitude, newLongitude,
         newLatitude.toString() + newLongitude.toString(), context, markerIcon));
 
-    await getEcopoints(newLatitude, newLongitude, ECOPOINT_RADIUS)
+    final ecopointRepository =
+        Provider.of<EcopointProvider>(context, listen: false);
+
+    await ecopointRepository
+        .getEcopointsByRadius(ECOPOINT_RADIUS, newLatitude, newLongitude)
         .then((value) {
       value.forEach((element) {
         print("MARKER ADDED: " + element.toString());
-        markers.add(createMarker(element.toString(), element.latitude,
-            element.longitude, element.adress, context, markerIcon));
+        markers.add(createMarker(element.toString(), element.getLatitude(),
+            element.getLongitude(), element.address, context, markerIcon));
       });
     });
 
