@@ -154,15 +154,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   //     "agustormakh@gmail.com", "11740590", "hola", true);
                   final ecopoint = Ecopoint(
                       null,
-                      false,
+                      true,
                       [Residue.paper, Residue.glass],
                       "",
                       new DateTime.now(),
                       [new TimeSlot(5), new TimeSlot(3)],
                       "",
-                      "testing create",
-                      "chacras del mar",
-                      LatLng(-34.5236, -58.4796));
+                      "PLANTA 111a",
+                      "hmm?",
+                      LatLng(-34.5296, -58.4786));
 
                   ecopointRepository
                       .createEcopoint(ecopoint)

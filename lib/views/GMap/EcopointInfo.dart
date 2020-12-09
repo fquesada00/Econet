@@ -1,3 +1,5 @@
+import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/econet_display_chip.dart';
@@ -6,33 +8,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EcopointInfo extends StatefulWidget {
-  //EcopointInfo({this.adress);
+  Ecopoint ecopoint;
+  double distance;
+
+  EcopointInfo({this.ecopoint, this.distance});
+
   //String adress;
   @override
   State<StatefulWidget> createState() => EcopointInfoState();
 }
 
 class EcopointInfoState extends State<EcopointInfo> {
-  //EcopointInfoState({this.adress});
-  //String adress;
-  List<String> residues = [
-    'Paper',
-    'Plastic',
-    'Glass',
-    'Metal',
-    'Electronics',
-    'Wood',
-    'Textile'
-  ];
-  String ecopointName = "Beto's Ecopoint";
-  double distance = 0.2;
-  String address = 'Address 1234';
-  String ecollector = 'Beto';
   ScrollController _controller = new ScrollController();
-  DateTime deliveryDate = new DateTime.utc(2020, 10, 26);
 
   @override
   Widget build(BuildContext context) {
+    print(widget.ecopoint);
     return new Container(
         height: 340,
         decoration: BoxDecoration(
@@ -56,14 +47,17 @@ class EcopointInfoState extends State<EcopointInfo> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            ecopointName,
+                            (widget.ecopoint.ecollector.fullName != null)
+                                ? widget.ecopoint.ecollector.fullName
+                                : "NULL",
                             style: TextStyle(
                                 fontSize: 30, fontWeight: FontWeight.w700),
                           ),
                         ),
                         SizedBox(width: 5),
                         Text(
-                          "$distance km",
+                          widget.distance.toStringAsPrecision(2).toString() +
+                              " km",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 18,
@@ -89,7 +83,6 @@ class EcopointInfoState extends State<EcopointInfo> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //SizedBox(width: 10),
                   Icon(
                     Icons.place,
                     size: 35,
@@ -108,7 +101,7 @@ class EcopointInfoState extends State<EcopointInfo> {
                     width: 285,
                     alignment: Alignment(0, 0),
                     child: Text(
-                      address,
+                      widget.ecopoint.address,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -140,26 +133,29 @@ class EcopointInfoState extends State<EcopointInfo> {
                     isAlwaysShown: true,
                     controller: _controller,
                     child: Container(
-                        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Color(0xFFe5e2e2),
-                          //color: Colors.grey,
+                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Color(0xFFe5e2e2),
+                        //color: Colors.grey,
+                      ),
+                      height: 76,
+                      width: 285,
+                      alignment: Alignment(0, 0),
+                      child: SingleChildScrollView(
+                        controller: _controller,
+                        child: Wrap(
+                          runSpacing: -7,
+                          spacing: 5,
+                          alignment: WrapAlignment.center,
+                          children: widget.ecopoint.residues
+                              .map((residue) => EconetDisplayChip(
+                                  residueToString(residue),
+                                  CHIP_DATA[residueToString(residue)]))
+                              .toList(),
                         ),
-                        height: 76,
-                        width: 285,
-                        alignment: Alignment(0, 0),
-                        child: SingleChildScrollView(
-                            controller: _controller,
-                            child: Wrap(
-                              runSpacing: -7,
-                              spacing: 5,
-                              alignment: WrapAlignment.center,
-                              children: residues
-                                  .map((residue) => EconetDisplayChip(
-                                      residue, CHIP_DATA[residue]))
-                                  .toList(),
-                            ))),
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -167,19 +163,24 @@ class EcopointInfoState extends State<EcopointInfo> {
             SizedBox(height: 10),
             Button1(
               btnData: ButtonData(
-                'OPEN ECOPOINT',
+                (widget.ecopoint.isPlant) ? 'CREATE ECOPOINT' : 'OPEN ECOPOINT',
                 () {
-                  Navigator.pushNamed(context, '/ecopoint_expanded',
-                      arguments: {
-                        'ecopointName': ecopointName,
-                        'address': address,
-                        'distance': distance,
-                        'residues': residues,
-                        'ecollector': ecollector,
-                        'deliveryDate': deliveryDate,
-                      });
+                  if (widget.ecopoint.isPlant) {
+                    List<String> auxResidues = [];
+                    widget.ecopoint.residues.forEach((element) {auxResidues.add(residueToString(element));});
+                    Navigator.pushNamed(context, '/createEcopoint', arguments: {
+                      'plantName': (widget.ecopoint.ecollector.fullName != null)? widget.ecopoint.ecollector.fullName : 'NULL',
+                      'address': widget.ecopoint.address,
+                      'distance': widget.distance,
+                      'residues': auxResidues,
+                    });
+                  } else {
+                    Navigator.pushNamed(context, '/ecopoint_expanded',
+                        arguments: widget.ecopoint);
+                  }
                 },
-                backgroundColor: GREEN_MEDIUM,
+                backgroundColor:
+                    (widget.ecopoint.isPlant) ? BROWN_MEDIUM : GREEN_MEDIUM,
                 width: 200,
                 height: 50,
                 fontSize: 50,
@@ -193,53 +194,57 @@ class EcopointInfoState extends State<EcopointInfo> {
 
 //Creates a row for the materials such as paper or glass
 Widget materialRow(text1, color1, text2, color2, text3, color3) {
-  return Wrap(runSpacing: 5, alignment: WrapAlignment.center, children: [
-    Container(
-      padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2.0),
-        color: Color(color1),
-        //color: Colors.grey,
+  return Wrap(
+    runSpacing: 5,
+    alignment: WrapAlignment.center,
+    children: [
+      Container(
+        padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2.0),
+          color: Color(color1),
+          //color: Colors.grey,
+        ),
+        height: 30,
+        width: 80,
+        alignment: Alignment(0, 0),
+        child: Text(
+          text1,
+          style: TextStyle(color: Colors.black),
+        ),
       ),
-      height: 30,
-      width: 80,
-      alignment: Alignment(0, 0),
-      child: Text(
-        text1,
-        style: TextStyle(color: Colors.black),
+      SizedBox(width: 7),
+      Container(
+        padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2.0),
+          color: Color(color2),
+          //color: Colors.grey,
+        ),
+        height: 30,
+        width: 80,
+        alignment: Alignment(0, 0),
+        child: Text(
+          text2,
+          style: TextStyle(color: Colors.black),
+        ),
       ),
-    ),
-    SizedBox(width: 7),
-    Container(
-      padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2.0),
-        color: Color(color2),
-        //color: Colors.grey,
+      SizedBox(width: 7),
+      Container(
+        padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2.0),
+          color: Color(color3),
+          //color: Colors.grey,
+        ),
+        height: 30,
+        width: 80,
+        alignment: Alignment(0, 0),
+        child: Text(
+          text3,
+          style: TextStyle(color: Colors.black),
+        ),
       ),
-      height: 30,
-      width: 80,
-      alignment: Alignment(0, 0),
-      child: Text(
-        text2,
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-    SizedBox(width: 7),
-    Container(
-      padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2.0),
-        color: Color(color3),
-        //color: Colors.grey,
-      ),
-      height: 30,
-      width: 80,
-      alignment: Alignment(0, 0),
-      child: Text(
-        text3,
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-  ]);
+    ],
+  );
 }

@@ -1,3 +1,5 @@
+import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/button1.dart';
@@ -12,7 +14,7 @@ class EcopointExpanded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    Ecopoint ecopoint = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       backgroundColor: GREEN_LIGHT,
@@ -20,7 +22,9 @@ class EcopointExpanded extends StatelessWidget {
         backgroundColor: GREEN_LIGHT,
         withBack: true,
         textColor: GREEN_DARK,
-        text: arguments['ecopointName'],
+        text: (ecopoint.ecollector.fullName != null)
+            ? ecopoint.ecollector.fullName
+            : "NULL",
       ),
       body: ListView(children: <Widget>[
         SizedBox(height: 30),
@@ -37,14 +41,7 @@ class EcopointExpanded extends StatelessWidget {
               btnData: ButtonData(
                 'RECYCLE',
                 () {
-                  Navigator.pushNamed(context, '/pickDelivery', arguments: {
-                    'ecopointName': "ecopointName",
-                    'address': "address",
-                    'distance': "distance",
-                    'residues': "residues",
-                    'ecollector': "ecollector",
-                    'deliveryDate': "deliveryDate",
-                  });
+                  //TODO: DEBERIA MANDARLO A ARRANCAR A ARMAR DELIVERY
                 },
                 backgroundColor: GREEN_DARK,
                 fontSize: 24,
@@ -69,7 +66,7 @@ class EcopointExpanded extends StatelessWidget {
                 color: Color(0xFFE5E2E2),
                 alignment: Alignment.center,
                 child: Text(
-                  arguments['address'],
+                  ecopoint.address,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -87,24 +84,28 @@ class EcopointExpanded extends StatelessWidget {
             content: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               child: CupertinoScrollbar(
-                  isAlwaysShown: true,
-                  controller: _controller1,
-                  child: Container(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                      height: 70,
-                      color: Color(0xFFE5E2E2),
-                      alignment: Alignment(0, 0),
-                      child: SingleChildScrollView(
-                          controller: _controller1,
-                          child: Wrap(
-                            runSpacing: -7,
-                            spacing: 5,
-                            alignment: WrapAlignment.center,
-                            children: List<Widget>.from((arguments['residues']
-                                .map((residue) => EconetDisplayChip(
-                                    residue, CHIP_DATA[residue]))
-                                .toList())),
-                          )))),
+                isAlwaysShown: true,
+                controller: _controller1,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  height: 70,
+                  color: Color(0xFFE5E2E2),
+                  alignment: Alignment(0, 0),
+                  child: SingleChildScrollView(
+                    controller: _controller1,
+                    child: Wrap(
+                      runSpacing: -7,
+                      spacing: 5,
+                      alignment: WrapAlignment.center,
+                      children: ecopoint.residues
+                          .map((residue) => EconetDisplayChip(
+                              residueToString(residue),
+                              CHIP_DATA[residueToString(residue)]))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -117,23 +118,27 @@ class EcopointExpanded extends StatelessWidget {
             content: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               child: CupertinoScrollbar(
-                  isAlwaysShown: true,
-                  controller: _controller2,
-                  child: Container(
-                      height: 70,
-                      color: Color(0xFFE5E2E2),
-                      alignment: Alignment(0, 0),
-                      child: SingleChildScrollView(
-                          controller: _controller2,
-                          child: Wrap(
-                            runSpacing: 5,
-                            spacing: 5,
-                            alignment: WrapAlignment.center,
-                            children: List<Widget>.from((arguments['residues']
-                                .map((residue) => EconetDisplayChip(
-                                    residue, CHIP_DATA[residue]))
-                                .toList())),
-                          )))),
+                isAlwaysShown: true,
+                controller: _controller2,
+                child: Container(
+                  height: 70,
+                  color: Color(0xFFE5E2E2),
+                  alignment: Alignment(0, 0),
+                  child: SingleChildScrollView(
+                    controller: _controller2,
+                    child: Wrap(
+                      runSpacing: 5,
+                      spacing: 5,
+                      alignment: WrapAlignment.center,
+                      children: ecopoint.residues
+                          .map((residue) => EconetDisplayChip(
+                              residueToString(residue),
+                              CHIP_DATA[residueToString(residue)]))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),

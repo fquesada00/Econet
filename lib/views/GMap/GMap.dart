@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'dart:ui';
+import 'dart:ui' as ui;
 
+import 'package:econet/model/ecopoint.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/services/ecopoint_repository.dart';
@@ -10,6 +13,8 @@ import 'package:econet/views/widgets/EconetButton.dart';
 import 'package:econet/views/widgets/GMapNavBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,7 +29,8 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
   Completer<GoogleMapController> _controller = Completer();
   TextEditingController text_controller = new TextEditingController();
   List<Marker> markers = List();
-  BitmapDescriptor markerIcon;
+  BitmapDescriptor markerEcopointIcon;
+  BitmapDescriptor markerPlantIcon;
   static bool searchingFlag = false, loadingPosition = false;
   static LatLng _initialPosition;
   static final double ECOPOINT_RADIUS = SettingsAppTab().ecopoint_finder_radius;
@@ -94,27 +100,6 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
           );
   }
 
-  //
-  // Future<List<Ecopoint>> getEcopoints(
-  //     double latitude, double longitude, double radius) async {
-  //   String request =
-  //       'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?' +
-  //           'radius=' +
-  //           radius.toString() +
-  //           '&latitude=' +
-  //           latitude.toString() +
-  //           '&longitude=' +
-  //           longitude.toString();
-  //   print("REQUEST: " + request);
-  //   final response = await http.get(request);
-  //   print(
-  //       "RESPONSE BODY =========================================================== " +
-  //           response.body);
-  //   final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-  //
-  //   return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
-  // }
-
   void findNewAddress() async {
     var addresses;
     print("TEXTO A BUSCAR: " + text_controller.value.text);
@@ -144,7 +129,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
 
   Future<void> changeLocation(double newLatitude, double newLongitude) async {
     markers.add(createMarker("positionMarker", newLatitude, newLongitude,
-        newLatitude.toString() + newLongitude.toString(), context, markerIcon));
+        newLatitude.toString() + newLongitude.toString(), context, null));
 
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
@@ -153,9 +138,17 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
         .getEcopointsByRadius(ECOPOINT_RADIUS, newLatitude, newLongitude)
         .then((value) {
       value.forEach((element) {
-        print("MARKER ADDED: " + element.toString());
-        markers.add(createMarker(element.toString(), element.getLatitude(),
-            element.getLongitude(), element.address, context, markerIcon));
+        print("MARKER ADDED: " +
+            element.toString() +
+            " IS PLANT? " +
+            ((element.isPlant) ? "YES" : "NO"));
+        markers.add(createMarker(
+            (element.isPlant) ? "plantMarker" : "ecopointMarker",
+            element.getLatitude(),
+            element.getLongitude(),
+            element.address,
+            context,
+            element));
       });
     });
 
@@ -200,18 +193,23 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
   }
 
   _setMarkerIcon() async {
-    markerIcon = await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
+    markerEcopointIcon =
+        await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
+    markerPlantIcon = await _bitmapDescriptorFromSvgAsset(
+        context, 'assets/icons/factory_icon.svg');
   }
 
-  static Marker createMarker(String id, double latitude, double longitude,
-      String adress, context, BitmapDescriptor auxMarkerIcon) {
+  Marker createMarker(String id, double latitude, double longitude,
+      String adress, context, Ecopoint ecopoint) {
     LatLng latlng = LatLng(latitude, longitude);
     BitmapDescriptor icon;
     if (id == "positionMarker")
       icon = BitmapDescriptor.defaultMarker;
-    else
-      icon = auxMarkerIcon; // icono de ecopoint
+    else if (id == "ecopointMarker")
+      icon = markerEcopointIcon; // icono de ecopoint
+    else if (id == "plantMarker") icon = markerPlantIcon;
 
+    print(icon);
     //marcador de la posicion en la que se encontraba al abrir la app
     return Marker(
       markerId: MarkerId(id),
@@ -221,12 +219,20 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
       zIndex: 1,
       //Calling the function that does the popup
       onTap: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (builder) {
-            return EcopointInfo();
-          },
-        );
+        if (id == "ecopointMarker" || id == "plantMarker")
+          showModalBottomSheet(
+            context: context,
+            builder: (builder) {
+              return EcopointInfo(
+                  ecopoint: ecopoint,
+                  distance: Geolocator.distanceBetween(
+                          latitude,
+                          longitude,
+                          _initialPosition.latitude,
+                          _initialPosition.longitude) /
+                      1000);
+            },
+          );
       },
     );
   }
@@ -260,3 +266,28 @@ Future<BitmapDescriptor> _iconToMarker(
   return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
 }
 //From guide here https://www.abhishekduhoon.com/2020/06/how-to-create-widget-based-google-maps.html
+
+Future<BitmapDescriptor> _bitmapDescriptorFromSvgAsset(
+    BuildContext context, String assetName) async {
+  // Read SVG file as String
+  String svgString = await DefaultAssetBundle.of(context).loadString(assetName);
+  // Create DrawableRoot from SVG String
+  DrawableRoot svgDrawableRoot = await svg.fromSvgString(svgString, null);
+
+  // toPicture() and toImage() don't seem to be pixel ratio aware, so we calculate the actual sizes here
+  MediaQueryData queryData = MediaQuery.of(context);
+  double devicePixelRatio = queryData.devicePixelRatio;
+  double width = 32 * devicePixelRatio; // where 32 is your SVG's original width
+  double height = 32 * devicePixelRatio; // same thing
+
+  // Convert to ui.Picture
+  ui.Picture picture = svgDrawableRoot.toPicture(size: Size(width, height));
+
+  // Convert to ui.Image. toImage() takes width and height as parameters
+  // you need to find the best size to suit your needs and take into account the
+  // screen DPI
+  ui.Image image = await picture.toImage(width.truncate(), height.truncate());
+  ByteData bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+  return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
+}
+//From guide here https://stackoverflow.com/questions/55655554/using-svg-markers-in-google-maps-flutter-flutter-plugin
