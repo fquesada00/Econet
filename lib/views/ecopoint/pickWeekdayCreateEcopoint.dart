@@ -11,10 +11,14 @@ class PickWeekday extends StatelessWidget {
   final createEcopointModel = CreateEcopointModel.instance;
   var numberOfDays;
   DateTime _actual = DateTime.now();
+  int diffInDays (DateTime date1, DateTime date2) {
+    return ((date1.difference(date2) - Duration(hours: date1.hour) + Duration(hours: date2.hour)).inHours / 24).round();
+  }
   @override
   Widget build(BuildContext context) {
+
     DateTime deliveryDate = createEcopointModel.deliveryDate;
-    this.numberOfDays = (deliveryDate.difference(_actual).inHours/24).round();
+    this.numberOfDays = diffInDays(deliveryDate,_actual);
 
     if (this.numberOfDays > 6) {
       this.numberOfDays = 6;
@@ -29,8 +33,6 @@ class PickWeekday extends StatelessWidget {
       var currentDay = deliveryDate.subtract(new Duration(days: daysBack));
       availableDays.add(currentDay);
       this.isWeekdayAllowed.add(false);
-      print("i");
-      print(i);
     }
 
 
@@ -46,9 +48,9 @@ class PickWeekday extends StatelessWidget {
         }
       }
       return chosenDays;
-    }
+    };
 
-    ;
+
     return Scaffold(
       backgroundColor: BROWN_DARK,
       appBar: NavBar(

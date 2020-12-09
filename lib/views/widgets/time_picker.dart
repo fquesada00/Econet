@@ -285,27 +285,24 @@ class TimePickerState extends State<TimePicker> {
                                         chosenHour: _currentHour,
                                         chosenMinute: _currentMinute);
                                   }).then((value) {
-                                if (value) {
-                                  Navigator.pop(context, true);
-                                }
+                                    Navigator.pop(context, true);
                               });
                             } else {
                               //It comes here after both times has been picked
-                              if (!((_startHour == _currentHour &&
-                                  _startMinute == _currentMinute))) {
-                                ecopointModel.addTimeslot(
-                                    weekday,
-                                    _chosenHour,
-                                    _chosenMinute * 15,
-                                    _currentHour,
-                                    _currentMinute * 15);
-
-                                Navigator.pop(context, true);
-                              } else {
-                                print(
-                                    "Timeslot has to be at least 15 minutes long");
+                              if (_currentHour >= _chosenHour) {
+                                if(_chosenHour != _currentHour || _currentMinute > _chosenMinute) {
+                                  ecopointModel.addTimeslot(
+                                      weekday,
+                                      _chosenHour,
+                                      _chosenMinute * 15,
+                                      _currentHour,
+                                      _currentMinute * 15);
+                                      Navigator.pop(context, true);
+                                }
+                                else {
+                                  print("Timeslot has to be at least 15 minutes long");
+                                }
                               }
-                              print("poporquitorsmth");
                             }
                           },
                           backgroundColor: BROWN_MEDIUM,
