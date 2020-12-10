@@ -49,8 +49,6 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return _initialPosition == null
         ? Container(
             //la posicion actual tarda en cargar, sin este if se muestra un error
