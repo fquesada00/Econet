@@ -179,19 +179,39 @@ class TimePickerState extends State<TimePicker> {
     _hasLoaded = true;
   }
 
+  Widget deleteButton(){
+    if(this.isReplacement != null) {
+      return Container(height: 50, width: 250, alignment: Alignment.bottomCenter,child: Button1(
+        btnData: ButtonData(
+          "DELETE TIMESLOT",
+              ({height:50}) {
+              CreateEcopointModel.instance.removeTimeslot(weekday, this.isReplacement);
+              Navigator.pop(context, true);
+            },
+          backgroundColor: Colors.red,
+        ),
+      ));
+    }else{
+      return SizedBox();
+    }
+  }
+
   Widget build(BuildContext context) {
     if (!_hasLoaded) {
       firstLoad();
       print("First load of time_picker");
     }
-
+    double height = 300;
+    if (this.isReplacement != null){
+      height = 350;
+    }
     return AlertDialog(
         title: Text("Pick your " + _timeType),
         content: Material(
             child: Container(
                 color: Colors.white,
                 width: 300,
-                height: 300,
+                height: height,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -321,6 +341,7 @@ class TimePickerState extends State<TimePicker> {
                           backgroundColor: BROWN_MEDIUM,
                         ),
                       ),
+                      deleteButton(),
                     ]
                 )
             )

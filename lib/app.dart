@@ -194,15 +194,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   //     "agustormakh@gmail.com", "11740590", "hola", true);
                   final ecopoint = Ecopoint(
                       MyUser.complete("ecopoint mbeh", "_email", "_phone", "", true),
-                      false,
-                      [Residue.paper],
+                      true,
+                      [Residue.paper, Residue.electronics,Residue.metal],
                       "",
                       new DateTime.utc(2021),
                       [new TimeSlot(5), new TimeSlot(3)],
                       "",
-                      "PLANTA 111a",
-                      "hmm?",
-                      LatLng(-34.5296, -58.4786));
+                      "Plaza de España",
+                      "Plaza de España, 4",
+                      LatLng(40.4232244, -3.713133));
 
                   ecopointRepository
                       .createEcopoint(ecopoint)
