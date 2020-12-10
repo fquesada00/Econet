@@ -1,3 +1,4 @@
+import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/material.dart';
 class CreateAdditionalDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    TextEditingController _controller = new TextEditingController();
+
     return Scaffold(
       appBar: NavBar(
         text: 'Additional details (optional)',
@@ -35,6 +38,7 @@ class CreateAdditionalDetails extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: TextField(
+                controller: _controller,
                 keyboardType: TextInputType.multiline,
                 minLines: 12,
                 maxLines: 12,
@@ -61,7 +65,9 @@ class CreateAdditionalDetails extends StatelessWidget {
             SizedBox(height: 50),
             Button1(
               btnData: ButtonData('CONTINUE', () {
-                // TODO: MANDARLO AL VIEWMODEL y PASAR A CHOOSE NAME
+                CreateEcopointModel.instance.additionalInfo =
+                    _controller.text.trim();
+                Navigator.pushNamed(context, '/create_ecopoint_name');
               }, backgroundColor: BROWN_MEDIUM),
             )
           ],

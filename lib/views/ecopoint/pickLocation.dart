@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/model/ecopoint.dart';
+import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:econet/views/widgets/positive_negative_buttons.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +25,7 @@ class _PickLocationState extends State<PickLocation> {
   List<Marker> markers = List();
   static LatLng _initialPosition;
   Ecopoint ecopoint;
+  String _locationAddress;
 
   @override
   Future<void> initState() {
@@ -157,7 +161,11 @@ class _PickLocationState extends State<PickLocation> {
                                   if (loadingNewPosition)
                                     Padding(
                                         padding: EdgeInsets.only(right: 15),
-                                        child: CircularProgressIndicator()),
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  GREEN_MEDIUM),
+                                        )),
                                 ],
                               ),
                             ),
@@ -166,17 +174,23 @@ class _PickLocationState extends State<PickLocation> {
                       ),
                       Positioned(
                         bottom: 0,
-                        child:
-                            PositiveNegativeButtons("CONFIRM", "DISCARD", () {
+                        child: _LocationConfirmDiscard(_locationAddress, () {
                           if (ecopoint != null) {
                             //TODO: POSTEAR A API EL CAMBIO DE DIRECCION
                             // la informacion del ecopoint a actualizar esta en ecopoint y la direccion del ecopoint en _initialposition
 
                           } else {
-                            //TODO: ESTA CREANDO UN ECOPOINT, SEGUIR EL CAMINO
-                            // la direccion del ecopoint en _initialposition
+                            //TODO: ESTA CREANDO UN ECOPOINT, SEGUIR EL CAMINO (agregar a viewmodel y navegar)
+                            final createEcopointModel =
+                                CreateEcopointModel.instance;
+                            createEcopointModel.address = _locationAddress;
+                            createEcopointModel.coordinates = _initialPosition;
+
+                            Navigator.pushNamed(
+                                context, '/create_ecopoint_additional');
                           }
                         }, () {
+                          // TODO : ELIMINAR MARKER DEL MAPA
                           print("hmhmn't");
                         }),
                       ),
@@ -218,6 +232,13 @@ class _PickLocationState extends State<PickLocation> {
     _initialPosition =
         new LatLng(currentPosition.latitude, currentPosition.longitude);
 
+    List<Address> addresses = await Geocoder.local.findAddressesFromCoordinates(
+        new Coordinates(currentPosition.latitude, currentPosition.longitude));
+
+    if (addresses != null && addresses.isNotEmpty) {
+      _locationAddress = addresses.first.addressLine;
+    }
+
     await changeLocation(currentPosition.latitude, currentPosition.longitude);
 
     return;
@@ -241,7 +262,8 @@ class _PickLocationState extends State<PickLocation> {
     }
 
     if (addresses != null && !addresses.isEmpty) {
-      var newAddress = addresses.first;
+      Address newAddress = addresses.first;
+
       print("NEW ADDRESS FROM NAVBAR: " +
           "${newAddress.featureName} : ${newAddress.addressLine}");
 
@@ -254,6 +276,8 @@ class _PickLocationState extends State<PickLocation> {
           newAddress.coordinates.latitude, newAddress.coordinates.longitude);
       _initialPosition = new LatLng(
           newAddress.coordinates.latitude, newAddress.coordinates.longitude);
+
+      _locationAddress = newAddress.addressLine;
     }
 
     setState(() {
@@ -281,5 +305,82 @@ class _PickLocationState extends State<PickLocation> {
 
     //notifico al sistema de que hubieron cambios
     setState(() {});
+  }
+}
+
+class _LocationConfirmDiscard extends StatefulWidget {
+  final String address;
+  Function positiveButtonFunction;
+  Function negativeButtonFunction;
+
+  _LocationConfirmDiscard(
+      this.address, this.positiveButtonFunction, this.negativeButtonFunction);
+
+  @override
+  __LocationConfirmDiscardState createState() =>
+      __LocationConfirmDiscardState();
+}
+
+class __LocationConfirmDiscardState extends State<_LocationConfirmDiscard> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          height: 70,
+          width: MediaQuery.of(context).size.width,
+          color: GREEN_MEDIUM,
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              widget.address,
+              maxLines: 2,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.center,
+          height: 100,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Button1(
+                btnData: ButtonData(
+                  'CONFIRM',
+                  widget.positiveButtonFunction,
+                  backgroundColor: GREEN_MEDIUM,
+                  adjust: true,
+                  height: 60,
+                  width: 130,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ),
+              Button1(
+                btnData: ButtonData(
+                  'DISCARD',
+                  widget.negativeButtonFunction,
+                  backgroundColor: RED_MEDIUM,
+                  adjust: true,
+                  height: 60,
+                  width: 130,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

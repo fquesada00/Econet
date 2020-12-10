@@ -1,9 +1,9 @@
-import 'package:econet/views/widgets/navbar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:econet/presentation/constants.dart';
-import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/views/widgets/button1.dart';
+import 'package:econet/views/widgets/navbar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class SignUpMethod extends StatelessWidget {
   @override
@@ -37,15 +37,33 @@ class SignUpMethod extends StatelessWidget {
               textColor: GREEN_MEDIUM,
               height: 120),
           SizedBox(height: size.height * 0.03),
-          Column(
-              children: _buttonData
-                  .map((btn) => Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: Button1(
-                          btnData: btn,
-                        ),
-                      ))
-                  .toList()),
+          // para cuando hay muchos metodos
+          // Column(
+          //     children: _buttonData
+          //         .map((btn) => Padding(
+          //               padding: const EdgeInsets.all(25.0),
+          //               child: Button1(
+          //                 btnData: btn,
+          //               ),
+          //             ))
+          //         .toList()),
+          Column(children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(25.0),
+              child: Button1(
+                btnData: _buttonData[0],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(25.0),
+              child: Hero(
+                tag: 'SignupButton',
+                child: Button1(
+                  btnData: _buttonData[1],
+                ),
+              ),
+            )
+          ])
         ]));
   }
 }

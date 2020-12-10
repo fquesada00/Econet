@@ -1,3 +1,4 @@
+import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
@@ -10,6 +11,8 @@ class CreateEcopointName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    TextEditingController _controller = new TextEditingController();
+
     return Scaffold(
       appBar: NavBar(
         text: 'Additional details (optional)',
@@ -27,6 +30,7 @@ class CreateEcopointName extends StatelessWidget {
               child: Form(
                 key: _formKey,
                 child: TextFormField(
+                  controller: _controller,
                   keyboardType: TextInputType.text,
                   style: TextStyle(
                     fontSize: 18,
@@ -49,7 +53,7 @@ class CreateEcopointName extends StatelessWidget {
                     contentPadding: EdgeInsets.all(20),
                   ),
                   validator: (value) {
-                    if (value.isEmpty) {
+                    if (value.trim().isEmpty) {
                       return 'Field is required';
                     }
                     return null;
@@ -61,8 +65,8 @@ class CreateEcopointName extends StatelessWidget {
             Button1(
               btnData: ButtonData('CONTINUE', () {
                 if (_formKey.currentState.validate()) {
-                  // TODO: MANDARLO AL VIEWMODEL y PASAR A OVERVIEW
-                  // Navigator.pushNamed(context, '/GMap');
+                  CreateEcopointModel.instance.name = _controller.text;
+                  Navigator.pushNamed(context, '/ecopoint_overview');
                 }
               }, backgroundColor: GREEN_DARK),
             )

@@ -29,7 +29,7 @@ class PositiveNegativeButtons extends StatelessWidget {
             btnData: ButtonData(
               positiveButtonTExt,
               positiveButtonFunction,
-              backgroundColor: GREEN_LIGHT,
+              backgroundColor: GREEN_MEDIUM,
               adjust: true,
               height: 60,
               width: 130,
