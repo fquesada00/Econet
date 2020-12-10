@@ -79,17 +79,6 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
                 },
               ),
               if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
-                Container(
-                  margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
-                  child: EconetButton(
-                    onPressed: () {
-                      print("HOLA");
-                    },
-                    backgroundColor: GREEN_MEDIUM,
-                  ),
-                  alignment: Alignment.bottomRight,
-                ),
-              if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
                 GMapNavBar(
                   withBack: true,
                   searchingFlag: searchingFlag,
@@ -170,7 +159,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
             ", CONTAINS FILTER: " +
             ((isFiltered) ? "YES" : "NO"));
 
-        if (!isFinished && isFiltered) {
+        if (!isFinished /*&& isFiltered*/) {
           print("AGREGADO MARKER");
           markers.add(createMarker(
               (element.isPlant) ? "plantMarker" : "ecopointMarker",
