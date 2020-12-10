@@ -29,6 +29,7 @@ class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
     final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
     final email = user.email;
+    print(delivery.toJson());
     final response = await http.post("$deliveryUrl?email=$email",
         headers: {
           'Content-Type': 'application/json',

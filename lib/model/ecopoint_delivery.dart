@@ -40,6 +40,7 @@ class EcopointDelivery {
   Map<String, dynamic> toJson(){
     return {
       'ecopoint': _ecopoint.toJson(),
+      'ecopointId': _ecopoint.id,
       'date': _date.toString(),
       'bags': bags,
       'user': _user.toJson(),

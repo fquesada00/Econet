@@ -156,6 +156,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   EcopointDelivery delivery = new EcopointDelivery(
                       ecopoint, date, bags, user, false, false, false);
                   deliveryRepository.createDelivery(delivery);
+                  messagingRepository.sendMessage(delivery.ecopoint.ecollector.email,{
+                    "notification":{
+                      "title":"New Delivery!",
+                      "body":"created by aj"
+                    }
+                  });
                 },
               ),
               RaisedButton(
