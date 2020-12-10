@@ -47,8 +47,8 @@ class EcopointInfoState extends State<EcopointInfo> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Text(
-                            (widget.ecopoint.ecollector.fullName != null)
-                                ? widget.ecopoint.ecollector.fullName
+                            (widget.ecopoint.name != null)
+                                ? widget.ecopoint.name
                                 : "NULL",
                             style: TextStyle(
                                 fontSize: 30, fontWeight: FontWeight.w700),
@@ -166,8 +166,6 @@ class EcopointInfoState extends State<EcopointInfo> {
                 (widget.ecopoint.isPlant) ? 'CREATE ECOPOINT' : 'OPEN ECOPOINT',
                 () {
                   if (widget.ecopoint.isPlant) {
-                    List<String> auxResidues = [];
-                    widget.ecopoint.residues.forEach((element) {auxResidues.add(residueToString(element));});
                     Navigator.pushNamed(context, '/createEcopoint', arguments: {
                       'distance': widget.distance,
                       'plant' : widget.ecopoint,

@@ -35,7 +35,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
   static bool searchingFlag = false, loadingPosition = false;
   static LatLng _initialPosition;
   static final double ECOPOINT_RADIUS = SettingsAppTab().ecopoint_finder_radius;
-  static List<Residue> filterResidues = [];
+  static List<String> filteredElements;
 
   @override
   Future<void> initState() {
@@ -43,6 +43,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
     _setMarkerIcon();
     getLocation();
     print("ECOPOINT RADIUS VALUE: " + ECOPOINT_RADIUS.toString());
+    filteredElements = List();
     super.initState();
   }
 
@@ -89,17 +90,12 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
                   onFilledAdress: () {
                     findNewAddress();
                   },
-                  filterResidues: filterResidues,
+                  filterElements: filteredElements,
                   updateFilterResidues: (String residueName, bool add) {
                     if (add)
-                      filterResidues.add(residueFromString(residueName));
+                      filteredElements.add(residueName);
                     else
-                      filterResidues.remove(residueFromString(residueName));
-
-                    //limpio markers y los vuelvo a cargar con los cambios de los filtros
-                    markers.clear();
-                    changeLocation(
-                        _initialPosition.latitude, _initialPosition.longitude);
+                      filteredElements.remove(residueName);
                   },
                 ),
             ],
@@ -140,15 +136,31 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
 
+    print(filteredElements);
     await ecopointRepository
         .getEcopointsByRadius(ECOPOINT_RADIUS, newLatitude, newLongitude)
         .then((value) {
       value.forEach((element) {
         bool isFinished = element.deadline.isBefore(DateTime.now());
         //Si hay filtros, me fijo que el ecopoint los cumpla, si no hay filtros lo meto
-        bool isFiltered = ((filterResidues.length > 0 &&
-                element.residues.contains(filterResidues)) ||
-            filterResidues.length == 0);
+        bool isFiltered = true;
+        for (int i = 0; i < filteredElements.length; i++) {
+          if (filteredElements[i] == 'Ecopoints Only') {
+            if (element.isPlant) {
+              isFiltered = false;
+              break;
+            }
+          } else if (filteredElements[i] == 'Recycling Plants Only') {
+            if (!element.isPlant) {
+              isFiltered = false;
+              break;
+            }
+          } else if (!element.residues
+              .contains(residueFromString(filteredElements[i]))) {
+            isFiltered = false;
+            break;
+          }
+        }
 
         print("MARKER INFO: " +
             element.toString() +
@@ -159,7 +171,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
             ", CONTAINS FILTER: " +
             ((isFiltered) ? "YES" : "NO"));
 
-        if (!isFinished /*&& isFiltered*/) {
+        if (!isFinished && isFiltered) {
           print("AGREGADO MARKER");
           markers.add(createMarker(
               (element.isPlant) ? "plantMarker" : "ecopointMarker",
@@ -209,6 +221,10 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
 
   void switchSearchState() {
     searchingFlag = !searchingFlag;
+    //limpio markers y los vuelvo a cargar con los cambios de los filtros
+    markers.clear();
+    changeLocation(_initialPosition.latitude, _initialPosition.longitude);
+
     setState(() {});
   }
 
@@ -222,10 +238,8 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
   Marker createMarker(String id, double latitude, double longitude,
       String adress, context, Ecopoint ecopoint) {
     LatLng latlng = LatLng(latitude, longitude);
-    BitmapDescriptor icon;
-    if (id == "positionMarker")
-      icon = BitmapDescriptor.defaultMarker;
-    else if (id == "ecopointMarker")
+    BitmapDescriptor icon = BitmapDescriptor.defaultMarker;
+    if (id == "ecopointMarker")
       icon = markerEcopointIcon; // icono de ecopoint
     else if (id == "plantMarker") icon = markerPlantIcon;
 

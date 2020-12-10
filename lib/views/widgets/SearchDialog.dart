@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 
 class SearchDialog extends StatefulWidget {
   final TextEditingController _controller;
-  final List<Residue> filterResidues;
+  final List<String> filterElements;
   final Function(String chipName, bool add) updateFilterResidues;
 
   SearchDialog(
-      this._controller, this.filterResidues, this.updateFilterResidues);
+      this._controller, this.filterElements, this.updateFilterResidues);
 
   @override
   _SearchDialogState createState() => _SearchDialogState(_controller);
@@ -37,7 +37,7 @@ class _SearchDialogState extends State<SearchDialog> {
             SearchHistory(_controller),
             SizedBox(height: 15),
             SearchFilters(
-              filterResidues: widget.filterResidues,
+              filterElements: widget.filterElements,
               updateFilterResidues: widget.updateFilterResidues,
             ),
           ],

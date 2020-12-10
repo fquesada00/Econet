@@ -36,6 +36,7 @@ class _PickMaterialsState extends State<PickMaterials> {
       ecopoint = ModalRoute.of(context).settings.arguments;
       if (ecopoint != null) {
         selectedChoices = ecopoint.residues;
+        // tengo que buscar los residuos del ecopoint
         getResiduesFromEcopoint();
       } else {
         posibleChoices = CreateEcopointModel.instance.plant.residues;

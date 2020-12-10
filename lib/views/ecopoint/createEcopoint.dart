@@ -26,8 +26,8 @@ class CreateEcopoint extends StatelessWidget {
         backgroundColor: GREEN_LIGHT,
         withBack: true,
         textColor: GREEN_DARK,
-        text: (plant.ecollector.fullName != null)
-            ? plant.ecollector.fullName
+        text: (plant.name != null)
+            ? plant.name
             : "NULL",
       ),
       body: ListView(children: <Widget>[

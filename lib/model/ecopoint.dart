@@ -44,6 +44,7 @@ class Ecopoint {
       this._name,
       this._address,
       this._coordinates);
+
   Ecopoint.fromJson(Map<String, dynamic> map) {
     this.id = map['id'];
     this._plantId = map['plantId'];
@@ -63,6 +64,7 @@ class Ecopoint {
     this._coordinates = LatLng(map['coordinates']['geopoint']['_latitude'],
         map['coordinates']['geopoint']['_longitude']);
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

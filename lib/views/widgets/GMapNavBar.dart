@@ -16,7 +16,7 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
   final Function switchSearchState;
   final TextEditingController text_controller;
   final Function() onFilledAdress;
-  final List<Residue> filterResidues;
+  final List<String> filterElements;
   final Function(String chipName, bool add) updateFilterResidues;
 
   const GMapNavBar(
@@ -29,7 +29,7 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
       this.context,
       this.text_controller,
       this.onFilledAdress,
-      this.filterResidues,
+      this.filterElements,
       this.updateFilterResidues})
       : super(key: key);
 
@@ -86,7 +86,7 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                             context: context,
                             builder: (BuildContext context) => SearchDialog(
                                 text_controller,
-                                filterResidues,
+                                filterElements,
                                 updateFilterResidues),
                           );
 
