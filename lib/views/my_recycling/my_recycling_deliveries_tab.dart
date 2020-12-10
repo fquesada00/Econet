@@ -24,64 +24,64 @@ class MyRecyclingDeliveriesTab extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 15),
         child: Column(
           children: List.generate(ecopointsList.length, (index) {
-            return Container(
-              margin: EdgeInsets.only(top: 15, left: 15, right: 15),
-              padding: EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: <Widget>[
-                  Spacer(),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      children: [
-                        Text(
-                          ecopointsList[index].user.fullName + "'s Ecopoint",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: GREEN_DARK,
-                            fontSize: 22,
-                            fontFamily: 'SFProDisplay',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 14.0),
-                          child: Text(
-                            "Due in",
+            return GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/my_delivery_details',
+                    arguments: ecopointsList[index]);
+              },
+              child: Container(
+                margin: EdgeInsets.only(top: 15, left: 15, right: 15),
+                padding: EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Spacer(),
+                    Expanded(
+                      flex: 5,
+                      child: Column(
+                        children: [
+                          Text(
+                            ecopointsList[index].user.fullName + "'s Ecopoint",
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 15,
+                              color: GREEN_DARK,
+                              fontSize: 22,
                               fontFamily: 'SFProDisplay',
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
-                        Chip(
-                          label: Text(
-                            TimeRange.getRemainingDeliverTime(
-                                ecopointsList[index].date),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontFamily: 'SFProDisplay',
-                              fontWeight: FontWeight.w700,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 14.0),
+                            child: Text(
+                              "Due in",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15,
+                                fontFamily: 'SFProDisplay',
+                              ),
                             ),
                           ),
-                          backgroundColor: BROWN_DARK,
-                        ),
-                      ],
+                          Chip(
+                            label: Text(
+                              TimeRange.getRemainingDeliverTime(
+                                  ecopointsList[index].date),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontFamily: 'SFProDisplay',
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            backgroundColor: BROWN_DARK,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/my_delivery_details',
-                            arguments: ecopointsList[index]);
-                      },
+                    Expanded(
+                      flex: 1,
                       child: Container(
                         alignment: Alignment.center,
                         child: Icon(
@@ -90,8 +90,8 @@ class MyRecyclingDeliveriesTab extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }),

@@ -264,11 +264,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.pushNamed(context, '/settings');
                   }),
               RaisedButton(
-                  child: Text("my recycling"),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/my_recycling');
-                  }),
-              RaisedButton(
                 child: Text("Add Bags"),
                 onPressed: () {
                   Navigator.pushNamed(context, '/add_bags');
