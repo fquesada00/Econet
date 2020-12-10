@@ -138,6 +138,13 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             RaisedButton(
+              child: Text("Get Current User"),
+              onPressed: () async {
+                final user = await userRepository.getCurrentUser();
+                print("USEEEEER ===" + user.toString());
+              },
+            ),
+            RaisedButton(
               child: Text("Create ecopoint"),
               onPressed: () {
                 // MyUser user = MyUser.complete("agustintormakh",

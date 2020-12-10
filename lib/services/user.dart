@@ -30,6 +30,7 @@ abstract class AuthProvider implements ChangeNotifier {
   Future<UserCredential> signInWithGoogle();
   logOut();
   Future updateUser(MyUser user);
+  Future<MyUser> getCurrentUser();
 }
 
 class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
@@ -164,7 +165,7 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
       print("user ES NULL");
     } else {
       try {
-        final currentUser = await getCurrentUser();
+        final currentUser = await _getCurrentUser();
         final token = await currentUser.getIdToken();
         final response = await http.put(
           _userUrl + "?email=" + currentUser.email.trim(),
@@ -181,9 +182,22 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
     }
   }
 
-  Future<MyUser> getCurrentUserFirebase() {}
+  Future<MyUser> getCurrentUser() async {
+    final user = await _getCurrentUser();
+    final token = await user.getIdToken();
+    final response = await http.get(
+      _userUrl + "?email=" + user.email.trim(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print("RESPONSE ================ " + response.body.toString());
+    //  print("RESPONSE ================ " + Ecopoint.fromJson(jsonDecode(response.body)).toString());
+    return MyUser.fromJson(jsonDecode(response.body));
+  }
 
-  Future<User> getCurrentUser() async {
+  Future<User> _getCurrentUser() async {
     final user = await FirebaseAuth.instance.currentUser;
 
     return user;
