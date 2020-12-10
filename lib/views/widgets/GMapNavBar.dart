@@ -1,3 +1,4 @@
+import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/notifications_dialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,17 +16,21 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
   final Function switchSearchState;
   final TextEditingController text_controller;
   final Function() onFilledAdress;
+  final List<Residue> filterResidues;
+  final Function(String chipName, bool add) updateFilterResidues;
 
   const GMapNavBar(
       {Key key,
-        this.withBack,
-        this.searchingFlag,
-        this.switchSearchState,
-        this.backgroundColor,
-        this.textColor,
-        this.context,
-        this.text_controller,
-        this.onFilledAdress})
+      this.withBack,
+      this.searchingFlag,
+      this.switchSearchState,
+      this.backgroundColor,
+      this.textColor,
+      this.context,
+      this.text_controller,
+      this.onFilledAdress,
+      this.filterResidues,
+      this.updateFilterResidues})
       : super(key: key);
 
   @override
@@ -79,8 +84,10 @@ class GMapNavBar extends StatelessWidget implements PreferredSizeWidget {
                           // mientras esta abierto el dialog esta "buscando"
                           await showDialog(
                             context: context,
-                            builder: (BuildContext context) =>
-                                SearchDialog(text_controller),
+                            builder: (BuildContext context) => SearchDialog(
+                                text_controller,
+                                filterResidues,
+                                updateFilterResidues),
                           );
 
                           // cuando se cierra el popup, vuelven a aparecer los widgets del mapa

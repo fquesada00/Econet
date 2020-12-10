@@ -37,7 +37,7 @@ class CreateEcopoint extends StatelessWidget {
           children: [
             Button1(
               btnData: ButtonData(
-                'SCHEDULE TRIP',
+                'CREATE ECOPOINT',
                 () {
                   createEcopointModel.reset();
                   createEcopointModel.plant = plant;

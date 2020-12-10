@@ -5,15 +5,16 @@ import 'package:tinycolor/tinycolor.dart';
 class EconetFilterChip extends StatefulWidget {
   final String chipName;
   final Color chipColor;
+  bool isSelected;
+  Function(String chipName) selectChip;
 
-  EconetFilterChip(this.chipName, this.chipColor);
+  EconetFilterChip(this.chipName, this.chipColor, this.isSelected, this.selectChip);
 
   @override
   _EconetFilterChipState createState() => _EconetFilterChipState();
 }
 
 class _EconetFilterChipState extends State<EconetFilterChip> {
-  bool _isSelected = false;
   Color textColor = Colors.white;
 
   @override
@@ -27,7 +28,7 @@ class _EconetFilterChipState extends State<EconetFilterChip> {
             color: textColor,
           ),
         ),
-        selected: _isSelected,
+        selected: widget.isSelected,
         backgroundColor: widget.chipColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
@@ -35,8 +36,8 @@ class _EconetFilterChipState extends State<EconetFilterChip> {
         pressElevation: 0,
         onSelected: (isSelected) {
           setState(() {
-            // TODO: Filter implementation
-            _isSelected = isSelected;
+            widget.isSelected = isSelected;
+            widget.selectChip(widget.chipName);
           });
         },
         selectedColor: widget.chipName == 'Recycling Plants Only'

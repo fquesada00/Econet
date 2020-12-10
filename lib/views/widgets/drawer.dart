@@ -16,8 +16,7 @@ class AppDrawer extends StatefulWidget {
   State<StatefulWidget> createState() => DrawerState();
 }
 
-class DrawerState extends State<AppDrawer>
-    with AutomaticKeepAliveClientMixin<AppDrawer> {
+class DrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
@@ -49,13 +48,6 @@ class DrawerState extends State<AppDrawer>
               onTap: () {
                 widget.setPosition(3);
               }),
-          _createDrawerItem(
-              text: 'Profile',
-              active: widget.drawerPos == 4,
-              onTap: () {
-                widget.setPosition(4);
-              }),
-
           // No lo pude mandar con la funcion por que tiene icono, distinto tamanio, color y font
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(16, 40, 0, 40),
@@ -117,7 +109,9 @@ class DrawerState extends State<AppDrawer>
                 fontFamily: 'SFProText',
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/settings');
+            },
           ),
           ListTile(
             dense: true,
@@ -132,22 +126,10 @@ class DrawerState extends State<AppDrawer>
             ),
             onTap: () {
               auth.logOut();
-              Navigator.popUntil(context, ModalRoute.withName('/auth'));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/loginsignup', ModalRoute.withName('/'));
             },
           ),
-          ListTile(
-            dense: true,
-            leading: Icon(Icons.help),
-            title: Text(
-              'Help',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontFamily: 'SFProText',
-              ),
-            ),
-            onTap: () {},
-          )
         ],
       ),
     );
@@ -184,7 +166,4 @@ class DrawerState extends State<AppDrawer>
       onTap: onTap,
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

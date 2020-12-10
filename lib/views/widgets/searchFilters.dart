@@ -1,3 +1,4 @@
+import 'package:econet/model/residue.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/presentation/constants.dart';
@@ -38,6 +39,12 @@ class AlwaysVisibleScrollbarPainter extends ScrollbarPainter {
 }
 
 class SearchFilters extends StatefulWidget {
+  final List<Residue> filterResidues;
+  final Function(String chipName, bool add) updateFilterResidues;
+
+  const SearchFilters({Key key, this.filterResidues, this.updateFilterResidues})
+      : super(key: key);
+
   @override
   _SearchFiltersState createState() => _SearchFiltersState();
 }
@@ -122,7 +129,13 @@ class _SearchFiltersState extends State<SearchFilters> {
                                   (k) => Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 2),
-                                    child: EconetFilterChip(k, CHIP_DATA[k]),
+                                    child: EconetFilterChip(k, CHIP_DATA[k],
+                                        widget.filterResidues.contains(residueFromString(k)),
+                                        (String chipName) {
+                                      widget.updateFilterResidues(chipName,
+                                          !widget.filterResidues.contains(residueFromString(k)));
+                                      // si lo contiene lo tiene que borrar, sino agregarlo
+                                    }),
                                   ),
                                 )
                                 .toList(),
@@ -146,7 +159,12 @@ class _SearchFiltersState extends State<SearchFilters> {
                                     (k) => Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 2),
-                                      child: EconetFilterChip(k, CHIP_DATA[k]),
+                                      child: EconetFilterChip(k, CHIP_DATA[k],
+                                          widget.filterResidues.contains(residueFromString(k)),
+                                          (String chipName) {
+                                        widget.updateFilterResidues(chipName,
+                                            !widget.filterResidues.contains(k));
+                                      }),
                                     ),
                                   )
                                   .toList(),

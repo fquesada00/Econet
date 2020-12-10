@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'dart:ui' as ui;
 
 import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/services/ecopoint_repository.dart';
@@ -34,6 +35,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
   static bool searchingFlag = false, loadingPosition = false;
   static LatLng _initialPosition;
   static final double ECOPOINT_RADIUS = SettingsAppTab().ecopoint_finder_radius;
+  static List<Residue> filterResidues = [];
 
   @override
   Future<void> initState() {
@@ -77,17 +79,6 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
                 },
               ),
               if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
-                Container(
-                  margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
-                  child: EconetButton(
-                    onPressed: () {
-                      print("HOLA");
-                    },
-                    backgroundColor: GREEN_MEDIUM,
-                  ),
-                  alignment: Alignment.bottomRight,
-                ),
-              if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
                 GMapNavBar(
                   withBack: true,
                   searchingFlag: searchingFlag,
@@ -97,6 +88,18 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
                   text_controller: text_controller,
                   onFilledAdress: () {
                     findNewAddress();
+                  },
+                  filterResidues: filterResidues,
+                  updateFilterResidues: (String residueName, bool add) {
+                    if (add)
+                      filterResidues.add(residueFromString(residueName));
+                    else
+                      filterResidues.remove(residueFromString(residueName));
+
+                    //limpio markers y los vuelvo a cargar con los cambios de los filtros
+                    markers.clear();
+                    changeLocation(
+                        _initialPosition.latitude, _initialPosition.longitude);
                   },
                 ),
             ],
@@ -142,14 +145,22 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
         .then((value) {
       value.forEach((element) {
         bool isFinished = element.deadline.isBefore(DateTime.now());
-        print("MARKER ADDED: " +
+        //Si hay filtros, me fijo que el ecopoint los cumpla, si no hay filtros lo meto
+        bool isFiltered = ((filterResidues.length > 0 &&
+                element.residues.contains(filterResidues)) ||
+            filterResidues.length == 0);
+
+        print("MARKER INFO: " +
             element.toString() +
             " IS PLANT? " +
             ((element.isPlant) ? "YES" : "NO") +
             ", IS FINISHED? " +
-            ((isFinished) ? "YES" : "NO"));
+            ((isFinished) ? "YES" : "NO") +
+            ", CONTAINS FILTER: " +
+            ((isFiltered) ? "YES" : "NO"));
 
-        if (!isFinished)
+        if (!isFinished /*&& isFiltered*/) {
+          print("AGREGADO MARKER");
           markers.add(createMarker(
               (element.isPlant) ? "plantMarker" : "ecopointMarker",
               element.getLatitude(),
@@ -157,6 +168,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
               element.address,
               context,
               element));
+        }
       });
     });
 
@@ -217,8 +229,6 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
       icon = markerEcopointIcon; // icono de ecopoint
     else if (id == "plantMarker") icon = markerPlantIcon;
 
-    print(icon);
-    //marcador de la posicion en la que se encontraba al abrir la app
     return Marker(
       markerId: MarkerId(id),
       position: latlng,
@@ -273,6 +283,7 @@ Future<BitmapDescriptor> _iconToMarker(
 
   return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
 }
+
 //From guide here https://www.abhishekduhoon.com/2020/06/how-to-create-widget-based-google-maps.html
 
 Future<BitmapDescriptor> _bitmapDescriptorFromSvgAsset(

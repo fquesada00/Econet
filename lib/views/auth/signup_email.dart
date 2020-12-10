@@ -154,29 +154,31 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                 .toList(),
           ),
         ),
-        SafeArea(
-          child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
-              child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                      text: "By continuing, you agree to Econet's ",
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: 'Terms & Conditions',
-                            style: TextStyle(color: GREEN_DARK)),
-                        TextSpan(text: ' and '),
-                        TextSpan(
-                            text: 'Privacy Policy',
-                            style: TextStyle(color: GREEN_DARK)),
-                      ]))),
-        ),
+
+        // Para cuando hayan terms & conditions...
+        // SafeArea(
+        //   child: Padding(
+        //       padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
+        //       child: RichText(
+        //           textAlign: TextAlign.center,
+        //           text: TextSpan(
+        //               text: "By continuing, you agree to Econet's ",
+        //               style: TextStyle(
+        //                 color: Colors.black,
+        //               ),
+        //               children: <TextSpan>[
+        //                 TextSpan(
+        //                     text: 'Terms & Conditions',
+        //                     style: TextStyle(color: GREEN_DARK)),
+        //                 TextSpan(text: ' and '),
+        //                 TextSpan(
+        //                     text: 'Privacy Policy',
+        //                     style: TextStyle(color: GREEN_DARK)),
+        //               ]))),
+        // ),
+        SizedBox(height: 80),
         Padding(
-          padding:
-              const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
+          padding: const EdgeInsets.only(left: 45, right: 45, bottom: 30),
           child: Button1(
               btnData: ButtonData(
             'SIGN UP',
@@ -192,10 +194,34 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                   Navigator.pushReplacementNamed(
                       context, '/ecollector_or_regular',
                       arguments: MyUser.partial(
-                          nameController.text+
-                          lastNameController.text, emailController.text));
+                          nameController.text + lastNameController.text,
+                          emailController.text));
                 } else {
-                  print("not equal");
+                  String snackMessage = errorMessage;
+
+                  switch (errorMessage) {
+                    case 'weak-password':
+                      snackMessage =
+                          'Password should be at least 6 characters long';
+                      break;
+                    case 'invalid-email':
+                      snackMessage = 'Please enter a valid email address';
+                      break;
+                  }
+
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Center(
+                      heightFactor: 1,
+                      child: Text(
+                        snackMessage,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ));
                 }
                 print(errorMessage);
                 setState(() {});

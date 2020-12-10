@@ -9,7 +9,7 @@ class MyUser {
 
   MyUser.fromJson(Map<String, dynamic> map) {
     this._fullName = map['fullName'];
-    this._email = map['id'];
+    this._email = map['id'] ?? map['email'] ?? null;
     this._isEcollector =
         map['userType'].toString().toLowerCase() == 'ecollector';
     this._avatarUrl = map['avatarUrl'];
