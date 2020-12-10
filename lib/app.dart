@@ -158,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   EcopointDelivery delivery = new EcopointDelivery(
                       ecopoint, date, bags, user, false, false, false);
                   deliveryRepository.createDelivery(delivery);
-                  messagingRepository.sendMessage("goarca@itba.edu.ar",{
+                  messagingRepository.sendMessage("aj2@econet.com",{
                     "notification":{
                       "title":"New Delivery!",
                       "body":"created by aj"
