@@ -143,7 +143,6 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
       },
     );
     print("RESPONSE ================ " + response.body.toString());
-    //  print("RESPONSE ================ " + Ecopoint.fromJson(jsonDecode(response.body)).toString());
     return Ecopoint.fromJson(jsonDecode(response.body));
   }
 

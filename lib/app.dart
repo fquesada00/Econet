@@ -1,13 +1,10 @@
 import 'dart:convert';
 
-import 'package:econet/auth_widget.dart';
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/ecopoint_delivery.dart';
 import 'package:econet/model/timeslot.dart';
-import 'package:econet/presentation/constants.dart';
 import 'package:econet/services/delivery_repository.dart';
 import 'package:econet/services/ecopoint_repository.dart';
-import 'package:econet/views/GMap/filter_testing.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
@@ -34,7 +31,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart' as EcopointView;
 import 'package:flutter/material.dart';
-import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -74,7 +70,6 @@ class MyApp extends StatelessWidget {
           '/signup_email': (context) => SignupEmail(),
           '/login': (context) => Login(),
           '/ecollector_or_regular': (context) => EcollectorOrRegular(),
-          '/filter_testing': (context) => FilterTesting(),
           '/ecopoint_expanded': (context) => EcopointExpanded(),
           '/pickDeliveryMaterials': (context) => PickMaterials(),
           '/pickTime': (context) => PickTime(),
@@ -190,19 +185,17 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 child: Text("Create ecopoint"),
                 onPressed: () {
-                  // MyUser user = MyUser.complete("agustintormakh",
-                  //     "agustormakh@gmail.com", "11740590", "hola", true);
                   final ecopoint = Ecopoint(
-                      MyUser.complete("ecopoint mbeh", "_email", "_phone", "", true),
+                      MyUser.complete("ecopoint mbeh2", "_email", "_phone", "", true),
                       false,
-                      [Residue.paper],
+                      [Residue.metal, Residue.electronics, Residue.wood],
                       "",
                       new DateTime.utc(2021),
                       [new TimeSlot(5), new TimeSlot(3)],
                       "",
                       "PLANTA 111a",
                       "hmm?",
-                      LatLng(-34.5296, -58.4786));
+                      LatLng(-34.5356, -58.4786));
 
                   ecopointRepository
                       .createEcopoint(ecopoint)
@@ -220,12 +213,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text('Login screen'),
                 onPressed: () {
                   Navigator.pushNamed(context, '/loginsignup');
-                },
-              ),
-              RaisedButton(
-                child: Text("filters"),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/filter_testing');
                 },
               ),
               RaisedButton(

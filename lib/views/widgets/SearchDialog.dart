@@ -1,12 +1,16 @@
+import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/searchFilters.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchDialog extends StatefulWidget {
-  TextEditingController _controller;
+  final TextEditingController _controller;
+  final List<Residue> filterResidues;
+  final Function(String chipName, bool add) updateFilterResidues;
 
-  SearchDialog(this._controller);
+  SearchDialog(
+      this._controller, this.filterResidues, this.updateFilterResidues);
 
   @override
   _SearchDialogState createState() => _SearchDialogState(_controller);
@@ -32,7 +36,10 @@ class _SearchDialogState extends State<SearchDialog> {
             SizedBox(height: 15),
             SearchHistory(_controller),
             SizedBox(height: 15),
-            SearchFilters(),
+            SearchFilters(
+              filterResidues: widget.filterResidues,
+              updateFilterResidues: widget.updateFilterResidues,
+            ),
           ],
         ),
       ),
