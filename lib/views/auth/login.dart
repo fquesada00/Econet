@@ -171,7 +171,7 @@ class __LoginFormState extends State<_LoginForm> {
     if (errorMessage.trim() == "successfully logged in") {
       print("DID IT");
       Navigator.pushNamedAndRemoveUntil(
-          context, '/GMap', ModalRoute.withName('/'));
+          context, '/home_econet', ModalRoute.withName('/'));
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Incorrect user and/or password. Please try again.'),

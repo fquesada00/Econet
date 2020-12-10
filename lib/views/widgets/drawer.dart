@@ -109,7 +109,9 @@ class DrawerState extends State<AppDrawer> {
                 fontFamily: 'SFProText',
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/settings');
+            },
           ),
           ListTile(
             dense: true,
@@ -124,7 +126,8 @@ class DrawerState extends State<AppDrawer> {
             ),
             onTap: () {
               auth.logOut();
-              Navigator.popUntil(context, ModalRoute.withName('/auth'));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/loginsignup', ModalRoute.withName('/'));
             },
           ),
         ],

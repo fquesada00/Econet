@@ -54,7 +54,7 @@ class SettingsAccountTab extends StatelessWidget {
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: 28,
-                fontFamily: 'SFProText',
+                fontFamily: 'SFProDisplay',
                 color: Colors.black,
                 fontWeight: FontWeight.w700,
               ),
@@ -81,7 +81,7 @@ class SettingsAccountTab extends StatelessWidget {
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: 28,
-                fontFamily: 'SFProText',
+                fontFamily: 'SFProDisplay',
                 color: Colors.black,
                 fontWeight: FontWeight.w700,
               ),
