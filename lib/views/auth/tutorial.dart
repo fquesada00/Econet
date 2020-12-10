@@ -47,7 +47,7 @@ class _TutorialState extends State<Tutorial> {
           InkWell(
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/GMap', ModalRoute.withName('/'));
+                  context, '/home_econet', ModalRoute.withName('/'));
             },
             child: Text(
               'Skip Tutorial',
