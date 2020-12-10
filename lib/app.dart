@@ -5,6 +5,7 @@ import 'package:econet/model/ecopoint_delivery.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:econet/services/delivery_repository.dart';
 import 'package:econet/services/ecopoint_repository.dart';
+import 'package:econet/services/messaging_repository.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
@@ -56,6 +57,8 @@ class MyApp extends StatelessWidget {
             create: (_) => FirebaseAuthProvider()),
         ChangeNotifierProvider<DeliveryProvider>(
             create: (_) => FirebaseDeliveryProvider()),
+        ChangeNotifierProvider<MessagingProvider>(
+            create: (_) => FirebaseMessagingProvider()),
         ChangeNotifierProvider<EcopointProvider>(
             create: (_) => FirebaseEcopointProvider()),
       ],
@@ -124,6 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
         Provider.of<EcopointProvider>(context, listen: false);
     final deliveryRepository =
         Provider.of<DeliveryProvider>(context, listen: false);
+    final messagingRepository =
+    Provider.of<MessagingProvider>(context, listen: false);
     final userRepository = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
