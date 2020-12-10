@@ -23,7 +23,8 @@ class FirebaseMessagingProvider extends MessagingProvider with ChangeNotifier {
   Future<bool> sendMessage(String email, Map<String, dynamic > message) async {
     final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
-    final response = await http.post("$messageUrl?email=$email",
+    final userEmail = user.email;
+    final response = await http.post("$messageUrl?email=$userEmail&receiver=$email",
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -36,8 +37,9 @@ class FirebaseMessagingProvider extends MessagingProvider with ChangeNotifier {
   Future<bool> createDevice() async {
     final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
-    final fcm = FirebaseMessaging.instance.getToken();
-    final response = await http.post("$messageUrl?fcm=$fcm",
+    final userEmail = user.email;
+    final fcm = await FirebaseMessaging.instance.getToken();
+    final response = await http.post("$deviceUrl?email=$userEmail&fcm=$fcm",
         headers: {
           'Authorization': 'Bearer $token',
         });
@@ -48,8 +50,9 @@ class FirebaseMessagingProvider extends MessagingProvider with ChangeNotifier {
   Future<bool> deleteDevice() async {
     final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
-    final fcm = FirebaseMessaging.instance.getToken();
-    final response = await http.delete("$messageUrl?fcm=$fcm",
+    final userEmail = user.email;
+    final fcm = await FirebaseMessaging.instance.getToken();
+    final response = await http.delete("$deviceUrl?email=$userEmail&fcm=$fcm",
         headers: {
           'Authorization': 'Bearer $token',
         });
