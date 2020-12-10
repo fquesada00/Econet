@@ -1,8 +1,11 @@
+import 'package:econet/model/residue.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:econet/presentation/constants.dart';
-import 'package:econet/views/widgets/econet_chip.dart';
+import 'package:econet/views/widgets/econet_display_chip.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
+
+import 'econet_filter_chip.dart';
 
 class AlwaysVisibleScrollbarPainter extends ScrollbarPainter {
   AlwaysVisibleScrollbarPainter()
@@ -36,6 +39,12 @@ class AlwaysVisibleScrollbarPainter extends ScrollbarPainter {
 }
 
 class SearchFilters extends StatefulWidget {
+  final List<Residue> filterResidues;
+  final Function(String chipName, bool add) updateFilterResidues;
+
+  const SearchFilters({Key key, this.filterResidues, this.updateFilterResidues})
+      : super(key: key);
+
   @override
   _SearchFiltersState createState() => _SearchFiltersState();
 }
@@ -63,7 +72,7 @@ class _SearchFiltersState extends State<SearchFilters> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(10),
         height: 190,
         width: 340,
         decoration: BoxDecoration(
@@ -97,56 +106,74 @@ class _SearchFiltersState extends State<SearchFilters> {
               SizedBox(height: 10),
               Container(
                 width: 290,
-                height: 100,
+                height: 110,
                 decoration: BoxDecoration(
                   color: Color(0xFFE5E2E2),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 50,
-                      child: ListView(
-                        shrinkWrap: true,
-                        controller: _controller1,
-                        scrollDirection: Axis.horizontal,
-                        children: List.from(
-                          CHIP_DATA.keys
-                              .take(((CHIP_DATA.keys.length + 1) / 2).round())
-                              .map(
-                                (k) => Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                                  child: EconetChip(k, CHIP_DATA[k], true),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      child: CupertinoScrollbar(
-                        isAlwaysShown: true,
-                        controller: _controller2,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 30,
                         child: ListView(
+                          padding: EdgeInsets.only(left: 15, right: 100),
                           shrinkWrap: true,
-                          controller: _controller2,
+                          controller: _controller1,
                           scrollDirection: Axis.horizontal,
                           children: List.from(
                             CHIP_DATA.keys
-                                .skip(((CHIP_DATA.keys.length) / 2).round())
+                                .take(((CHIP_DATA.keys.length + 1) / 2).round())
                                 .map(
                                   (k) => Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                                    child: EconetChip(k, CHIP_DATA[k], true),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2),
+                                    child: EconetFilterChip(k, CHIP_DATA[k],
+                                        widget.filterResidues.contains(residueFromString(k)),
+                                        (String chipName) {
+                                      widget.updateFilterResidues(chipName,
+                                          !widget.filterResidues.contains(residueFromString(k)));
+                                      // si lo contiene lo tiene que borrar, sino agregarlo
+                                    }),
                                   ),
                                 )
                                 .toList(),
                           ),
                         ),
                       ),
-                    )
-                  ],
+                      Container(
+                        height: 50,
+                        child: CupertinoScrollbar(
+                          isAlwaysShown: true,
+                          controller: _controller2,
+                          child: ListView(
+                            padding: EdgeInsets.only(left: 15),
+                            shrinkWrap: true,
+                            controller: _controller2,
+                            scrollDirection: Axis.horizontal,
+                            children: List.from(
+                              CHIP_DATA.keys
+                                  .skip(((CHIP_DATA.keys.length) / 2).round())
+                                  .map(
+                                    (k) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 2),
+                                      child: EconetFilterChip(k, CHIP_DATA[k],
+                                          widget.filterResidues.contains(residueFromString(k)),
+                                          (String chipName) {
+                                        widget.updateFilterResidues(chipName,
+                                            !widget.filterResidues.contains(k));
+                                      }),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ]));

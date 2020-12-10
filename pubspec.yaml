@@ -33,6 +33,8 @@ dependencies:
   cloud_firestore: ^0.14.1+3
   google_maps_flutter: ^0.5.33
   geolocator: ^6.1.7
+  # Para buscar coordenadas de direcciones
+  geocoder: ^0.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -47,11 +49,23 @@ dependencies:
   #for linking scrollers in searchFilters
   linked_scroll_controller: ^0.1.2
 
+  #font awesome icons, ejemplo icon: FaIcon(FontAwesomeIcons.recycle)
+  font_awesome_flutter: 8.10.0
+
+  sprintf: "^4.0.0"
+
+  #For app icon
+  flutter_launcher_icons: ^0.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  image_path: "assets/launcher/icon.png"
+  adaptive_icon_background: "assets/launcher/background.png"
+  adaptive_icon_foreground: "assets/launcher/foreground.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -67,6 +81,7 @@ flutter:
     - assets/icons/
     - assets/fonts/
     - assets/artwork/
+    - assets/launcher/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

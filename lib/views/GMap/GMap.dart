@@ -1,63 +1,48 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:ui';
-import 'package:econet/presentation/custom_icons_icons.dart';
-import 'package:econet/views/GMap/EcopointInfo.dart';
-import 'package:econet/views/widgets/drawer.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
-import 'Ecopoint.dart';
-import 'EconetButton.dart';
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:econet/views/widgets/GMapNavBar.dart';
+import 'dart:ui' as ui;
+
+import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/services/ecopoint_repository.dart';
+import 'package:econet/views/GMap/EcopointInfo.dart';
+import 'package:econet/views/settings/settings_app_tab.dart';
+import 'package:econet/views/widgets/EconetButton.dart';
+import 'package:econet/views/widgets/GMapNavBar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class GMap extends StatefulWidget {
   @override
   State<GMap> createState() => GMapState();
 }
 
-class GMapState extends State<GMap> {
+class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
   Completer<GoogleMapController> _controller = Completer();
   TextEditingController text_controller = new TextEditingController();
   List<Marker> markers = List();
-  Future<List<Ecopoint>> ecopoints;
-  BitmapDescriptor markerIcon;
-  static bool searchingFlag = false;
-  static LatLng _initialPosition; //para que no de error de null al arrancar
-
-  void getLocation() async {
-    Position currentPosition;
-    try {
-      currentPosition = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best);
-    } catch (error) {
-      print("ERROR: " + error.toString());
-      return;
-    }
-    //HARDCODEADO
-    // markers.add(createMarker("positionMarker", -34.523274, -58.479917, "TesterCalle", null));
-
-    //NO HARDCODEADO, toma posicion real del dispositivo
-    markers.add(createMarker("positionMarker", currentPosition.latitude,
-        currentPosition.longitude, currentPosition.toString(), null));
-    setState(() {
-      _initialPosition =
-          new LatLng(currentPosition.latitude, currentPosition.longitude);
-    });
-    return;
-  }
+  BitmapDescriptor markerEcopointIcon;
+  BitmapDescriptor markerPlantIcon;
+  static bool searchingFlag = false, loadingPosition = false;
+  static LatLng _initialPosition;
+  static final double ECOPOINT_RADIUS = SettingsAppTab().ecopoint_finder_radius;
+  static List<Residue> filterResidues = [];
 
   @override
   Future<void> initState() {
-    getLocation();
-    ecopoints = getEcopoints(4536456, 2345234, 5435);
-
-    //asigno iconos a marcadores
+    //asigno variable de icono a marcadores de ecopoints
     _setMarkerIcon();
-
+    getLocation();
+    print("ECOPOINT RADIUS VALUE: " + ECOPOINT_RADIUS.toString());
     super.initState();
   }
 
@@ -65,73 +50,161 @@ class GMapState extends State<GMap> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return new Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: GMapNavBar(
-        withBack: true,
-        searchingFlag: searchingFlag,
-        switchSearchState: switchSearchState,
-        backgroundColor: Colors.transparent,
-        textColor: GREEN_MEDIUM,
-        text_controller: text_controller,
-      ),
-      drawer: AppDrawer(),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            child: FutureBuilder<List<Ecopoint>>(
-              future: ecopoints,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  snapshot.data.forEach((element) {
-                    print(element);
-                    markers.add(createMarker(
-                        element.userEmail,
-                        element.longitude,
-                        element.latitude,
-                        element.adress,
-                        context));
-                  });
-                }
+    return _initialPosition == null
+        ? Container(
+            //la posicion actual tarda en cargar, sin este if se muestra un error
+            color: Colors.white,
+            alignment: Alignment.center,
+            child: (!loadingPosition)
+                ? Text("Please enable system location.")
+                : CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(GREEN_MEDIUM),
+                  ))
+        : Stack(
+            children: <Widget>[
+              GoogleMap(
+                //Con esto sacamos el logo de Google: Cuidado que si
+                //queremos subir esto al Play Store nos hacen quilombo
+                markers: markers.toSet(),
+                zoomControlsEnabled: false,
+                initialCameraPosition: CameraPosition(
+                  // target: LatLng(-34.523644, -58.479677), HARDCODEADO
+                  target: _initialPosition,
+                  zoom: 15.4746,
+                ),
+                mapToolbarEnabled: false,
+                compassEnabled: false,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+              ),
+              if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
+                GMapNavBar(
+                  withBack: true,
+                  searchingFlag: searchingFlag,
+                  switchSearchState: switchSearchState,
+                  backgroundColor: Colors.transparent,
+                  textColor: GREEN_MEDIUM,
+                  text_controller: text_controller,
+                  onFilledAdress: () {
+                    findNewAddress();
+                  },
+                  filterResidues: filterResidues,
+                  updateFilterResidues: (String residueName, bool add) {
+                    if (add)
+                      filterResidues.add(residueFromString(residueName));
+                    else
+                      filterResidues.remove(residueFromString(residueName));
 
-                if (_initialPosition == null)
-                  //la posicion actual tarda en cargar, sin este if se muestra un error 
-                  return Container();
-                else
-                  return GoogleMap(
-                    //Con esto sacamos el logo de Google: Cuidado que si
-                    //queremos subir esto al Play Store nos hacen quilombo
-                    padding: EdgeInsets.symmetric(horizontal: 500),
+                    //limpio markers y los vuelvo a cargar con los cambios de los filtros
+                    markers.clear();
+                    changeLocation(
+                        _initialPosition.latitude, _initialPosition.longitude);
+                  },
+                ),
+            ],
+          );
+  }
 
-                    markers: markers.toSet(),
-                    zoomControlsEnabled: false,
-                    initialCameraPosition: CameraPosition(
-                      // target: LatLng(-34.523644, -58.479677), HARDCODEADO
+  void findNewAddress() async {
+    var addresses;
+    print("TEXTO A BUSCAR: " + text_controller.value.text);
+    try {
+      addresses = await Geocoder.local
+          .findAddressesFromQuery(text_controller.value.text);
+    } catch (error) {
+      print(error);
+      return;
+    }
 
-                      // el chequeo de null es por que el mapa se crea antes de que se encuentra la posicion actual
-                      target: _initialPosition,
-                      zoom: 15.4746,
-                    ),
-                    mapToolbarEnabled: false,
-                    compassEnabled: false,
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                  );
-              },
-            ),
-          ),
-          if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
-            Container(
-              margin: EdgeInsets.fromLTRB(200, 0, 15, size.height * 0.05),
-              child: EconetButton(onPressed: () {
-                print("HOLA");
-              }),
-              alignment: Alignment.bottomRight,
-            ),
-        ],
-      ),
-    );
+    if (addresses != null && !addresses.isEmpty) {
+      var newAddress = addresses.first;
+      print("NEW ADDRESS FROM NAVBAR: " +
+          "${newAddress.featureName} : ${newAddress.addressLine}");
+
+      final GoogleMapController controller = await _controller.future;
+      // me muevo al nuevo punto
+      controller.animateCamera(CameraUpdate.newLatLng(new LatLng(
+          newAddress.coordinates.latitude, newAddress.coordinates.longitude)));
+      // actualizo el marker de posicion actual y ecopoints
+      markers.clear();
+      await changeLocation(
+          newAddress.coordinates.latitude, newAddress.coordinates.longitude);
+    }
+  }
+
+  Future<void> changeLocation(double newLatitude, double newLongitude) async {
+    markers.add(createMarker("positionMarker", newLatitude, newLongitude,
+        newLatitude.toString() + newLongitude.toString(), context, null));
+
+    final ecopointRepository =
+        Provider.of<EcopointProvider>(context, listen: false);
+
+    await ecopointRepository
+        .getEcopointsByRadius(ECOPOINT_RADIUS, newLatitude, newLongitude)
+        .then((value) {
+      value.forEach((element) {
+        bool isFinished = element.deadline.isBefore(DateTime.now());
+        //Si hay filtros, me fijo que el ecopoint los cumpla, si no hay filtros lo meto
+        bool isFiltered = ((filterResidues.length > 0 &&
+                element.residues.contains(filterResidues)) ||
+            filterResidues.length == 0);
+
+        print("MARKER INFO: " +
+            element.toString() +
+            " IS PLANT? " +
+            ((element.isPlant) ? "YES" : "NO") +
+            ", IS FINISHED? " +
+            ((isFinished) ? "YES" : "NO") +
+            ", CONTAINS FILTER: " +
+            ((isFiltered) ? "YES" : "NO"));
+
+        if (!isFinished /*&& isFiltered*/) {
+          print("AGREGADO MARKER");
+          markers.add(createMarker(
+              (element.isPlant) ? "plantMarker" : "ecopointMarker",
+              element.getLatitude(),
+              element.getLongitude(),
+              element.address,
+              context,
+              element));
+        }
+      });
+    });
+
+    //notifico al sistema de que hubieron cambios
+    setState(() {});
+  }
+
+  void getLocation() async {
+    await Geolocator.requestPermission();
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      print("NO HAY PERMISOS DE UBICACION, PERMISOS " + permission.toString());
+      return;
+    }
+
+    setState(() {
+      loadingPosition = true;
+    });
+
+    Position currentPosition;
+    try {
+      //el metodo dentro pide los permisos
+      currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+    } catch (error) {
+      print("ERROR: " + error.toString());
+      return;
+    }
+    // posicion inicial del mapa
+    _initialPosition =
+        new LatLng(currentPosition.latitude, currentPosition.longitude);
+
+    await changeLocation(currentPosition.latitude, currentPosition.longitude);
+
+    return;
   }
 
   void switchSearchState() {
@@ -140,59 +213,50 @@ class GMapState extends State<GMap> {
   }
 
   _setMarkerIcon() async {
-    markerIcon = await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
+    markerEcopointIcon =
+        await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
+    markerPlantIcon = await _bitmapDescriptorFromSvgAsset(
+        context, 'assets/icons/factory_icon.svg');
   }
 
-  Marker createMarker(
-      String id, double latitude, double longitude, String adress, context) {
+  Marker createMarker(String id, double latitude, double longitude,
+      String adress, context, Ecopoint ecopoint) {
     LatLng latlng = LatLng(latitude, longitude);
+    BitmapDescriptor icon;
     if (id == "positionMarker")
-      //marcador de la posicion en la que se encontraba al abrir la app
-      return Marker(
-          markerId: MarkerId(id),
-          position: latlng,
-          icon: BitmapDescriptor.defaultMarker,
-          draggable: false,
-          zIndex: 1,
-          //Calling the function that does the popup
-          onTap: () {
-            showModalBottomSheet(
-                context: context,
-                builder: (builder) {
-                  return EcopointInfo();
-                });
-          });
-    else
-      return Marker(
-          markerId: MarkerId(id),
-          position: latlng,
-          icon: markerIcon,
-          //markerIcon!=null? markerIcon:BitmapDescriptor.defaultMarker,
-          draggable: false,
-          zIndex: 1,
-          //Calling the function that does the popup
-          onTap: () {
-            showModalBottomSheet(
-                context: context,
-                builder: (builder) {
-                  return EcopointInfo();
-                });
-          });
+      icon = BitmapDescriptor.defaultMarker;
+    else if (id == "ecopointMarker")
+      icon = markerEcopointIcon; // icono de ecopoint
+    else if (id == "plantMarker") icon = markerPlantIcon;
+
+    return Marker(
+      markerId: MarkerId(id),
+      position: latlng,
+      icon: icon,
+      draggable: false,
+      zIndex: 1,
+      //Calling the function that does the popup
+      onTap: () {
+        if (id == "ecopointMarker" || id == "plantMarker")
+          showModalBottomSheet(
+            context: context,
+            builder: (builder) {
+              return EcopointInfo(
+                  ecopoint: ecopoint,
+                  distance: Geolocator.distanceBetween(
+                          latitude,
+                          longitude,
+                          _initialPosition.latitude,
+                          _initialPosition.longitude) /
+                      1000);
+            },
+          );
+      },
+    );
   }
-}
 
-Future<List<Ecopoint>> getEcopoints(
-    double latitude, double longitude, double radius) async {
-  final response = await http.get(
-    'https://us-central1-econet-8552d.cloudfunctions.net/ecopoint?radius=10&latitude=-58.479677&longitude=-34.523644',
-    //headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
-  );
-  print(
-      "RESPONSE BODY =========================================================== " +
-          response.body);
-  final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-
-  return parsed.map<Ecopoint>((json) => Ecopoint.fromJson(json)).toList();
+  @override
+  bool get wantKeepAlive => true;
 }
 
 Future<BitmapDescriptor> _iconToMarker(
@@ -221,3 +285,28 @@ Future<BitmapDescriptor> _iconToMarker(
 }
 
 //From guide here https://www.abhishekduhoon.com/2020/06/how-to-create-widget-based-google-maps.html
+
+Future<BitmapDescriptor> _bitmapDescriptorFromSvgAsset(
+    BuildContext context, String assetName) async {
+  // Read SVG file as String
+  String svgString = await DefaultAssetBundle.of(context).loadString(assetName);
+  // Create DrawableRoot from SVG String
+  DrawableRoot svgDrawableRoot = await svg.fromSvgString(svgString, null);
+
+  // toPicture() and toImage() don't seem to be pixel ratio aware, so we calculate the actual sizes here
+  MediaQueryData queryData = MediaQuery.of(context);
+  double devicePixelRatio = queryData.devicePixelRatio;
+  double width = 32 * devicePixelRatio; // where 32 is your SVG's original width
+  double height = 32 * devicePixelRatio; // same thing
+
+  // Convert to ui.Picture
+  ui.Picture picture = svgDrawableRoot.toPicture(size: Size(width, height));
+
+  // Convert to ui.Image. toImage() takes width and height as parameters
+  // you need to find the best size to suit your needs and take into account the
+  // screen DPI
+  ui.Image image = await picture.toImage(width.truncate(), height.truncate());
+  ByteData bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+  return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
+}
+//From guide here https://stackoverflow.com/questions/55655554/using-svg-markers-in-google-maps-flutter-flutter-plugin

@@ -2,19 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tinycolor/tinycolor.dart';
 
-class EconetChip extends StatefulWidget {
+class EconetFilterChip extends StatefulWidget {
   final String chipName;
   final Color chipColor;
-  final bool isFilter;
+  bool isSelected;
+  Function(String chipName) selectChip;
 
-  EconetChip(this.chipName, this.chipColor, this.isFilter);
+  EconetFilterChip(this.chipName, this.chipColor, this.isSelected, this.selectChip);
 
   @override
-  _EconetChipState createState() => _EconetChipState();
+  _EconetFilterChipState createState() => _EconetFilterChipState();
 }
 
-class _EconetChipState extends State<EconetChip> {
-  bool _isSelected = false;
+class _EconetFilterChipState extends State<EconetFilterChip> {
   Color textColor = Colors.white;
 
   @override
@@ -28,19 +28,17 @@ class _EconetChipState extends State<EconetChip> {
             color: textColor,
           ),
         ),
-        selected: _isSelected,
+        selected: widget.isSelected,
         backgroundColor: widget.chipColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
         ),
         pressElevation: 0,
         onSelected: (isSelected) {
-          //Solo es seleccionable si es un filtro
-          if (widget.isFilter) {
-            setState(() {
-              _isSelected = isSelected;
-            });
-          }
+          setState(() {
+            widget.isSelected = isSelected;
+            widget.selectChip(widget.chipName);
+          });
         },
         selectedColor: widget.chipName == 'Recycling Plants Only'
             ? TinyColor(widget.chipColor).brighten(50).color

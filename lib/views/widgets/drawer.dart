@@ -5,58 +5,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-Widget _createDrawerItem({String text, bool active, GestureTapCallback onTap}) {
-  return ListTile(
-    dense: true,
-    contentPadding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-    title: Container(
-      alignment: Alignment.centerLeft,
-      height: 40,
-      child: Padding(
-        padding: EdgeInsets.only(left: 20.0),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 26,
-            fontFamily: 'SFProDisplay',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-      decoration: BoxDecoration(
-        color: (active) ? Colors.white : null,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(90),
-          bottomLeft: Radius.circular(90),
-        ),
-      ),
-    ),
-    onTap: onTap,
-  );
-}
-
 class AppDrawer extends StatefulWidget {
+  final Function(int pos) setPosition;
+  final int drawerPos;
+
+  const AppDrawer(this.setPosition, this.drawerPos, {Key key})
+      : super(key: key);
+
   @override
   State<StatefulWidget> createState() => DrawerState();
 }
 
 class DrawerState extends State<AppDrawer> {
-  var states = [
-    true,
-    false,
-    false,
-    false,
-    false,
-    false
-  ]; // Home es el que corre primero
-
-  void changeState(index) {
-    for (int i = 0; i < states.length; i++) states[i] = false;
-
-    states[index] = true;
-  }
-
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
@@ -66,53 +26,28 @@ class DrawerState extends State<AppDrawer> {
         children: <Widget>[
           _createDrawerItem(
               text: 'Home',
-              active: states[0],
+              active: widget.drawerPos == 0,
               onTap: () {
-                setState(() {
-                  changeState(0);
-                });
+                widget.setPosition(0);
               }),
           _createDrawerItem(
-              text: 'My recycling',
-              active: states[1],
+              text: 'My Recycling',
+              active: widget.drawerPos == 1,
               onTap: () {
-                setState(() {
-                  changeState(1);
-                });
-              }),
-          _createDrawerItem(
-              text: 'News',
-              active: states[2],
-              onTap: () {
-                setState(() {
-                  changeState(2);
-                });
+                widget.setPosition(1);
               }),
           _createDrawerItem(
               text: 'Tutorials',
-              active: states[3],
+              active: widget.drawerPos == 2,
               onTap: () {
-                setState(() {
-                  changeState(3);
-                });
+                widget.setPosition(2);
               }),
           _createDrawerItem(
               text: 'FAQs',
-              active: states[4],
+              active: widget.drawerPos == 3,
               onTap: () {
-                setState(() {
-                  changeState(4);
-                });
+                widget.setPosition(3);
               }),
-          _createDrawerItem(
-              text: 'Profile',
-              active: states[5],
-              onTap: () {
-                setState(() {
-                  changeState(5);
-                });
-              }),
-
           // No lo pude mandar con la funcion por que tiene icono, distinto tamanio, color y font
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(16, 40, 0, 40),
@@ -174,7 +109,9 @@ class DrawerState extends State<AppDrawer> {
                 fontFamily: 'SFProText',
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/settings');
+            },
           ),
           ListTile(
             dense: true,
@@ -189,24 +126,44 @@ class DrawerState extends State<AppDrawer> {
             ),
             onTap: () {
               auth.logOut();
-              Navigator.popUntil(context, ModalRoute.withName('/auth'));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/loginsignup', ModalRoute.withName('/'));
             },
           ),
-          ListTile(
-            dense: true,
-            leading: Icon(Icons.help),
-            title: Text(
-              'Help',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontFamily: 'SFProText',
-              ),
-            ),
-            onTap: () {},
-          )
         ],
       ),
+    );
+  }
+
+  Widget _createDrawerItem(
+      {String text, bool active, GestureTapCallback onTap}) {
+    return ListTile(
+      dense: true,
+      contentPadding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+      title: Container(
+        alignment: Alignment.centerLeft,
+        height: 40,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20.0),
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 26,
+              fontFamily: 'SFProDisplay',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        decoration: BoxDecoration(
+          color: (active) ? Colors.white : null,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(90),
+            bottomLeft: Radius.circular(90),
+          ),
+        ),
+      ),
+      onTap: onTap,
     );
   }
 }

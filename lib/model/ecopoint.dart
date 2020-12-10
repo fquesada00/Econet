@@ -65,6 +65,7 @@ class Ecopoint {
   }
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'latitude': this._coordinates.latitude,
       'longitude': this._coordinates.longitude,
       'isPlant': this._isPlant,
@@ -83,4 +84,24 @@ class Ecopoint {
   double getLongitude() {
     return this._coordinates.longitude;
   }
+
+  LatLng get coordinates => _coordinates;
+
+  String get address => _address;
+
+  String get name => _name;
+
+  String get additionalInfo => _additionalInfo;
+
+  List<TimeSlot> get openHours => _openHours;
+
+  DateTime get deadline => _deadline;
+
+  String get plantId => _plantId;
+
+  List<Residue> get residues => _residues;
+
+  bool get isPlant => _isPlant;
+
+  MyUser get ecollector => _ecollector;
 }

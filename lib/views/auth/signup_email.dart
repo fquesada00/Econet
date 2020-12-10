@@ -1,11 +1,11 @@
 import 'package:econet/model/my_user.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/user.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:econet/services/user.dart';
 
 class SignupEmail extends StatefulWidget {
   @override
@@ -38,8 +38,13 @@ class _FieldTemplateData {
   final String labelText;
   final Icon icon;
   TextEditingController controller;
+  final TextInputType keyboardType;
 
-  _FieldTemplateData({@required this.labelText, this.icon, this.controller});
+  _FieldTemplateData(
+      {@required this.labelText,
+      this.icon,
+      this.controller,
+      this.keyboardType});
 }
 
 class _EmailRegisterForm extends StatefulWidget {
@@ -55,21 +60,25 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
 
   List<_FieldTemplateData> fieldData = [
     _FieldTemplateData(
-        labelText: 'First Name',
+        labelText: 'Full Name',
         icon: Icon(Icons.person),
-        controller: nameController),
-    _FieldTemplateData(
-        labelText: 'Last Name',
-        icon: Icon(Icons.person),
-        controller: lastNameController),
+        controller: nameController,
+        keyboardType: TextInputType.name),
     _FieldTemplateData(
         labelText: 'Email Address',
         icon: Icon(Icons.email),
-        controller: emailController),
+        controller: emailController,
+        keyboardType: TextInputType.emailAddress),
+    _FieldTemplateData(
+        labelText: 'Phone Number',
+        icon: Icon(Icons.phone),
+        controller: lastNameController,
+        keyboardType: TextInputType.phone),
     _FieldTemplateData(
         labelText: 'Password',
         icon: Icon(Icons.lock),
-        controller: passwordController),
+        controller: passwordController,
+        keyboardType: TextInputType.visiblePassword),
   ];
 
   String errorMessage = "";
@@ -99,6 +108,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 35, vertical: 5),
                       child: TextFormField(
+                        keyboardType: field.keyboardType,
                         controller: field.controller,
                         textInputAction: field.labelText.toLowerCase() ==
                                 'password' // Si es el ultimo field, tiene que dar la opcion de Done
@@ -122,8 +132,8 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                                   ? IconButton(
                                       icon: Icon(
                                         _passwordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -144,29 +154,31 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                 .toList(),
           ),
         ),
-        SafeArea(
-          child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
-              child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                      text: "By continuing, you agree to Econet's ",
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: 'Terms & Conditions',
-                            style: TextStyle(color: GREEN_DARK)),
-                        TextSpan(text: ' and '),
-                        TextSpan(
-                            text: 'Privacy Policy',
-                            style: TextStyle(color: GREEN_DARK)),
-                      ]))),
-        ),
+
+        // Para cuando hayan terms & conditions...
+        // SafeArea(
+        //   child: Padding(
+        //       padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
+        //       child: RichText(
+        //           textAlign: TextAlign.center,
+        //           text: TextSpan(
+        //               text: "By continuing, you agree to Econet's ",
+        //               style: TextStyle(
+        //                 color: Colors.black,
+        //               ),
+        //               children: <TextSpan>[
+        //                 TextSpan(
+        //                     text: 'Terms & Conditions',
+        //                     style: TextStyle(color: GREEN_DARK)),
+        //                 TextSpan(text: ' and '),
+        //                 TextSpan(
+        //                     text: 'Privacy Policy',
+        //                     style: TextStyle(color: GREEN_DARK)),
+        //               ]))),
+        // ),
+        SizedBox(height: 80),
         Padding(
-          padding:
-              const EdgeInsets.only(top: 20.0, left: 45, right: 45, bottom: 30),
+          padding: const EdgeInsets.only(left: 45, right: 45, bottom: 30),
           child: Button1(
               btnData: ButtonData(
             'SIGN UP',
@@ -182,10 +194,34 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                   Navigator.pushReplacementNamed(
                       context, '/ecollector_or_regular',
                       arguments: MyUser.partial(
-                          nameController.text+
-                          lastNameController.text, emailController.text));
+                          nameController.text + lastNameController.text,
+                          emailController.text));
                 } else {
-                  print("not equal");
+                  String snackMessage = errorMessage;
+
+                  switch (errorMessage) {
+                    case 'weak-password':
+                      snackMessage =
+                          'Password should be at least 6 characters long';
+                      break;
+                    case 'invalid-email':
+                      snackMessage = 'Please enter a valid email address';
+                      break;
+                  }
+
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Center(
+                      heightFactor: 1,
+                      child: Text(
+                        snackMessage,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ));
                 }
                 print(errorMessage);
                 setState(() {});

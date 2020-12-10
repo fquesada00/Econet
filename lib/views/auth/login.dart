@@ -54,11 +54,10 @@ class __LoginFormState extends State<_LoginForm> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     List<_LoginServiceData> services = [
-      _LoginServiceData(color: Colors.black, icon: CustomIcons.apple),
       _LoginServiceData(
           color: Color(0xFF4285F4),
           icon: CustomIcons.google,
-          onPressed: signInWithGoolge(context)),
+          onPressed: () async => await signInWithGoogle(context)),
     ];
     return Column(
       children: [
@@ -71,6 +70,7 @@ class __LoginFormState extends State<_LoginForm> {
                     left: 35, right: 35, bottom: 20, top: 50),
                 child: TextFormField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     labelStyle: TextStyle(
@@ -90,6 +90,7 @@ class __LoginFormState extends State<_LoginForm> {
               Padding(
                 padding: const EdgeInsets.only(left: 35, right: 35, top: 8.0),
                 child: TextFormField(
+                  keyboardType: TextInputType.visiblePassword,
                   controller: passwordController,
                   obscureText: !_passwordVisible,
                   decoration: InputDecoration(
@@ -164,20 +165,24 @@ class __LoginFormState extends State<_LoginForm> {
   }
 
   signInWithEmailAndPassword(BuildContext context) async {
-    errorMessage = await Provider.of<AuthProvider>(context)
+    errorMessage = await Provider.of<AuthProvider>(context, listen: false)
         .emailLogin(emailController.text, passwordController.text);
     print(errorMessage);
     if (errorMessage.trim() == "successfully logged in") {
       print("DID IT");
-      Navigator.popUntil(context, ModalRoute.withName('/auth'));
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/home_econet', ModalRoute.withName('/'));
     } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Incorrect user and/or password. Please try again.'),
+      ));
       print("not equal");
     }
     setState(() {});
     print('FORM: OK');
   }
 
-  signInWithGoolge(BuildContext context) async {
+  signInWithGoogle(BuildContext context) async {
     final res = await Provider.of<AuthProvider>(context).signInWithGoogle();
 
     if (res != null) {
@@ -195,6 +200,7 @@ class _LoginServiceData {
   Color color;
   IconData icon;
   Function onPressed;
+
   _LoginServiceData({this.color, this.icon, this.onPressed});
 }
 
