@@ -2,6 +2,7 @@ import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/ecollector_info.dart';
+import 'package:econet/views/widgets/open_hours_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -156,51 +157,8 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
         InformationCard(
             name: "Available at",
             nameColor: GREEN_DARK,
-            content: Column(
-              children: List.from(
-                widget.ecopoint.openHours
-                    .map((e) => Container(
-                          margin: EdgeInsets.only(top: 3, bottom: 3, right: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  e.toStringDay() + ": ",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontFamily: 'SFProDisplay',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      e.toStringRanges(),
-                                      maxLines: 5,
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        fontFamily: 'SFProDisplay',
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ))
-                    .toList(),
-              ),
+            content: OpenHoursList(
+              timeSlots: widget.ecopoint.openHours,
             ),
             editable: widget.withoutPicture),
         InformationCard(
