@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'InformationCard.dart';
+import 'econet_display_chip.dart';
 import 'econet_filter_chip.dart';
 
 class EcopointInfoList extends StatefulWidget {
@@ -119,7 +120,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
                     .map(
                       (k) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: EconetFilterChip(k, CHIP_DATA[k]),
+                        child: EconetDisplayChip(k, CHIP_DATA[k]),
                       ),
                     )
                     .toList(),

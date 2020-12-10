@@ -25,6 +25,10 @@ class MyEcopoint extends StatelessWidget {
             withBack: true,
             backgroundColor: Colors.transparent,
             textColor: BROWN_DARK,
+            rightIcon: Icons.delete_forever,
+            onPressedRightIcon: () {
+              //TODO: ABRIR DIALOGO PARA CONFIRMAR DELETE
+            },
           ),
           Expanded(
             child: DefaultTabController(

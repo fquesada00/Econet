@@ -2,6 +2,8 @@ import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/my_user.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/model/timeslot.dart';
+import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/ecopoint_info_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +35,20 @@ class MyEcopointDetailsTab extends StatelessWidget {
     //----------------------------------------------------
 
     return SingleChildScrollView(
-      child: EcopointInfoList(ecopoint, true, null),
+      child: Column(
+        children: [
+          Button1(
+            btnData: ButtonData(
+              'CONFIRM DELIVERY',
+              // TODO: ABRIR DIALOGO PARA CONFIRMAR LA OPERACION
+              () {},
+              backgroundColor: GREEN_DARK,
+            ),
+          ),
+          SizedBox(height: 25),
+          EcopointInfoList(ecopoint, true, null),
+        ],
+      ),
     );
   }
 }

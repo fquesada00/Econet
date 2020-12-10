@@ -12,15 +12,22 @@ class InformationCard extends StatelessWidget {
   bool editable;
   Function edit;
 
-  InformationCard({this.icon, this.svgUrl, this.name, this.nameColor,
-      this.content, this.editable = false, this.edit});
+  InformationCard(
+      {this.icon,
+      this.svgUrl,
+      this.name,
+      this.nameColor,
+      this.content,
+      this.editable = false,
+      this.edit});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, bottom: 15),
+      padding: EdgeInsets.only(top: 5, bottom: 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(30)),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         color: Colors.white,
       ),
       child: Column(
@@ -37,9 +44,9 @@ class InformationCard extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: nameColor,
-                      fontSize: 22,
+                      fontSize: 24,
                       fontFamily: 'SFProDisplay',
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -59,7 +66,7 @@ class InformationCard extends StatelessWidget {
                             onTap: edit,
                             child: Icon(
                               Icons.edit,
-                              size: 30,
+                              size: 26,
                               color: Colors.white,
                             ),
                           ),

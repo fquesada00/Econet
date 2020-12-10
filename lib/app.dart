@@ -14,6 +14,8 @@ import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
 import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/add_bags.dart';
+import 'package:econet/views/ecopoint/create_ecopoint_additional.dart';
+import 'package:econet/views/ecopoint/create_ecopoint_name.dart';
 import 'package:econet/views/ecopoint/ecopoint_details.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/ecopoint_overview.dart';
@@ -91,6 +93,8 @@ class MyApp extends StatelessWidget {
           '/pending_delivery_details': (context) => PendingDetails(),
           '/my_delivery_details': (context) => MyDeliveryDetails(),
           '/request_delivery_details': (context) => RequestDetails(),
+          '/create_ecopoint_additional': (context) => CreateAdditionalDetails(),
+          '/create_ecopoint_name': (context) => CreateEcopointName(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -124,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
     final deliveryRepository =
-    Provider.of<DeliveryProvider>(context, listen: false);
+        Provider.of<DeliveryProvider>(context, listen: false);
     final userRepository = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -147,7 +151,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   List<Bag> bags = new List();
                   bags.add(new Bag(BagSize.large, BagWeight.light, 2));
                   final firebase_user = FirebaseAuth.instance.currentUser;
-                  MyUser user =  new MyUser.complete(firebase_user.displayName, firebase_user.email, null, null, false);
+                  MyUser user = new MyUser.complete(firebase_user.displayName,
+                      firebase_user.email, null, null, false);
                   EcopointDelivery delivery = new EcopointDelivery(
                       ecopoint, date, bags, user, false, false, false);
                   deliveryRepository.createDelivery(delivery);
@@ -156,8 +161,9 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 child: Text("GET deliveries"),
                 onPressed: () async {
-
-                  List<EcopointDelivery> deliveries = await deliveryRepository.getDeliveriesOfUser(FirebaseAuth.instance.currentUser.email);
+                  List<EcopointDelivery> deliveries =
+                      await deliveryRepository.getDeliveriesOfUser(
+                          FirebaseAuth.instance.currentUser.email);
                   print(jsonEncode(deliveries.first));
                 },
               ),
@@ -321,6 +327,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text("ecopoint details"),
                 onPressed: () {
                   Navigator.pushNamed(context, '/ecopoint_details');
+                },
+              ),
+              RaisedButton(
+                child: Text("additional"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/create_ecopoint_additional');
+                },
+              ),
+              RaisedButton(
+                child: Text("ecopoint name"),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/create_ecopoint_name');
                 },
               ),
             ],

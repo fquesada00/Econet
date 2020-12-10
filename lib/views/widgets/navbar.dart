@@ -1,3 +1,4 @@
+import 'package:econet/presentation/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -34,8 +35,10 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           if (withBack)
-            CupertinoNavigationBarBackButton(
-              color: Colors.black,
+            Expanded(
+              child: CupertinoNavigationBarBackButton(
+                color: Colors.black,
+              ),
             )
           else if (withDrawer)
             Expanded(
@@ -72,7 +75,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Icon(
                   rightIcon,
                   size: 40,
-                  color: Colors.red,
+                  color: ERROR_COLOR,
                 ),
               ),
             )
