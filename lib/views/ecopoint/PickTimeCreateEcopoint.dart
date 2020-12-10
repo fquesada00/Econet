@@ -12,7 +12,6 @@ class PickTimeCreateEcopoint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
-    final testList = List<String>();
     final createEcopointModel = CreateEcopointModel.instance;
 
     print("Testing ecopoint at PickTimeCreateEcopoint");
