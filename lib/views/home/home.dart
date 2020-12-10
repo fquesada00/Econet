@@ -53,8 +53,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Solo se extiende si estas en pantalla de mapa
-      resizeToAvoidBottomPadding: true,
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: _drawerPos == 0,
       appBar: _getAppBar(_drawerPos),

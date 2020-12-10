@@ -65,7 +65,7 @@ class _SearchFiltersState extends State<SearchFilters> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(10),
         height: 190,
         width: 340,
         decoration: BoxDecoration(

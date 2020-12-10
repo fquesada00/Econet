@@ -167,7 +167,7 @@ class _PickLocationState extends State<PickLocation> {
                       Positioned(
                         bottom: 0,
                         child:
-                            PositiveNegativeButtons("Confirm", "Discard", () {
+                            PositiveNegativeButtons("CONFIRM", "DISCARD", () {
                           if (ecopoint != null) {
                             //TODO: POSTEAR A API EL CAMBIO DE DIRECCION
                             // la informacion del ecopoint a actualizar esta en ecopoint y la direccion del ecopoint en _initialposition

@@ -20,12 +20,12 @@ class _SearchDialogState extends State<SearchDialog> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
       // para asegurarnos que cuando el teclado esta abierto
       // el usuario vea la busqueda
       child: Dialog(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        insetPadding: EdgeInsets.zero,
         child: Column(
           children: <Widget>[
             SearchBox(_controller),
@@ -133,7 +133,7 @@ class _SearchHistoryState extends State<SearchHistory> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       width: 340,
       decoration: BoxDecoration(
         boxShadow: [

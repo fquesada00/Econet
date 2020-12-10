@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => MyHomePage(title: 'Econet is flying high'),
-          '/home': (context) => Home(),
+          '/home_econet': (context) => Home(),
           '/signup_method': (context) => SignUpMethod(),
           '/loginsignup': (context) => LoginOrSignup(),
           '/tutorial': (context) => Tutorial(),
@@ -207,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 child: Text("home"),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/home');
+                  Navigator.pushNamed(context, '/home_econet');
                 },
               ),
               RaisedButton(

@@ -51,10 +51,13 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
     return _initialPosition == null
         ? Container(
             //la posicion actual tarda en cargar, sin este if se muestra un error
+            color: Colors.white,
             alignment: Alignment.center,
             child: (!loadingPosition)
                 ? Text("Please enable system location.")
-                : CircularProgressIndicator())
+                : CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(GREEN_MEDIUM),
+                  ))
         : Stack(
             children: <Widget>[
               GoogleMap(
