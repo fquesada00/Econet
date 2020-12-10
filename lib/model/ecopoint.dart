@@ -71,6 +71,7 @@ class Ecopoint {
     return {
       'id': id,
       'name': this._name == null ? "": this._name,
+      'ecollector': this._ecollector.toJson(),
       'information': this.additionalInfo == null ? "": this.additionalInfo,
       'latitude': this._coordinates.latitude,
       'longitude': this._coordinates.longitude,

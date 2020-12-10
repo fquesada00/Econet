@@ -29,6 +29,7 @@ import 'package:econet/views/my_recycling/my_delivery_details.dart';
 import 'package:econet/views/my_recycling/my_recycling.dart';
 import 'package:econet/views/settings/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart' as EcopointView;
 import 'package:flutter/material.dart';
@@ -145,6 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 child: Text("create deliveries"),
                 onPressed: () async {
+                  //FirebaseMessaging.onBackgroundMessage((message) => print(message));
                   Ecopoint ecopoint = await ecopointRepository
                       .getEcopoint("0HLurrwNhlU32EAVGnsx");
                   DateTime date = DateTime.now();
@@ -156,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   EcopointDelivery delivery = new EcopointDelivery(
                       ecopoint, date, bags, user, false, false, false);
                   deliveryRepository.createDelivery(delivery);
-                  messagingRepository.sendMessage(delivery.ecopoint.ecollector.email,{
+                  messagingRepository.sendMessage("goarca@itba.edu.ar",{
                     "notification":{
                       "title":"New Delivery!",
                       "body":"created by aj"
