@@ -78,6 +78,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
+                onTap: handleTap,
               ),
               if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
                 GMapNavBar(
@@ -98,18 +99,26 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
                       filteredElements.remove(residueName);
                   },
                 ),
+              if (loadingPosition)
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
             ],
           );
   }
 
   void findNewAddress() async {
+    loadingPosition = true;
+    setState(() {});
     var addresses;
-    print("TEXTO A BUSCAR: " + text_controller.value.text);
     try {
       addresses = await Geocoder.local
           .findAddressesFromQuery(text_controller.value.text);
     } catch (error) {
       print(error);
+      setState(() {
+        loadingPosition = false;
+      });
       return;
     }
 
@@ -126,13 +135,21 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
       markers.clear();
       await changeLocation(
           newAddress.coordinates.latitude, newAddress.coordinates.longitude);
+    } else {
+      print("No hubieron resultados en la busqueda");
+      loadingPosition = false;
+      setState(() {});
     }
   }
 
   Future<void> changeLocation(double newLatitude, double newLongitude) async {
+    if (!loadingPosition) {
+      loadingPosition = true;
+      setState(() {});
+    }
+
     markers.add(createMarker("positionMarker", newLatitude, newLongitude,
         newLatitude.toString() + newLongitude.toString(), context, null));
-
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
 
@@ -163,7 +180,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
         }
 
         print("MARKER INFO: " +
-            element.toString() +
+            element.toJson().toString() +
             " IS PLANT? " +
             ((element.isPlant) ? "YES" : "NO") +
             ", IS FINISHED? " +
@@ -184,6 +201,7 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
       });
     });
 
+    loadingPosition = false;
     //notifico al sistema de que hubieron cambios
     setState(() {});
   }
@@ -224,8 +242,11 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
     //limpio markers y los vuelvo a cargar con los cambios de los filtros
     markers.clear();
     changeLocation(_initialPosition.latitude, _initialPosition.longitude);
+  }
 
-    setState(() {});
+  void handleTap(LatLng tappedPoint) {
+    markers.clear();
+    changeLocation(tappedPoint.latitude, tappedPoint.longitude);
   }
 
   _setMarkerIcon() async {
