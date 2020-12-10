@@ -2,10 +2,12 @@ import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/ecopoint_repository.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tinycolor/tinycolor.dart';
 
 class PickMaterials extends StatefulWidget {
@@ -15,8 +17,17 @@ class PickMaterials extends StatefulWidget {
 
 class _PickMaterialsState extends State<PickMaterials> {
   List<Residue> selectedChoices = List();
+  List<Residue> posibleChoices = List();
   Ecopoint ecopoint;
   bool alreadyCreated = false;
+
+  Future<void> getResiduesFromEcopoint() async {
+    final ecopointRepository =
+        Provider.of<EcopointProvider>(context, listen: false);
+    Ecopoint aux = await ecopointRepository.getEcopoint(ecopoint.id);
+    posibleChoices = aux.residues;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +35,10 @@ class _PickMaterialsState extends State<PickMaterials> {
     if (!alreadyCreated) {
       ecopoint = ModalRoute.of(context).settings.arguments;
       if (ecopoint != null) {
-        ecopoint.residues.forEach((element) {
-          print("NUEVO ELEMENTO DE ID: " + element.toString());
-          selectedChoices.add(element);
-        });
+        selectedChoices = ecopoint.residues;
+        getResiduesFromEcopoint();
+      } else {
+        posibleChoices = CreateEcopointModel.instance.plant.residues;
       }
       alreadyCreated = !alreadyCreated;
     }
@@ -65,6 +76,7 @@ class _PickMaterialsState extends State<PickMaterials> {
                             });
                           },
                           selectedChoices: selectedChoices,
+                          posibleChoices: posibleChoices,
                         ),
                         SizedBox(
                           height: 10,
@@ -124,8 +136,10 @@ class _PickMaterialsState extends State<PickMaterials> {
 class ResiduesChip extends StatefulWidget {
   Function(List<Residue>) onSelectedItem;
   List<Residue> selectedChoices;
+  List<Residue> posibleChoices;
 
-  ResiduesChip({this.onSelectedItem, this.selectedChoices});
+  ResiduesChip(
+      {this.onSelectedItem, this.selectedChoices, this.posibleChoices});
 
   @override
   _ResiduesChipState createState() => _ResiduesChipState();
@@ -136,7 +150,7 @@ class _ResiduesChipState extends State<ResiduesChip> {
 
   _buildChoiceList() {
     List<Widget> choices = List();
-    CreateEcopointModel.instance.plant.residues.forEach((item) {
+    widget.posibleChoices.forEach((item) {
       choices.add(Container(
         padding: const EdgeInsets.all(4.0),
         child: ChoiceChip(

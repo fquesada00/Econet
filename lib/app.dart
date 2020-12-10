@@ -193,11 +193,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   // MyUser user = MyUser.complete("agustintormakh",
                   //     "agustormakh@gmail.com", "11740590", "hola", true);
                   final ecopoint = Ecopoint(
-                      null,
-                      true,
-                      [Residue.paper, Residue.glass],
+                      MyUser.complete("ecopoint mbeh", "_email", "_phone", "", true),
+                      false,
+                      [Residue.paper],
                       "",
-                      new DateTime.now(),
+                      new DateTime.utc(2021),
                       [new TimeSlot(5), new TimeSlot(3)],
                       "",
                       "PLANTA 111a",
@@ -228,50 +228,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.pushNamed(context, '/filter_testing');
                 },
               ),
-              RaisedButton(
-                  child: Text("pickLocation"),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/pickLocation');
-                  }),
-              RaisedButton(
-                  child: Text("sheduleTrip"),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/createEcopoint', arguments: {
-                      'plantName': "Plant 1",
-                      'address': "Adress 1234",
-                      'distance': 0.2,
-                      'residues': [
-                        'Paper',
-                        'Plastic',
-                        'Glass',
-                        'Metal',
-                        'Electronics',
-                        'Wood',
-                        'Textile'
-                      ],
-                    });
-                  }),
-              RaisedButton(
-                  child: Text("ecopointExpanded"),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/ecopointExpanded',
-                        arguments: {
-                          'ecopointName': "Plant 1",
-                          'address': "Adress 1234",
-                          'distance': 0.2,
-                          'residues': [
-                            'Paper',
-                            'Plastic',
-                            'Glass',
-                            'Metal',
-                            'Electronics',
-                            'Wood',
-                            'Textile'
-                          ],
-                          'ecollector': "ecollector",
-                          'deliveryDate': new DateTime.utc(2020, 10, 26),
-                        });
-                  }),
               RaisedButton(
                   child: Text("pickWeekday"),
                   onPressed: () {

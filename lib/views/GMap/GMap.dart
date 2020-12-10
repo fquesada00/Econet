@@ -141,17 +141,22 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
         .getEcopointsByRadius(ECOPOINT_RADIUS, newLatitude, newLongitude)
         .then((value) {
       value.forEach((element) {
+        bool isFinished = element.deadline.isBefore(DateTime.now());
         print("MARKER ADDED: " +
             element.toString() +
             " IS PLANT? " +
-            ((element.isPlant) ? "YES" : "NO"));
-        markers.add(createMarker(
-            (element.isPlant) ? "plantMarker" : "ecopointMarker",
-            element.getLatitude(),
-            element.getLongitude(),
-            element.address,
-            context,
-            element));
+            ((element.isPlant) ? "YES" : "NO") +
+            ", IS FINISHED? " +
+            ((isFinished) ? "YES" : "NO"));
+
+        if (!isFinished)
+          markers.add(createMarker(
+              (element.isPlant) ? "plantMarker" : "ecopointMarker",
+              element.getLatitude(),
+              element.getLongitude(),
+              element.address,
+              context,
+              element));
       });
     });
 
