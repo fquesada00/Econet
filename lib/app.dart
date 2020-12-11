@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => LandingPage(),
-          '/landing':  (context) => MyHomePage(title: 'Econet is flying high'),
+          '/landing': (context) => MyHomePage(title: 'Econet is flying high'),
           '/home_econet': (context) => Home(),
           '/signup_method': (context) => SignUpMethod(),
           '/loginsignup': (context) => LoginOrSignup(),
@@ -121,12 +121,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
+  @override
+  _LandingPageState createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-
-    Cache.delete("notifications_deliveries");
-    print("SETTING UP CACHE");
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true,sound: true);
     FirebaseMessaging.onMessage.asBroadcastStream().listen((event) async {
       List<dynamic> list;
@@ -134,32 +136,53 @@ class LandingPage extends StatelessWidget {
         list = (await Cache.read("notifications_deliveries"))['data'];
       }catch(e){ list = new List();}
 
-        list.add(event.data['delivery']);
-        await Cache.write("notifications_deliveries", {"data":list});
+      list.add(event.data['delivery']);
+      await Cache.write("notifications_deliveries", {"data":list});
     });
-    return StreamBuilder<User>(
-        stream: Provider.of<AuthProvider>(context).onAuthStateChanged(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            User user = snapshot.data;
-            if (user == null) {
-              return LoginOrSignup();
-            } else {
-              return Home();
-            }
-          } else {
-            return Scaffold(
-                body: Center(
-              child: CircularProgressIndicator(),
-            ));
-          }
-        });
+    return Scaffold(body: Container());
+  }
+
+  @override
+  void didChangeDependencies() {
+    //we don't have to close or unsubscribe SB
+    Provider.of<AuthProvider>(context, listen: false)
+        .onAuthStateChanged()
+        .listen((user) {
+          print(user);
+      if (user == null) {
+        Navigator.pushReplacementNamed(context, '/loginsignup');
+      } else {
+        return Navigator.pushReplacementNamed(context, '/home_econet');
+      }
+    });
+
+    super.didChangeDependencies();
   }
 }
+//     return StreamBuilder<User>(
+//         stream: Provider.of<AuthProvider>(context).onAuthStateChanged(),
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.active) {
+//             User user = snapshot.data;
+//             if (user == null) {
+//               return LoginOrSignup();
+//             } else {
+//               return Home();
+//             }
+//           } else {
+//             return Scaffold(
+//                 body: Center(
+//               child: CircularProgressIndicator(),
+//             ));
+//           }
+//         });
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title = "p2"}) : super(key: key);
   final String title;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -167,6 +190,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+
     //Widget para variar las configuraciones del status bar entre las views
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
