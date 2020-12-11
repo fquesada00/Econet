@@ -31,7 +31,8 @@ class PendingDetails extends StatelessWidget {
           ),
           Expanded(
             child: SingleChildScrollView(
-              child: DeliveryInfoList(ecopointDelivery, BROWN_DARK),
+              child: DeliveryInfoList(ecopointDelivery, BROWN_DARK,
+                  isEcollector: false),
             ),
           ),
         ],

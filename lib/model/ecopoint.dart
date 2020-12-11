@@ -47,7 +47,8 @@ class Ecopoint {
     this._name = map['name'];
     this._additionalInfo = map['information'];
     this._plantId = map['plantId'];
-    this._ecollector = MyUser.fromJson(map['user']);
+    if(map['user'] != null)this._ecollector = MyUser.fromJson(map['user']);
+    if(map['ecollector'] != null)this._ecollector = MyUser.fromJson(map['ecollector']);
     this._isPlant = map['isPlant'];
 
     List<dynamic> residues = map['residues'];
@@ -60,8 +61,9 @@ class Ecopoint {
     this._address = map['address'];
     // Map<String, dynamic> coords = map['coordinates'];
 
-    this._coordinates = LatLng(map['coordinates']['geopoint']['_latitude'],
+    if(map['coordinates'] != null)this._coordinates = LatLng(map['coordinates']['geopoint']['_latitude'],
         map['coordinates']['geopoint']['_longitude']);
+
   }
 
   Map<String, dynamic> toJson() {

@@ -27,7 +27,7 @@ class _MyEcopointRequestsTabState extends State<MyEcopointRequestsTab> {
         .then((deliveries) {
       deliveries.forEach((delivery) {
         print("ELEMENTO = " + delivery.toString());
-        if (!delivery.finished && !delivery.responseValue) {
+        if (!delivery.isConfirmed) {
           requestsList.add(delivery);
         }
       });

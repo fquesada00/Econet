@@ -39,18 +39,19 @@ class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(delivery));
-    if(response.statusCode == 200){
-      FirebaseMessagingProvider().sendMessage(delivery.ecopoint.ecollector.email, {
+    if (response.statusCode == 200) {
+      FirebaseMessagingProvider()
+          .sendMessage(delivery.ecopoint.ecollector.email, {
         "notification": {
           "title": "New Delivery!",
-          "body": "created by ${delivery.user.fullName} for delivering ${delivery.date.day}/${delivery.date.month}/${delivery.date.year}"
+          "body":
+              "created by ${delivery.user.fullName} for delivering ${delivery.date.day}/${delivery.date.month}/${delivery.date.year}"
         },
-        "data":{
-          "delivery":jsonEncode(delivery.toJson())
-        }
-      } );
+        "data": {"delivery": jsonEncode(delivery.toJson())}
+      });
       return true;
-    }else return false;
+    } else
+      return false;
   }
 
   @override
@@ -101,16 +102,19 @@ class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
 
   @override
   Future<bool> deleteDelivery(String deliveryId) async {
-
     final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
     final email = user.email;
-    final response = await http.delete("$deliveryUrl?email=$email&?deliveryId=$deliveryId",
-        headers: {
-          'Authorization': 'Bearer $token',
-        });
+    final response = await http
+        .delete("$deliveryUrl?email=$email&deliveryId=$deliveryId", headers: {
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode == 200)
+      print("DELIVERY BORRADO");
+    else
+      print("DELIVERY NO BORRADO, error: " + response.statusCode.toString());
 
     return response.statusCode == 200;
-
   }
 }

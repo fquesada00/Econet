@@ -132,8 +132,8 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true,sound: true);
-    FirebaseMessaging.onMessage.asBroadcastStream().listen((event) async {
+    var updateCache = (event) async {
+      print("updating cacheeee");
       List<dynamic> list;
       try {
         list = (await Cache.read("notifications_deliveries"))['data'];
@@ -141,7 +141,11 @@ class _LandingPageState extends State<LandingPage> {
 
       list.add(event.data['delivery']);
       await Cache.write("notifications_deliveries", {"data":list});
-    });
+    };
+
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true,sound: true);
+    FirebaseMessaging.onMessage.asBroadcastStream().listen(updateCache);
+
     return Scaffold(body: Container());
   }
 

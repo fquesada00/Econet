@@ -6,8 +6,9 @@ import 'package:flutter_svg/svg.dart';
 class EcollectorInfo extends StatelessWidget {
   final String name;
   final Color backgroundColor;
+  final bool isEcollector;
 
-  EcollectorInfo(this.name, this.backgroundColor);
+  EcollectorInfo(this.name, this.backgroundColor, {this.isEcollector = true});
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +20,16 @@ class EcollectorInfo extends StatelessWidget {
         color: backgroundColor,
       ),
       child: Column(children: <Widget>[
-        Text(
-          "ECOLLECTOR",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-            color: GREEN_LIGHT,
+        if (isEcollector)
+          Text(
+            "ECOLLECTOR",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: GREEN_LIGHT,
+            ),
           ),
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5.0),
           child: LimitedBox(

@@ -16,9 +16,11 @@ class EcopointInfoList extends StatefulWidget {
   final Widget button;
   final TextEditingController nameController;
   final TextEditingController additionalInfoController;
+  final bool editable;
 
   EcopointInfoList(this.ecopoint, this.withoutPicture, this.button,
-      this.nameController, this.additionalInfoController);
+      this.nameController, this.additionalInfoController,
+      {this.editable = false});
 
   @override
   _EcopointInfoListState createState() => _EcopointInfoListState();
@@ -67,7 +69,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
                     counterText: ""),
               ),
             ),
-            editable: widget.withoutPicture,
+            editable: widget.editable,
             edit: () {
               nameFocusNode.requestFocus();
             },
@@ -96,7 +98,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
               fontFamily: 'SFProDisplay',
             ),
           ),
-          editable: widget.withoutPicture,
+          editable: widget.editable,
           edit: () {
             Navigator.pushNamed(context, '/pickLocation',
                 arguments: widget.ecopoint);
@@ -126,7 +128,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
               ),
             ),
           ),
-          editable: widget.withoutPicture,
+          editable: widget.editable,
           edit: () {
             _editChoices(context);
           },
@@ -145,7 +147,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          editable: widget.withoutPicture,
+          editable: widget.editable,
           edit: () {
             Navigator.pushNamed(context, '/pickDeliveryDate',
                 arguments: widget.ecopoint);
@@ -157,7 +159,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
           content: OpenHoursList(
             timeSlots: widget.ecopoint.openHours,
           ),
-          editable: widget.withoutPicture,
+          editable: widget.editable,
           edit: () {},
         ),
         InformationCard(
@@ -178,7 +180,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
               border: InputBorder.none,
             ),
           ),
-          editable: widget.withoutPicture,
+          editable: widget.editable,
           edit: () {
             additionalInfoFocusNode.requestFocus();
           },

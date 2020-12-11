@@ -7,6 +7,7 @@ import 'package:econet/views/widgets/tab_slide_choose.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tinycolor/tinycolor.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TutorialPicked extends StatelessWidget {
   Residue residue;
@@ -15,14 +16,19 @@ class TutorialPicked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List list = [
-      "How to prepare " +
+    List texts = [
+      "How to recycle " +
           residueToString(this.residue).toLowerCase() +
-          " for recycling",
-      "How to prepare **Other thing** for recycling",
+          " waste",
+      "Know your ${residueToString(this.residue).toLowerCase()}",
       "Which types of " +
           residueToString(this.residue).toLowerCase() +
           " are safe for recycling"
+    ];
+    List links = [
+      "https://www.youtube.com/watch?v=jgwH2BuHCr0",
+      "https://www.youtube.com/watch?v=_qTelxi3MjU",
+      "https://www.youtube.com/watch?v=eymigN8tMoY"
     ];
 
     return Scaffold(
@@ -46,41 +52,60 @@ class TutorialPicked extends StatelessWidget {
                   ),
                   child: SingleChildScrollView(
                     child: Column(
-                        children: List.generate(list.length, (index) {
-                      return Container(
-                          height: 100,
-                          margin: EdgeInsets.only(top: 15, left: 15, right: 15),
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                            color: Colors.white,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              SizedBox(
-                                width: 36,
-                              ),
-                              Container(
-                                  width: 250,
-                                  child: Center(
-                                      child: Text(list[index],
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: GREEN_DARK,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                          )))),
-                              Icon(
-                                Icons.chevron_right,
-                                size: 36,
-                              )
-                            ],
-                          ));
+                        children: List.generate(texts.length, (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          _launchURL(links[index]);
+                          print("pressed");
+                        },
+                        child: Container(
+                            height: 100,
+                            margin:
+                                EdgeInsets.only(top: 15, left: 15, right: 15),
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width: 36,
+                                ),
+                                Container(
+                                    width: 250,
+                                    child: Center(
+                                        child: Text(texts[index],
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: GREEN_DARK,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                            )))),
+                                IconButton(
+                                    icon: Icon(Icons.chevron_right),
+                                    iconSize: 36,
+                                    onPressed: () {})
+                              ],
+                            )),
+                      );
                     })),
                   )),
             )
           ])),
     );
+  }
+}
+
+_launchURL(inputURL) async {
+  String url = inputURL;
+  print("in launch url");
+  if (await canLaunch(url)) {
+    print("Launch url");
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }

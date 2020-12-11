@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/ecopoint_delivery.dart';
 import 'package:econet/model/my_user.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/model/timerange.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/cache.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -27,25 +30,35 @@ class NotificationsDialog extends StatelessWidget {
   }
 }
 
-class NotificationBox extends StatelessWidget {
-  List<EcopointDelivery> pendingDeliveries = [
-    // TODO: RECIBIR ESTOS DATOS DE LA API
-    EcopointDelivery(
-        Ecopoint(
-          new MyUser.complete(
-              "pepemaster", "pepemaster@gmail.com", "0303456", "", true),false, [Residue.glass], "XXXASasdas",
-        DateTime(2021), null, "", "pepeEcopoint", "Casa rosada", LatLng(0,0)),
-        new DateTime(2020, 12, 12),
-        null,
-        new MyUser.complete(
-            "pepe1pepe1pepe", "pepe@gmail.com", "0303456", "", true),
-        false,
-        false,
-        false),
-  ];
+class NotificationBox extends StatefulWidget {
+  @override
+  _NotificationBoxState createState() => _NotificationBoxState();
+}
 
+class _NotificationBoxState extends State<NotificationBox> {
+  List<EcopointDelivery> pendingDeliveries = [];
+  bool init = false;
   @override
   Widget build(BuildContext context) {
+
+    if(!init) {
+      init=true;
+      var readCache = () async {
+        try {
+          List<dynamic> list = (await Cache.read(
+              "notifications_deliveries"))['data'];
+          pendingDeliveries =
+              list.map((e) => EcopointDelivery.fromJson(jsonDecode(e)))
+                  .toList();
+        } catch (e) {
+          print(e);
+        }
+        setState(() {});
+      };
+      readCache();
+      Cache.addListener("notifications_deliveries", readCache);
+    }
+
     return Container(
       padding: EdgeInsets.all(10),
       height: 450,

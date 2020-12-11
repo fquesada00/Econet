@@ -42,15 +42,14 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
   }
 
   getInformation() async {
-    AuthProvider provider =
-        await Provider.of<AuthProvider>(context, listen: false);
+    AuthProvider provider = Provider.of<AuthProvider>(context, listen: false);
 
-    await provider.getCurrentUser().then((value) {
-      if (value.isEcollector) isEcollector = true;
-      currentUserEmail = value.email;
+    await provider.getCurrentUser().then((user) {
+      isEcollector = user.isEcollector;
+      currentUserEmail = user.email;
+      setState(() {});
+      fillDeliveries();
     });
-
-    fillDeliveries();
   }
 
   Future<void> fillDeliveries() async {
@@ -73,14 +72,14 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
               .getDeliveriesInEcopoint(ecopoint.id)
               .then((deliveries) {
             deliveries.forEach((delivery) {
-              print("ELEMENTO = " + delivery.toString());
               if (!delivery.finished) {
-                if (!delivery.responseValue) {
-                  // si no termino y no le respondi es un request
-                  requestedDeliveries++;
-                } else if (delivery.isConfirmed) {
+                if (delivery.isConfirmed) {
+                  if (delivery.responseValue)
+                    // si no termino y no le respondi es un request
+                    pendingDeliveries++;
+                } else {
                   // si no termino, le respondi y lo confirme es un pending
-                  pendingDeliveries++;
+                  requestedDeliveries++;
                 }
               }
             });
@@ -111,20 +110,17 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
             topLeft: Radius.circular(30), topRight: Radius.circular(30)),
         color: GREEN_MEDIUM,
       ),
-      //TODO: SACAR EL (false) ES PARA TESTEOS
-      child: (false) /*(!isEcollector)*/
-          ? Expanded(
-              child: Center(
-                child: Button1(
-                  btnData: ButtonData("BECOME AN ECOLLECTOR", () {},
-                      backgroundColor: BROWN_DARK,
-                      textColor: Colors.white,
-                      icon: Icon(
-                        CustomIcons.recycle,
-                        color: Colors.white,
-                      ),
-                      fontSize: 28),
-                ),
+      child: (!loadingEcopoints && !isEcollector)
+          ? Center(
+              child: Button1(
+                btnData: ButtonData("BECOME AN ECOLLECTOR", () {},
+                    backgroundColor: BROWN_DARK,
+                    textColor: Colors.white,
+                    icon: Icon(
+                      CustomIcons.recycle,
+                      color: Colors.white,
+                    ),
+                    fontSize: 28),
               ),
             )
           : SingleChildScrollView(
@@ -173,7 +169,7 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                                         Row(
                                           children: <Widget>[
                                             SizedBox(
-                                              width: 34,
+                                              width: 55,
                                             ),
                                             Expanded(
                                               flex: 5,
@@ -201,75 +197,74 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                                             SizedBox(
                                               width: 34,
                                             ),
-                                            Expanded(
-                                              child: Container(
-                                                height: 72,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 8.0),
-                                                      child: Text(
-                                                        "Due in",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 15,
-                                                          fontFamily:
-                                                              'SFProDisplay',
-                                                        ),
+                                            Container(
+                                              height: 72,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 8.0),
+                                                    child: Text(
+                                                      "Due in",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 15,
+                                                        fontFamily:
+                                                            'SFProDisplay',
                                                       ),
                                                     ),
-                                                    Chip(
-                                                      materialTapTargetSize:
-                                                          MaterialTapTargetSize
-                                                              .shrinkWrap,
-                                                      label: Text(
-                                                        TimeRange
-                                                            .getRemainingDeliverTime(
-                                                                e.ecopoint
-                                                                    .deadline),
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15,
-                                                          fontFamily:
-                                                              'SFProDisplay',
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                        ),
+                                                  ),
+                                                  Chip(
+                                                    materialTapTargetSize:
+                                                        MaterialTapTargetSize
+                                                            .shrinkWrap,
+                                                    label: Text(
+                                                      TimeRange
+                                                          .getRemainingDeliverTime(
+                                                              e.ecopoint
+                                                                  .deadline),
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                        fontFamily:
+                                                            'SFProDisplay',
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                       ),
-                                                      backgroundColor:
-                                                          BROWN_DARK,
                                                     ),
-                                                  ],
-                                                ),
+                                                    backgroundColor: BROWN_DARK,
+                                                  ),
+                                                ],
                                               ),
                                             ),
+                                            Spacer(),
                                             SizedBox(
-                                              width: 8,
+                                              width: 60,
+                                              child: TextAboveNumberedCircle(
+                                                  "Pending deliveries",
+                                                  e.pendingDeliveries,
+                                                  GREEN_DARK),
                                             ),
-                                            TextAboveNumberedCircle(
-                                                "Pending deliveries",
-                                                e.pendingDeliveries,
-                                                GREEN_DARK),
+                                            Spacer(),
                                             SizedBox(
-                                              width: 8,
+                                              width: 60,
+                                              child: TextAboveNumberedCircle(
+                                                  "Delivery requests",
+                                                  e.requestedDeliveries,
+                                                  BROWN_MEDIUM),
                                             ),
-                                            TextAboveNumberedCircle(
-                                                "Delivery requests",
-                                                e.requestedDeliveries,
-                                                BROWN_MEDIUM),
                                           ],
                                         ),
                                       ],
                                     ),
                                   ),
                                   Container(
-                                    width: 34,
+                                    width: 55,
                                     alignment: Alignment.topCenter,
                                     child: Icon(
                                       Icons.chevron_right,

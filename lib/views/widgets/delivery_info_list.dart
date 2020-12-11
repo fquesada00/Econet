@@ -1,5 +1,4 @@
 import 'package:econet/model/ecopoint_delivery.dart';
-import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,21 +10,45 @@ import 'ecollector_info.dart';
 class DeliveryInfoList extends StatelessWidget {
   final EcopointDelivery ecopointDelivery;
   final Color backgroundColor;
+  final bool editable;
+  final bool isEcollector;
 
-  DeliveryInfoList(this.ecopointDelivery, this.backgroundColor);
+  DeliveryInfoList(this.ecopointDelivery, this.backgroundColor,
+      {this.editable = true, this.isEcollector = true});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        EcollectorInfo(ecopointDelivery.user.fullName, backgroundColor),
+        EcollectorInfo(ecopointDelivery.user.fullName, backgroundColor,
+            isEcollector: isEcollector),
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
           child: Button1(
             btnData: ButtonData(
-              'CONTACT ECOLLECTOR',
+              isEcollector ? 'CONTACT ECOLLECTOR' : 'CONTACT',
               () {
-                print("no se que se deberia hacer aca");
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text("PHONE NUMBER"),
+                    content: Text(
+                      ecopointDelivery.ecopoint.ecollector.phone,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'SFProDisplay',
+                      ),
+                    ),
+                    actions: [
+                      FlatButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("Ok"),
+                      ),
+                    ],
+                  ),
+                );
               },
               backgroundColor: backgroundColor,
               adjust: true,
@@ -40,8 +63,7 @@ class DeliveryInfoList extends StatelessWidget {
           name: "Ecopoint address",
           nameColor: backgroundColor,
           content: Text(
-            "Avenida siempreviva 1234",
-            //TODO: DEBERIA BUSCAR EL ECOPOINT CON EL ID Y SACAR EL ADDRESS
+            ecopointDelivery.ecopoint.address,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
@@ -49,6 +71,7 @@ class DeliveryInfoList extends StatelessWidget {
               fontFamily: 'SFProDisplay',
             ),
           ),
+          editable: false,
         ),
         InformationCard(
           icon: Icons.calendar_today,
@@ -64,28 +87,26 @@ class DeliveryInfoList extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          editable: true,
-          //TODO: EDICION DE FECHA DE ENTREGA
+          editable: editable,
         ),
         if (ecopointDelivery.bags != null)
           InformationCard(
-              name: "Bags/Objects",
-              nameColor: backgroundColor,
-              content: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 330),
-                child: ListView.separated(
-                  padding: EdgeInsets.all(15),
-                  itemCount: ecopointDelivery.bags.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return BagInfoRow(ecopointDelivery.bags, index, true);
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      SizedBox(height: 8),
-                ),
+            name: "Bags/Objects",
+            nameColor: backgroundColor,
+            content: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 330),
+              child: ListView.separated(
+                padding: EdgeInsets.all(15),
+                itemCount: ecopointDelivery.bags.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return BagInfoRow(ecopointDelivery.bags, index, true);
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    SizedBox(height: 8),
               ),
-              editable: true
-              //TODO: EDICION DE BOLSAS A ENTREGAR
-              ),
+            ),
+            editable: editable,
+          ),
       ],
     );
   }

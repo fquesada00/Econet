@@ -33,7 +33,7 @@ class GMapState extends State<GMap> {
   BitmapDescriptor markerEcopointIcon;
   BitmapDescriptor markerPlantIcon;
   static bool searchingFlag = false, loadingPosition = false;
-  static LatLng _initialPosition;
+  static LatLng _initialPosition = null;
   static double ECOPOINT_RADIUS;
   static List<String> filteredElements;
 
@@ -55,15 +55,20 @@ class GMapState extends State<GMap> {
   }
 
   @override
+  void dispose() {
+    text_controller.dispose();
+    _initialPosition = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return _initialPosition == null
         ? Container(
             //la posicion actual tarda en cargar, sin este if se muestra un error
             color: Colors.white,
             alignment: Alignment.center,
-            child: (!loadingPosition)
-                ? Text("Please enable system location.")
-                : CircularProgressIndicator(
+            child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(GREEN_MEDIUM),
                   ))
         : Stack(
@@ -129,9 +134,7 @@ class GMapState extends State<GMap> {
                     //la posicion actual tarda en cargar, sin este if se muestra un error
                     color: Color.fromARGB(100, 0, 0, 0),
                     alignment: Alignment.center,
-                    child: (!loadingPosition)
-                        ? Text("Please enable system location.")
-                        : CircularProgressIndicator(
+                    child: CircularProgressIndicator(
                             valueColor:
                                 AlwaysStoppedAnimation<Color>(Colors.black),
                           ),
@@ -268,6 +271,7 @@ class GMapState extends State<GMap> {
       return;
     }
 
+    if (!mounted) return;
     setState(() {
       loadingPosition = true;
     });
