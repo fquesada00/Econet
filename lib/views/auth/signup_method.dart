@@ -1,19 +1,30 @@
+import 'package:econet/model/my_user.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/services/user.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignUpMethod extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     List<ButtonData> _buttonData = [
       ButtonData(
         'Continue with Google',
-        () {},
+        () async {
+          print("sign up with google");
+          //signup with google
+          final credential = await auth.signInWithGoogle();
+          //mandar al nuevo usuario a Ecollector o Regular
+          Navigator.pushReplacementNamed(context, '/ecollector_or_regular',
+              arguments: MyUser.partial(credential.user.displayName,
+                  credential.user.email, credential.user.phoneNumber));
+        },
         icon: Icon(CustomIcons.google),
         backgroundColor: Color(0xFF4285F4),
       ),
