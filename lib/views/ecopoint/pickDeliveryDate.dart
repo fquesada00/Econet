@@ -1,7 +1,11 @@
 import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/timeslot.dart';
+import 'package:econet/presentation/constants.dart';
+import 'package:econet/views/widgets/InformationCard.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
+import 'package:econet/views/widgets/open_hours_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +21,7 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
   Ecopoint ecopoint;
   Function _continueFunction;
   bool alreadyCreated = false;
+  ScrollController controller = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   String getWeekDay(int number) {
@@ -79,6 +84,19 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
     }
   }
 
+  String displayDate() {
+    String msg;
+    if (_date != null && _time != null)
+      msg = '${getWeekDay(_date.weekday)} - ${_date.day >= 10 ? _date.day : '0' + _date.day.toString()}/${_date.month >= 10 ? _date.month : '0' + _date.month.toString()}/${_date.year}' +
+          '\n${_time.hour >= 10 ? _time.hour : '0' + _time.hour.toString()}:${_time.minute >= 10 ? _time.minute : '0' + _time.minute.toString()} hs';
+    else if (_date == null)
+      msg = '---\n';
+    else
+      msg =
+          '${getWeekDay(_date.weekday)} - ${_date.day >= 10 ? _date.day : '0' + _date.day.toString()}/${_date.month >= 10 ? _date.month : '0' + _date.month.toString()}/${_date.year}';
+    return msg;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -93,6 +111,50 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
       alreadyCreated = !alreadyCreated;
     }
 
+    List<Widget> timeslots = List();
+    _createEcopointModel.plant.openHours.forEach((e) {
+      timeslots.add(Container(
+        margin: EdgeInsets.only(top: 3, bottom: 3, right: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: Text(
+                e.toStringDay() + ": ",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontFamily: 'SFProDisplay',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    e.toStringRanges(),
+                    maxLines: 5,
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontFamily: 'SFProDisplay',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ));
+    });
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.indigo[200],
@@ -106,36 +168,46 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
         builder: (context) => Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            //   SizedBox(
+            //   height: 70,
+            // ),
             Container(
-              width: size.width * 0.8,
-              height: size.height * 0.5 > 400 ? size.height * 0.5 : 400,
+              width: 360,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+              ),
+              child: InformationCard(
+                name: 'Open hours',
+                nameColor: GREEN_DARK,
+                content: Container(
+                  height: 80,
+                  child: ListView.builder(
+                    itemBuilder: (context, idx) {
+                      return timeslots[idx];
+                    },
+                    itemCount: timeslots.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    controller: ScrollController(),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: 350,
+              height: 160,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
               child: Column(
                 children: [
                   SizedBox(
-                    height: size.height * 0.1,
+                    height: 15,
                   ),
                   Text(
-                    (_date == null || _time == null)
-                        ? 'Please select a date first'
-                        : 'Your selected date is',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'SFProDisplay',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.1,
-                  ),
-                  Text(
-                    (_date == null || _time == null)
-                        ? '\n'
-                        : '${getWeekDay(_date.weekday)} - ${_date.day >= 10 ? _date.day : '0' + _date.day.toString()}/${_date.month >= 10 ? _date.month : '0' + _date.month.toString()}/${_date.year}' +
-                            '\n${_time.hour >= 10 ? _time.hour : '0' + _time.hour.toString()}:${_time.minute >= 10 ? _time.minute : '0' + _time.minute.toString()} hs',
+                    displayDate(),
                     style: TextStyle(
                       fontSize: 20,
                       fontFamily: 'SFProDisplay',
@@ -143,8 +215,11 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
                     ),
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 90.0, 20.0, 10.0),
+                    padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                     child: Button1(
                       btnData: ButtonData(
                         "SELECT A DATE",
