@@ -33,7 +33,9 @@ class DeliveryInfoList extends StatelessWidget {
                   builder: (_) => AlertDialog(
                     title: Text("PHONE NUMBER"),
                     content: Text(
-                      ecopointDelivery.ecopoint.ecollector.phone,
+                      ecopointDelivery.ecopoint.ecollector.phone == null
+                          ? 'No phone number available'
+                          : ecopointDelivery.ecopoint.ecollector.phone,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,

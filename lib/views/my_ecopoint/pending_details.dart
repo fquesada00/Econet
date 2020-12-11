@@ -24,9 +24,7 @@ class PendingDetails extends StatelessWidget {
               backgroundColor: BROWN_LIGHT,
               textColor: BROWN_DARK,
               rightIcon: Icons.delete_forever,
-              onPressedRightIcon: () {
-                print("BORRARRRRR");
-              },
+              onPressedRightIcon: () {},
             ),
           ),
           Expanded(

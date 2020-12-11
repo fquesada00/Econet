@@ -22,8 +22,8 @@ class EcopointDelivery {
     _date = date;
     _bags = bags;
     _user = user;
-    isConfirmed = isConfirmed;
-    finished = finished;
+    this.isConfirmed = isConfirmed;
+    this.finished = finished;
     responseValue = response;
   }
 

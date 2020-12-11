@@ -309,7 +309,7 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                   Row(
                     children: [
                       SizedBox(
-                        width: 55,
+                        width: 35,
                       ),
                       Container(
                         width: 170,
@@ -377,7 +377,7 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                   Row(
                     children: [
                       SizedBox(
-                        width: 55,
+                        width: 35,
                       ),
                       Container(
                         width: 170,
@@ -393,8 +393,8 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                         )),
                         decoration: BoxDecoration(
                           color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),),
-
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
                       ),
                       Container(
                         decoration: BoxDecoration(

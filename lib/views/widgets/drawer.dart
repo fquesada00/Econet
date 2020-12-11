@@ -8,8 +8,10 @@ import 'package:provider/provider.dart';
 class AppDrawer extends StatefulWidget {
   final Function(int pos) setPosition;
   final int drawerPos;
+  final bool isEcollector;
 
-  const AppDrawer(this.setPosition, this.drawerPos, {Key key})
+  const AppDrawer(this.setPosition, this.drawerPos, this.isEcollector,
+      {Key key})
       : super(key: key);
 
   @override
@@ -49,50 +51,53 @@ class DrawerState extends State<AppDrawer> {
                 widget.setPosition(3);
               }),
           // No lo pude mandar con la funcion por que tiene icono, distinto tamanio, color y font
-          ListTile(
-            contentPadding: EdgeInsets.fromLTRB(16, 40, 0, 40),
-            title: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/become_ecollector');
-              }, //IMPLEMENTAR
-              child: Container(
-                height: 40,
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Icon(
-                        CustomIcons.recycle,
-                        color: Colors.white,
+          if (!widget.isEcollector)
+            ListTile(
+              contentPadding: EdgeInsets.fromLTRB(16, 40, 0, 40),
+              title: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, '/become_ecollector');
+                }, //IMPLEMENTAR
+                child: Container(
+                  height: 40,
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Icon(
+                          CustomIcons.recycle,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Become an Ecollector',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: 'SFProDisplay',
-                            fontWeight: FontWeight.w600,
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Become an Ecollector',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: 'SFProDisplay',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    color: BROWN_DARK,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(90),
+                      bottomLeft: Radius.circular(90),
                     ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  color: BROWN_DARK,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(90),
-                    bottomLeft: Radius.circular(90),
                   ),
                 ),
               ),
-            ),
-          ),
+            )
+          else
+            SizedBox(height: 40),
 
           Divider(
             indent: 40,

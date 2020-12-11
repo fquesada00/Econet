@@ -90,12 +90,13 @@ class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
     final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
     final email = user.email;
-    final response = await http.put("$deliveryUrl?email=$email",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(delivery));
+    final response =
+        await http.put("$deliveryUrl?email=$email&deliveryId=${delivery.id}",
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode(delivery));
 
     return response.statusCode == 200;
   }
