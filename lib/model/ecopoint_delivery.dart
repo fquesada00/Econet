@@ -10,10 +10,10 @@ class EcopointDelivery {
   MyUser _user;
   DateTime _date;
   List<Bag> _bags;
-  bool _isConfirmed; // Si el Ecollector respondio o no
-  bool _finished;
+  bool isConfirmed; // Si el Ecollector respondio o no
+  bool finished;
   bool
-      _responseValue; // La respuesta del Ecollector (acepta=true, rechaza=false)
+      responseValue; // La respuesta del Ecollector (acepta=true, rechaza=false)
   String _id;
 
   EcopointDelivery(
@@ -22,33 +22,32 @@ class EcopointDelivery {
     _date = date;
     _bags = bags;
     _user = user;
-    _isConfirmed = isConfirmed;
-    _finished = finished;
-    _responseValue = response;
+    isConfirmed = isConfirmed;
+    finished = finished;
+    responseValue = response;
   }
 
-  EcopointDelivery.fromJson(Map<String,dynamic> json) {
+  EcopointDelivery.fromJson(Map<String, dynamic> json) {
     _ecopoint = Ecopoint.fromJson(json['ecopoint']);
     _date = DateTime.parse(json['date']);
     _bags = (json['bags'] as List).map((e) => Bag.fromJson(e)).toList();
     _user = MyUser.fromJson(json['user']);
-    _isConfirmed = json['isConfirmed'];
-    _finished = json['finished'];
-    _responseValue = json['response'];
+    isConfirmed = json['isConfirmed'];
+    finished = json['finished'];
+    responseValue = json['response'];
     _id = json['id'];
   }
 
-
-  Map<String, dynamic> toJson(){
+  Map<String, dynamic> toJson() {
     return {
       'ecopoint': _ecopoint.toJson(),
       'ecopointId': _ecopoint.id,
       'date': _date.toString(),
       'bags': bags,
       'user': _user.toJson(),
-      'isConfirmed': _isConfirmed,
-      'response': _responseValue,
-      'finished': _finished,
+      'isConfirmed': isConfirmed,
+      'response': responseValue,
+      'finished': finished,
       'id': _id
     };
   }
@@ -60,12 +59,6 @@ class EcopointDelivery {
   List<Bag> get bags => _bags;
 
   MyUser get user => _user;
-
-  bool get isConfirmed => _isConfirmed;
-
-  bool get finished => _finished;
-
-  bool get responseValue => _responseValue;
 
   String get id => _id;
 }
