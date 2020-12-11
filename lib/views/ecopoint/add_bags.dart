@@ -1,4 +1,5 @@
 import 'package:econet/model/bag.dart';
+import 'package:econet/model/create_delivery_view_model.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
@@ -16,7 +17,7 @@ class _AddBagsState extends State<AddBags> {
   Bag bagData1 = new Bag(BagSize.small, BagWeight.light, 2);
   Bag bagData2 = new Bag(BagSize.medium, BagWeight.veryHeavy, 2);
   Bag bagData3 = new Bag(BagSize.extraLarge, BagWeight.veryHeavy, 5);
-
+  final CreateDeliveryModel viewModel = CreateDeliveryModel.instance;
   List<Bag> bagList;
   BagSize bagSize;
   BagWeight bagWeight;
@@ -77,8 +78,26 @@ class _AddBagsState extends State<AddBags> {
               ),
             ),
             Button1(
-                btnData: ButtonData('CONTINUE', () {},
-                    backgroundColor: BROWN_MEDIUM))
+                btnData: ButtonData('CONTINUE', () {
+              if (bagList.isEmpty) {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Center(
+                    heightFactor: 1,
+                    child: Text(
+                      'Add at least one bag/object',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ));
+              } else {
+                viewModel.bags = bagList;
+                Navigator.pushNamed(context, '/pickDelivery');
+              }
+            }, backgroundColor: BROWN_MEDIUM))
           ],
         ),
       ),

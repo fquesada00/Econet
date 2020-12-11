@@ -1,3 +1,4 @@
+import 'package:econet/model/create_delivery_view_model.dart';
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 class EcopointExpanded extends StatelessWidget {
   final ScrollController _controller1 = new ScrollController();
   final ScrollController _controller2 = new ScrollController();
+  final CreateDeliveryModel viewModel = CreateDeliveryModel.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,9 @@ class EcopointExpanded extends StatelessWidget {
                 btnData: ButtonData(
                   'RECYCLE',
                   () {
+                    viewModel.reset();
+                    viewModel.ecopoint = ecopoint;
+                    Navigator.pushNamed(context, '/add_bags');
                     //TODO: DEBERIA MANDARLO A ARRANCAR A ARMAR DELIVERY
                   },
                   backgroundColor: GREEN_DARK,

@@ -96,6 +96,7 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
       double radius, double lat, double long) async {
     final user = await getCurrentUser();
     final token = await user.getIdToken();
+    print(token);
     final response = await http.get(
       _ecopointUrl +
           '?radius=' +

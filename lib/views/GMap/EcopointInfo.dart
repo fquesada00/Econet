@@ -96,7 +96,7 @@ class EcopointInfoState extends State<EcopointInfo> {
                       color: Color(0xFFe5e2e2),
                       //color: Colors.grey,
                     ),
-                    height: 35,
+                    height: 60,
                     width: 285,
                     alignment: Alignment(0, 0),
                     child: Text(
@@ -111,7 +111,7 @@ class EcopointInfoState extends State<EcopointInfo> {
                 ],
               ),
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(

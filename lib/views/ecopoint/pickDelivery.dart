@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:econet/model/create_delivery_view_model.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/navbar.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/src/widgets/framework.dart';
 
 class PickDelivery extends StatelessWidget {
   static final int WEEKDAYS = 7;
+  final viewModel = CreateDeliveryModel.instance;
 
   String getMonth(int number) {
     switch (number) {

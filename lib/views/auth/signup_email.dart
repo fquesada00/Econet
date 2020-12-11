@@ -27,7 +27,6 @@ class _SignupEmailState extends State<SignupEmail> {
               textColor: GREEN_MEDIUM,
               height: 120,
             ),
-            SizedBox(height: 100),
             _EmailRegisterForm(),
           ],
         ),

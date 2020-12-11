@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final deliveryRepository =
         Provider.of<DeliveryProvider>(context, listen: false);
     final messagingRepository =
-    Provider.of<MessagingProvider>(context, listen: false);
+        Provider.of<MessagingProvider>(context, listen: false);
     final userRepository = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -160,10 +160,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   EcopointDelivery delivery = new EcopointDelivery(
                       ecopoint, date, bags, user, false, false, false);
                   deliveryRepository.createDelivery(delivery);
-                  messagingRepository.sendMessage("aj2@econet.com",{
-                    "notification":{
-                      "title":"New Delivery!",
-                      "body":"created by aj"
+                  messagingRepository.sendMessage("aj2@econet.com", {
+                    "notification": {
+                      "title": "New Delivery!",
+                      "body": "created by aj"
                     }
                   });
                 },
@@ -206,18 +206,25 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 child: Text("Create ecopoint"),
                 onPressed: () {
+                  TimeSlot ts1 = TimeSlot(3);
+                  TimeSlot ts2 = TimeSlot(5);
+                  ts1.addRange("10:00", "11:00");
+                  ts1.addRange("15:00", "18:00");
+                  ts2.addRange("10:00", "11:00");
+                  ts2.addRange("15:00", "18:00");
+
                   final ecopoint = Ecopoint(
                       MyUser.complete(
                           "ecopoint mbeh2", "_email", "_phone", "", true),
-                      false,
+                      true,
                       [Residue.metal, Residue.electronics, Residue.wood],
                       "",
                       new DateTime.utc(2021),
-                      [new TimeSlot(5), new TimeSlot(3)],
+                      [ts1, ts2],
                       "",
-                      "PLANTA 111a",
-                      "hmm?",
-                      LatLng(-34.5356, -58.4786));
+                      "La Planta",
+                      "SAPEEEEEEEE",
+                      LatLng(-34.5891, -58.3999));
 
                   ecopointRepository
                       .createEcopoint(ecopoint)
