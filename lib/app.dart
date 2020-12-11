@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => LandingPage(),
-          '/landing':  (context) => MyHomePage(title: 'Econet is flying high'),
+          '/landing': (context) => MyHomePage(title: 'Econet is flying high'),
           '/home_econet': (context) => Home(),
           '/signup_method': (context) => SignUpMethod(),
           '/loginsignup': (context) => LoginOrSignup(),
@@ -121,32 +121,58 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
+  @override
+  _LandingPageState createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User>(
-        stream: Provider.of<AuthProvider>(context).onAuthStateChanged(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            User user = snapshot.data;
-            if (user == null) {
-              return LoginOrSignup();
-            } else {
-              return Home();
-            }
-          } else {
-            return Scaffold(
-                body: Center(
-              child: CircularProgressIndicator(),
-            ));
-          }
-        });
+    return Scaffold(body: Container());
+  }
+
+  @override
+  void didChangeDependencies() {
+    //we don't have to close or unsubscribe SB
+    Provider.of<AuthProvider>(context, listen: false)
+        .onAuthStateChanged()
+        .listen((user) {
+          print(user);
+      if (user == null) {
+        Navigator.pushReplacementNamed(context, '/loginsignup');
+      } else {
+        return Navigator.pushReplacementNamed(context, '/home_econet');
+      }
+    });
+
+    super.didChangeDependencies();
   }
 }
+//     return StreamBuilder<User>(
+//         stream: Provider.of<AuthProvider>(context).onAuthStateChanged(),
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.active) {
+//             User user = snapshot.data;
+//             if (user == null) {
+//               return LoginOrSignup();
+//             } else {
+//               return Home();
+//             }
+//           } else {
+//             return Scaffold(
+//                 body: Center(
+//               child: CircularProgressIndicator(),
+//             ));
+//           }
+//         });
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title = "p2"}) : super(key: key);
   final String title;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
