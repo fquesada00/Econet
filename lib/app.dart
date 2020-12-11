@@ -24,6 +24,7 @@ import 'package:econet/views/ecopoint/pickDeliveryDate.dart';
 import 'package:econet/views/ecopoint/pickLocation.dart';
 import 'package:econet/views/ecopoint/pickMaterials.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
+import 'package:econet/views/faq/faq_answer.dart';
 import 'package:econet/views/home/home.dart';
 import 'package:econet/views/my_ecopoint/my_ecopoint.dart';
 import 'package:econet/views/my_ecopoint/pending_details.dart';
@@ -40,6 +41,7 @@ import 'package:econet/views/GMap/Ecopoint.dart' as EcopointView;
 import 'package:flutter/material.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:econet/model/ecopoint.dart' as EcopointModel;
 import 'package:provider/provider.dart';
@@ -72,7 +74,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => LandingPage(),
-          '/landing':  (context) => MyHomePage(title: 'Econet is flying high'),
+          '/landing': (context) => MyHomePage(title: 'Econet is flying high'),
           '/home_econet': (context) => Home(),
           '/signup_method': (context) => SignUpMethod(),
           '/loginsignup': (context) => LoginOrSignup(),
@@ -103,6 +105,7 @@ class MyApp extends StatelessWidget {
           '/create_ecopoint_additional': (context) => CreateAdditionalDetails(),
           '/create_ecopoint_name': (context) => CreateEcopointName(),
           '/become_ecollector': (context) => BecomeEcollector(),
+          '/faq_answer': (context) => FAQAnswer(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -154,8 +157,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-
-    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true);
+    FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(alert: true);
     //Widget para variar las configuraciones del status bar entre las views
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
