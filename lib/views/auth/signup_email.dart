@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:econet/model/my_user.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/services/user.dart';
@@ -191,6 +193,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                   errorMessage = await auth.registerWithEmailAndPassword(
                       emailController.text, passwordController.text);
                   print(errorMessage);
+                  sleep(new Duration(seconds: 3));
                   if (errorMessage.trim() == "successfully logged in") {
                     print("DID IT");
                     //Navigator.popUntil(context, ModalRoute.withName('/auth'));

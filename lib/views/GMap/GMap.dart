@@ -176,7 +176,7 @@ class GMapState extends State<GMap> {
         });
         print('En then de gmap '+ aux.toString() );
         if(aux.length > 3){
-          aux.removeLast();
+          aux.removeAt(0);
         }
         if(!aux.contains(newAddress.addressLine)) {
           aux.add(newAddress.addressLine);

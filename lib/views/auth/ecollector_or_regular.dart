@@ -17,7 +17,7 @@ class EcollectorOrRegular extends StatelessWidget {
     user = ModalRoute.of(context).settings.arguments;
     AuthProvider auth = Provider.of<AuthProvider>(context);
     print("ARGUMENTS RECEIVED === " + user.toString());
-    sleep(new Duration(seconds: 2));
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(

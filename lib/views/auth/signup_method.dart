@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:econet/model/my_user.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
@@ -21,6 +23,7 @@ class SignUpMethod extends StatelessWidget {
           //signup with google
           final credential = await auth.signInWithGoogle();
           //mandar al nuevo usuario a Ecollector o Regular
+          sleep(new Duration(seconds: 2));
           Navigator.pushReplacementNamed(context, '/ecollector_or_regular',
               arguments: MyUser.partial(credential.user.displayName,
                   credential.user.email, credential.user.phoneNumber));
