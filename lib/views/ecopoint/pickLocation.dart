@@ -289,8 +289,6 @@ class _PickLocationState extends State<PickLocation> {
       markers.clear();
       await changeLocation(
           newAddress.coordinates.latitude, newAddress.coordinates.longitude);
-      _position = new LatLng(
-          newAddress.coordinates.latitude, newAddress.coordinates.longitude);
 
       _locationAddress = newAddress.addressLine;
     }

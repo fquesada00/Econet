@@ -279,18 +279,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               RaisedButton(
-                child: Text("My ecopoint"),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/my_ecopoint');
-                },
-              ),
-              RaisedButton(
-                child: Text("ecopoint overview"),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/ecopoint_overview');
-                },
-              ),
-              RaisedButton(
                 child: Text("additional"),
                 onPressed: () {
                   Navigator.pushNamed(context, '/create_ecopoint_additional');
