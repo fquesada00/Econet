@@ -5,7 +5,7 @@ class MyUser {
   MyUser.complete(this._fullName, this._email, this._phone, this._avatarUrl,
       this._isEcollector);
 
-  MyUser.partial(this._fullName, this._email);
+  MyUser.partial(this._fullName, this._email,this._phone);
 
   MyUser.fromJson(Map<String, dynamic> map) {
     this._fullName = map['fullName'];

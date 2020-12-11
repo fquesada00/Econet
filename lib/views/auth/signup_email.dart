@@ -55,7 +55,7 @@ class _EmailRegisterForm extends StatefulWidget {
 
 class __EmailRegisterFormState extends State<_EmailRegisterForm> {
   static TextEditingController nameController = TextEditingController(),
-      lastNameController = TextEditingController(),
+      phoneNumberController = TextEditingController(),
       emailController = TextEditingController(),
       passwordController = TextEditingController();
 
@@ -73,7 +73,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
     _FieldTemplateData(
         labelText: 'Phone Number',
         icon: Icon(Icons.phone),
-        controller: lastNameController,
+        controller: phoneNumberController,
         keyboardType: TextInputType.phone),
     _FieldTemplateData(
         labelText: 'Password',
@@ -198,7 +198,8 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                         context, '/ecollector_or_regular',
                         arguments: MyUser.partial(
                             nameController.text,
-                            emailController.text));
+                            emailController.text,
+                            phoneNumberController.text));
                   } else {
                     String snackMessage = errorMessage;
 

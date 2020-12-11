@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
             create: (_) => FirebaseEcopointProvider()),
       ],
       child: MaterialApp(
-        initialRoute: '/',
+        initialRoute: '/landing',
         routes: {
           '/': (context) => MyHomePage(title: 'Econet is flying high'),
           '/landing': (context) => LandingPage(),
