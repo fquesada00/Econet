@@ -5,7 +5,6 @@ import 'package:econet/model/ecopoint.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
-import 'package:econet/views/widgets/positive_negative_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
@@ -23,7 +22,7 @@ class _PickLocationState extends State<PickLocation> {
   GoogleMapController controller;
   TextEditingController text_controller = new TextEditingController();
   List<Marker> markers = List();
-  static LatLng _initialPosition;
+  static LatLng _position;
   Ecopoint ecopoint;
   String _locationAddress;
 
@@ -56,7 +55,7 @@ class _PickLocationState extends State<PickLocation> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: (_initialPosition == null)
+      body: (_position == null)
           ? Container(
               //la posicion actual tarda en cargar, sin este if se muestra un error
               alignment: Alignment.center,
@@ -82,7 +81,7 @@ class _PickLocationState extends State<PickLocation> {
                         zoomControlsEnabled: false,
                         initialCameraPosition: CameraPosition(
                           // target: LatLng(-34.523644, -58.479677), HARDCODEADO
-                          target: _initialPosition,
+                          target: _position,
                           zoom: 15.4746,
                         ),
                         mapToolbarEnabled: false,
@@ -178,7 +177,7 @@ class _PickLocationState extends State<PickLocation> {
                             final createEcopointModel =
                                 CreateEcopointModel.instance;
                             createEcopointModel.address = _locationAddress;
-                            createEcopointModel.coordinates = _initialPosition;
+                            createEcopointModel.coordinates = _position;
 
                             Navigator.pushNamed(
                                 context, '/create_ecopoint_additional');
@@ -228,7 +227,7 @@ class _PickLocationState extends State<PickLocation> {
       return;
     }
     // posicion inicial del mapa
-    _initialPosition =
+    _position =
         new LatLng(currentPosition.latitude, currentPosition.longitude);
 
     List<Address> addresses = await Geocoder.local.findAddressesFromCoordinates(
@@ -290,7 +289,7 @@ class _PickLocationState extends State<PickLocation> {
       markers.clear();
       await changeLocation(
           newAddress.coordinates.latitude, newAddress.coordinates.longitude);
-      _initialPosition = new LatLng(
+      _position = new LatLng(
           newAddress.coordinates.latitude, newAddress.coordinates.longitude);
 
       _locationAddress = newAddress.addressLine;
@@ -322,6 +321,7 @@ class _PickLocationState extends State<PickLocation> {
     }
     markers.add(createMarker("positionMarker", newLatitude, newLongitude,
         newLatitude.toString() + newLongitude.toString(), context));
+    _position = LatLng(newLatitude, newLongitude);
 
     //notifico al sistema de que hubieron cambios
     loadingPosition = false;
