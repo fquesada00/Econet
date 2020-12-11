@@ -16,6 +16,12 @@ class MyUser {
     this._phone = map['phone'];
   }
 
+
+  @override
+  String toString() {
+    return 'MyUser{_fullName: $_fullName, _email: $_email, _avatarUrl: $_avatarUrl, _phone: $_phone, _isEcollector: $_isEcollector}';
+  }
+
   toJson() {
     return {
       'isEcollector': _isEcollector,

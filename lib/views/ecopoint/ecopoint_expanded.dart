@@ -1,5 +1,6 @@
 import 'package:econet/model/create_delivery_view_model.dart';
 import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/my_user.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
@@ -17,7 +18,6 @@ class EcopointExpanded extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Ecopoint ecopoint = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
       backgroundColor: GREEN_LIGHT,
       appBar: NavBar(
@@ -32,7 +32,7 @@ class EcopointExpanded extends StatelessWidget {
         children: <Widget>[
           SizedBox(height: 30),
           Center(
-            child: EcollectorCard(),
+            child: EcollectorCard(ecopoint.ecollector),
           ),
           SizedBox(
             height: 30,
@@ -149,6 +149,10 @@ class EcopointExpanded extends StatelessWidget {
 }
 
 class EcollectorCard extends StatelessWidget {
+  MyUser _ecollector;
+
+  EcollectorCard(this._ecollector);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -174,8 +178,10 @@ class EcollectorCard extends StatelessWidget {
             CircleAvatar(radius: 45, backgroundColor: Colors.white),
             Button1(
               btnData: ButtonData(
-                'Beto',
-                () {},
+                _ecollector.fullName != null ? _ecollector.fullName:'',
+                () {
+                  Navigator.pushNamed(context, '/');
+                },
                 backgroundColor: Colors.white,
                 textColor: GREEN_DARK,
                 fontSize: 23,

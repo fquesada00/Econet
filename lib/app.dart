@@ -30,6 +30,7 @@ import 'package:econet/views/my_recycling/my_delivery_details.dart';
 import 'package:econet/views/my_recycling/my_recycling.dart';
 import 'package:econet/views/settings/settings.dart';
 import 'package:econet/views/tutorials/tutorial_picked.dart';
+import 'package:econet/views/widgets/ecollector_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,8 +50,6 @@ import 'model/bag.dart';
 import 'model/my_user.dart';
 import 'model/residue.dart';
 // import 'model/user.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

@@ -189,7 +189,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                 if (_formKey.currentState.validate()) {
                   print('FORM: OK');
                   errorMessage = await auth.registerWithEmailAndPassword(
-                      emailController.text, passwordController.text) as String;
+                      emailController.text, passwordController.text);
                   print(errorMessage);
                   if (errorMessage.trim() == "successfully logged in") {
                     print("DID IT");
@@ -197,7 +197,7 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
                     Navigator.pushReplacementNamed(
                         context, '/ecollector_or_regular',
                         arguments: MyUser.partial(
-                            nameController.text + lastNameController.text,
+                            nameController.text,
                             emailController.text));
                   } else {
                     String snackMessage = errorMessage;
