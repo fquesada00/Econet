@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/ecopoint_delivery.dart';
 import 'package:econet/model/timeslot.dart';
+import 'package:econet/services/cache.dart';
 import 'package:econet/services/delivery_repository.dart';
 import 'package:econet/services/ecopoint_repository.dart';
 import 'package:econet/services/messaging_repository.dart';
@@ -125,6 +126,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    Cache.addListener("jerusa", () => print("listen"));
+    Cache.write("jerusa", {"name":"manaa"}).then((value) async {
+      print(await Cache.read("jerusa"));
+    });
+
+
     //Widget para variar las configuraciones del status bar entre las views
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
