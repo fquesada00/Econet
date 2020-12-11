@@ -2,6 +2,7 @@ import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/InformationCard.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
@@ -23,6 +24,7 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
   bool alreadyCreated = false;
   ScrollController controller = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  TimeSlot selectedDay;
 
   String getWeekDay(int number) {
     switch (number) {
@@ -56,7 +58,7 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
           content: Center(
             heightFactor: 1,
             child: Text(
-              'Please select a value',
+              'Please select a date',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -93,8 +95,28 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
       msg = '---\n';
     else
       msg =
-          '${getWeekDay(_date.weekday)} - ${_date.day >= 10 ? _date.day : '0' + _date.day.toString()}/${_date.month >= 10 ? _date.month : '0' + _date.month.toString()}/${_date.year}';
+          '${getWeekDay(_date.weekday)} - ${_date.day >= 10 ? _date.day : '0' + _date.day.toString()}/${_date.month >= 10 ? _date.month : '0' + _date.month.toString()}/${_date.year}\n';
     return msg;
+  }
+
+  DateTime initialDate(DateTime now, List<TimeSlot> list) {
+    int addDays = -1;
+    for (int j = 0; j < 7; j++) {
+      if ((list[j].weekDay + 1) >= now.weekday) {
+        addDays = (list[j].weekDay + 1) - now.weekday;
+        break;
+      }
+    }
+    if (addDays == -1) {
+      addDays = 7 - (now.weekday - (list[0].weekDay + 1));
+      // for(int j = 1 ; j < 7;j++){
+      //   if((now.weekday+j) %7 == (list[0].weekDay - 1)){
+      //     addDays = j;
+      //     break;
+      //   }
+      // }
+    }
+    return now.add(Duration(days: addDays));
   }
 
   @override
@@ -154,6 +176,12 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
         ),
       ));
     });
+
+    print("length ${_createEcopointModel.plant.openHours.length}");
+    for(int i = 0 ; i < _createEcopointModel.plant.openHours.length ; i++){
+      print("$i y ${_createEcopointModel.plant.openHours[i].weekDay}");
+      print(_createEcopointModel.plant.openHours[i].compareTo(TimeSlot(5)));
+    }
 
     return Scaffold(
       key: _scaffoldKey,
@@ -226,13 +254,38 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
                         () {
                           showDatePicker(
                             context: context,
-                            initialDate: _actual,
+                            initialDate: initialDate(
+                                _actual, _createEcopointModel.plant.openHours),
                             firstDate: _actual,
                             lastDate: DateTime(2100).toLocal(),
-                            selectableDayPredicate: (DateTime value) => true,
+                            selectableDayPredicate: (DateTime value) {
+                              for (int i = 0;
+                                  i <
+                                      _createEcopointModel
+                                          .plant.openHours.length;
+                                  i++) {
+                                print(
+                                    '${_createEcopointModel.plant.openHours[i].weekDay}');
+                                if (_createEcopointModel
+                                        .plant.openHours[i].weekDay ==
+                                    (value.weekday - 1)) return true;
+                              }
+                              return false;
+                            },
+                            // selectableDayPredicate: (DateTime value) => true,
                           ).then((value) {
                             if (value == null) return;
                             _date = value;
+                            int pos = -1;
+                            for(int i = 0 ; i < _createEcopointModel.plant.openHours.length ; i++){
+                              if(_createEcopointModel.plant.openHours[i].weekDay == (value.weekday - 1)){
+                                pos = i;
+                                break;
+                              }
+                            }
+                            // print('compareto '+_createEcopointModel.plant.openHours.indexOf(TimeSlot(value.weekday - 1)).toString());
+                            selectedDay =
+                                _createEcopointModel.plant.openHours[pos];
                             showTimePicker(
                                     context: context,
                                     initialTime: _time == null
@@ -242,10 +295,43 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
                                         : _time)
                                 .then((value) {
                               _time = (value == null) ? _time : value;
-
+                              bool isInRange = false;
                               setState(() {
                                 if (_time != null) {
                                   print("set");
+                                  for (int i = 0;
+                                      i < selectedDay.ranges.length;
+                                      i++) {
+                                    if (selectedDay.isBetween(
+                                        selectedDay.ranges[i].first.hour * 100 +
+                                            selectedDay.ranges[i].first.minute,
+                                        selectedDay.ranges[i].last.hour * 100 +
+                                            selectedDay.ranges[i].last.minute,
+                                        _time.hour * 100 + _time.minute)) {
+                                      isInRange = true;
+                                      break;
+                                    }
+                                  }
+                                  if(!isInRange){
+                                    _time = null;
+                                    //TODO snackbar
+                                    print('HORA NO EN RANGO');
+                                    _continueFunction = () {
+                                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                        content: Center(
+                                          heightFactor: 1,
+                                          child: Text(
+                                            'Please select a valid hour',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ));
+                                    };
+                                    return;
+                                  }
                                   _continueFunction = () {
                                     if (ecopoint != null) {
                                       //TODO: POST A API CON LOS CAMBIOS DE LA FECHA DE ENTREGA, DIA EN _DATE y HORA EN _TIME

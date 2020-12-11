@@ -11,6 +11,7 @@ class PickWeekday extends StatelessWidget {
   final createEcopointModel = CreateEcopointModel.instance;
   var numberOfDays;
   DateTime _actual = DateTime.now();
+
   int diffInDays(DateTime date1, DateTime date2) {
     return ((date1.difference(date2) -
                     Duration(hours: date1.hour) +
@@ -18,6 +19,32 @@ class PickWeekday extends StatelessWidget {
                 .inHours /
             24)
         .round();
+  }
+
+  int getIdx(List<bool> selected) {
+    for (int i = 0; i < 7; i++) {
+      if (selected[i]) return i;
+    }
+    return -1;
+  }
+
+  int getWeekDay(String day, DateTime now, List<bool> selected) {
+    int dayNow = now.weekday;
+    for (int i = 0; i < 7; i++) {
+      if (selected[i]) break;
+      dayNow = dayNow == 7 ? 1 : dayNow + 1;
+    }
+    //Sumo uno asi accedo por indice
+    return dayNow - 1;
+    // switch(day){
+    //   case 'Monday': return 1;
+    //   case 'Tuesday': return 2;
+    //   case 'Wednesday': return 3;
+    //   case 'Thursday': return 4;
+    //   case 'Friday': return 5;
+    //   case 'Saturday': return 6;
+    //   case 'Sunday': return 7;
+    // }
   }
 
   @override
@@ -84,17 +111,33 @@ class PickWeekday extends StatelessWidget {
                 btnData: ButtonData(
                   'CONTINUE',
                   () {
-                    List<DateTime> chosenWeekdays = getChosenWeekdays();
-                    createEcopointModel.chosenWeekdays = chosenWeekdays;
-                    print(createEcopointModel.chosenWeekdays.length);
-                    if (createEcopointModel.chosenWeekdays.length > 0) {
-                      createEcopointModel.timeslotsWeekdays = List.filled(
-                          chosenWeekdays.length, null,
-                          growable: false);
+                    // List<DateTime> chosenWeekdays = getChosenWeekdays();
+                    // createEcopointModel.chosenWeekdays = chosenWeekdays;
+                    // print(createEcopointModel.chosenWeekdays.length);
+                    // if (createEcopointModel.chosenWeekdays.length > 0) {
+                    //   createEcopointModel.timeslotsWeekdays = List.filled(
+                    //       chosenWeekdays.length, null,
+                    //       growable: false);
+                    if (getIdx(isWeekdayAllowed) == -1) {
+                      print('SELECCIONAR UN DIA AL MENOS');
+                      //TODO show display to select at least one day
+                    } else {
+                      createEcopointModel.initializeTimeSlots();
+                      // for(int i = 0 ; i < 7 ;i++){
+                      //   print("estoy en $i");
+                      //   createEcopointModel.getRangesOfDay(i);
+                      // }
+                      print("$isWeekdayAllowed" +
+                          "${getWeekDay(null, _actual, isWeekdayAllowed)}");
+                      print('length: ${isWeekdayAllowed.length}');
+
                       Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
                           arguments: {
                             //"currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
-                            "currentDay": 0,
+                            "idx": getIdx(isWeekdayAllowed),
+                            //NO puede ser -1
+                            "currentDay":
+                                getWeekDay(null, _actual, isWeekdayAllowed),
                             "daysAvailable": this.isWeekdayAllowed
                           });
                     }
