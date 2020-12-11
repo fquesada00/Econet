@@ -33,6 +33,12 @@ class Cache{
     return jsonDecode(await (file.readAsString()));
   }
 
+  static Future delete(String dir) async{
+    await initialize();
+    File file = new File(_basePath + dir);
+    file.delete();
+  }
+
   static Future addListener(String dir, listener) async {
     await initialize();
     if(!_notifiers.containsKey(dir)){

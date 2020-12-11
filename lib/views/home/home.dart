@@ -1,5 +1,6 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/GMap/GMap.dart';
+import 'package:econet/views/faq/faq_list.dart';
 import 'package:econet/views/my_recycling/my_recycling.dart';
 import 'package:econet/views/tutorials/tutorials.dart';
 import 'package:econet/views/widgets/drawer.dart';
@@ -23,6 +24,8 @@ class _HomeState extends State<Home> {
         return MyRecycling();
       case 2:
         return Tutorials();
+      case 3:
+        return FAQList();
       default:
         return GMap();
     }
@@ -50,6 +53,13 @@ class _HomeState extends State<Home> {
           withDrawer: true,
           backgroundColor: Colors.white,
         );
+      case 3:
+        return NavBar(
+          text: 'Frequently Asked Questions',
+          textColor: GREEN_DARK,
+          withDrawer: true,
+          backgroundColor: Colors.white,
+        );
     }
   }
 
@@ -58,6 +68,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: _drawerPos == 0,
+      backgroundColor: Colors.white,
       appBar: _getAppBar(_drawerPos),
       drawer: AppDrawer(
           (pos) => setState(() {

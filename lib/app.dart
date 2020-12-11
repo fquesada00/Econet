@@ -24,6 +24,7 @@ import 'package:econet/views/ecopoint/pickDeliveryDate.dart';
 import 'package:econet/views/ecopoint/pickLocation.dart';
 import 'package:econet/views/ecopoint/pickMaterials.dart';
 import 'package:econet/views/ecopoint/pickWeekdayCreateEcopoint.dart';
+import 'package:econet/views/faq/faq_answer.dart';
 import 'package:econet/views/home/home.dart';
 import 'package:econet/views/my_ecopoint/my_ecopoint.dart';
 import 'package:econet/views/my_ecopoint/pending_details.dart';
@@ -40,6 +41,7 @@ import 'package:econet/views/GMap/Ecopoint.dart' as EcopointView;
 import 'package:flutter/material.dart';
 import 'package:econet/views/auth/tutorial.dart';
 import 'package:econet/views/auth/login.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:econet/model/ecopoint.dart' as EcopointModel;
 import 'package:provider/provider.dart';
@@ -103,6 +105,7 @@ class MyApp extends StatelessWidget {
           '/create_ecopoint_additional': (context) => CreateAdditionalDetails(),
           '/create_ecopoint_name': (context) => CreateEcopointName(),
           '/become_ecollector': (context) => BecomeEcollector(),
+          '/faq_answer': (context) => FAQAnswer(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -129,6 +132,16 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true,sound: true);
+    FirebaseMessaging.onMessage.asBroadcastStream().listen((event) async {
+      List<dynamic> list;
+      try {
+        list = (await Cache.read("notifications_deliveries"))['data'];
+      }catch(e){ list = new List();}
+
+      list.add(event.data['delivery']);
+      await Cache.write("notifications_deliveries", {"data":list});
+    });
     return Scaffold(body: Container());
   }
 
