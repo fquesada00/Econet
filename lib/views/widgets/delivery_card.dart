@@ -55,47 +55,52 @@ class DeliveryCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0, left: 5),
-                      child: TextAboveNumberedCircle(
-                          "Bags", ecopointDelivery.bags.length, GREEN_DARK),
-                    ),
-                    Spacer(),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4.0),
-                          child: Text(
-                            "Due in",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 15,
-                              fontFamily: 'SFProDisplay',
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: TextAboveNumberedCircle(
+                            "Bags", ecopointDelivery.bags.length, GREEN_DARK),
+                      ),
+                      Spacer(),
+                      Spacer(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 4.0),
+                            child: Text(
+                              "Due in",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15,
+                                fontFamily: 'SFProDisplay',
+                              ),
                             ),
                           ),
-                        ),
-                        Chip(
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          label: Text(
-                            TimeRange.getRemainingDeliverTime(
-                                ecopointDelivery.date),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontFamily: 'SFProDisplay',
-                              fontWeight: FontWeight.w700,
+                          Chip(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            label: Text(
+                              TimeRange.getRemainingDeliverTime(
+                                  ecopointDelivery.date),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontFamily: 'SFProDisplay',
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
+                            backgroundColor: BROWN_DARK,
                           ),
-                          backgroundColor: BROWN_DARK,
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      Spacer(),
+                    ],
+                  ),
                 ),
               ],
             ),

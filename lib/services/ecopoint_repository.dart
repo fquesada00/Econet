@@ -158,24 +158,25 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
   }
 
   Future<User> getCurrentUser() async {
-    final user = await FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
 
     return user;
-    // final idToken = await user.getIdToken();
-
-    // Create authorization header
-    // final header = { "authorization": 'Bearer $token' };
   }
 
   @override
   Future deleteEcopoint(String ecopointId) async {
     final user = await getCurrentUser();
     final token = await user.getIdToken();
-    final response = await http.get(
-      _ecopointUrl + "?email=${user.email}&?deliveryId=$ecopointId",
+    final response = await http.delete(
+      _ecopointUrl + "?email=${user.email}&ecopointId=$ecopointId",
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
+    if (response.statusCode == 200) {
+      print("ECOPOINT BORRADO");
+    } else {
+      print("ECOPOINT NO BORRADO, error: " + response.statusCode.toString());
+    }
   }
 }
