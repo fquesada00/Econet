@@ -14,7 +14,7 @@ class PickTimeCreateEcopoint extends StatefulWidget {
 }
 
 class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
-  List<TimeRange> timeRanges;
+  List<TimeRange> timeRanges = List();
 
   void fillList() {
     timeRanges = List();
@@ -24,11 +24,11 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
           last: TimeOfDay(hour: i + 1, minute: 0)));
   }
 
-  String getWeekDay(int n){
-    switch(n){
+  String getWeekDay(int n) {
+    switch (n) {
       case 1:
         return 'Monday';
-      case 2: 
+      case 2:
         return 'Tuesday';
       case 3:
         return 'Wednesday';
@@ -42,13 +42,13 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
         return 'Sunday';
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
     final testList = List<String>();
     final createEcopointModel = CreateEcopointModel.instance;
-    if (timeRanges == null) fillList(); //Para test, hacer get en ViewModel
+    // if (timeRanges == null) fillList(); //Para test, hacer get en ViewModel
 
     print("${timeRanges}");
     print("Testing ecopoint at PickTimeCreateEcopoint");
@@ -145,7 +145,9 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
               btnData: ButtonData(
                 'CONTINUE',
                 () {
-                  int i = arguments["currentDay"] == 7? 0 : arguments['currentDay'] + 1;
+                  int i = arguments["currentDay"] == 7
+                      ? 0
+                      : arguments['currentDay'] + 1;
                   bool nextDay =
                       createEcopointModel.chosenWeekdays.length > i &&
                           createEcopointModel.chosenWeekdays.length > 0;
@@ -155,11 +157,14 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
                   List<bool> available = arguments['daysAvailable'];
                   available.removeAt(0);
                   if (available.length != 0) {
-                    Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
-                        arguments: {
-                          "currentDay": i,
-                          "daysAvailable": available,
-                        });
+                    if (timeRanges.isEmpty)
+                      int a; //TODO pop up / snackbar
+                    else
+                      Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+                          arguments: {
+                            "currentDay": i,
+                            "daysAvailable": available,
+                          });
                   } else {
                     //TODO conexion con el mapa
                     print(
@@ -248,7 +253,9 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                         height: 50,
                         child: Center(
                           child: Text(
-                            firstTime.length == 3? firstTime : firstTime + 'hs',
+                            firstTime.length == 3
+                                ? firstTime
+                                : firstTime + 'hs',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 25,
@@ -315,7 +322,7 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                         height: 50,
                         child: Center(
                             child: Text(
-                          lastTime.length == 3? lastTime: lastTime+ 'hs',
+                          lastTime.length == 3 ? lastTime : lastTime + 'hs',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 25,
@@ -375,7 +382,7 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                     'Cancel',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 15,
+                      fontSize: 20,
                     ),
                   ),
                   onPressed: () {
@@ -387,7 +394,7 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                     'Ok',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 15,
+                      fontSize: 20,
                     ),
                   ),
                   onPressed: () {
