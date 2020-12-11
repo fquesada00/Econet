@@ -11,20 +11,22 @@ class DeliveryInfoList extends StatelessWidget {
   final EcopointDelivery ecopointDelivery;
   final Color backgroundColor;
   final bool editable;
+  final bool isEcollector;
 
   DeliveryInfoList(this.ecopointDelivery, this.backgroundColor,
-      {this.editable = true});
+      {this.editable = true, this.isEcollector = true});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        EcollectorInfo(ecopointDelivery.user.fullName, backgroundColor),
+        EcollectorInfo(ecopointDelivery.user.fullName, backgroundColor,
+            isEcollector: isEcollector),
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
           child: Button1(
             btnData: ButtonData(
-              'CONTACT ECOLLECTOR',
+              isEcollector ? 'CONTACT ECOLLECTOR' : 'CONTACT',
               () {
                 showDialog(
                   context: context,

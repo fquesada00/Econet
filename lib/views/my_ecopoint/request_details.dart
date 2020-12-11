@@ -32,7 +32,11 @@ class RequestDetails extends StatelessWidget {
                 SingleChildScrollView(
                   padding: EdgeInsets.only(bottom: 100),
                   //tamanio del widget inferior
-                  child: DeliveryInfoList(ecopointDelivery, BROWN_DARK),
+                  child: DeliveryInfoList(
+                    ecopointDelivery,
+                    BROWN_DARK,
+                    isEcollector: false,
+                  ),
                 ),
                 Positioned(
                   bottom: 0,

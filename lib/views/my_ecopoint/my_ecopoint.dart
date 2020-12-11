@@ -12,7 +12,6 @@ import 'my_ecopoint_pending_tab.dart';
 import 'my_ecopoint_requests_tab.dart';
 
 class MyEcopoint extends StatelessWidget {
-  String residueName = "Cardboard";
   final List<String> tabNames = ["Details", "Pending", "Requests"];
 
   @override
@@ -25,7 +24,7 @@ class MyEcopoint extends StatelessWidget {
       body: Column(
         children: <Widget>[
           NavBar(
-            text: residueName,
+            text: ecopoint.name,
             withBack: true,
             backgroundColor: Colors.transparent,
             textColor: BROWN_DARK,
@@ -42,8 +41,12 @@ class MyEcopoint extends StatelessWidget {
                               EcopointProvider ecopointRepository =
                                   Provider.of<EcopointProvider>(context,
                                       listen: false);
-                              await ecopointRepository.deleteEcopoint(ecopoint.id);
-                              Navigator.pushNamedAndRemoveUntil(context, '/home_econet', ModalRoute.withName('/landing'));
+                              await ecopointRepository
+                                  .deleteEcopoint(ecopoint.id);
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  '/home_econet',
+                                  ModalRoute.withName('/landing'));
                             },
                             child: Text("Confirm"),
                           ),

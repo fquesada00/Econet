@@ -73,12 +73,13 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
               .then((deliveries) {
             deliveries.forEach((delivery) {
               if (!delivery.finished) {
-                if (!delivery.responseValue) {
-                  // si no termino y no le respondi es un request
-                  requestedDeliveries++;
-                } else if (delivery.isConfirmed) {
+                if (delivery.isConfirmed) {
+                  if (delivery.responseValue)
+                    // si no termino y no le respondi es un request
+                    pendingDeliveries++;
+                } else {
                   // si no termino, le respondi y lo confirme es un pending
-                  pendingDeliveries++;
+                  requestedDeliveries++;
                 }
               }
             });

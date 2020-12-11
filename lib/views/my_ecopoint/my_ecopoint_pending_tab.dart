@@ -28,7 +28,9 @@ class _MyEcopointPendingTabState extends State<MyEcopointPendingTab> {
         .then((deliveries) {
       deliveries.forEach((delivery) {
         print("ELEMENTO = " + delivery.toString());
-        if (!delivery.finished && !delivery.responseValue) {
+        if (!delivery.finished &&
+            delivery.isConfirmed &&
+            delivery.responseValue) {
           pendingsList.add(delivery);
         }
       });
