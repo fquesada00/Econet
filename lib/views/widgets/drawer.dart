@@ -52,7 +52,10 @@ class DrawerState extends State<AppDrawer> {
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(16, 40, 0, 40),
             title: GestureDetector(
-              onTap: () {}, //IMPLEMENTAR
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/become_ecollector');
+              }, //IMPLEMENTAR
               child: Container(
                 height: 40,
                 child: Row(
@@ -110,6 +113,7 @@ class DrawerState extends State<AppDrawer> {
               ),
             ),
             onTap: () {
+              Navigator.of(context).pop();
               Navigator.pushNamed(context, '/settings');
             },
           ),
@@ -126,6 +130,7 @@ class DrawerState extends State<AppDrawer> {
             ),
             onTap: () {
               auth.logOut();
+              Navigator.of(context).pop();
               Navigator.pushNamedAndRemoveUntil(
                   context, '/loginsignup', ModalRoute.withName('/'));
             },

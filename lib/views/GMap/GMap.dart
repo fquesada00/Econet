@@ -7,16 +7,15 @@ import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/services/cache.dart';
 import 'package:econet/services/ecopoint_repository.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
-import 'package:econet/views/ecopoint/ecopoint_details.dart';
-import 'package:econet/views/settings/settings_app_tab.dart';
-import 'package:econet/views/widgets/EconetButton.dart';
 import 'package:econet/views/widgets/GMapNavBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -35,17 +34,24 @@ class GMapState extends State<GMap> {
   BitmapDescriptor markerPlantIcon;
   static bool searchingFlag = false, loadingPosition = false;
   static LatLng _initialPosition;
-  static final double ECOPOINT_RADIUS = SettingsAppTab().ecopoint_finder_radius;
+  static double ECOPOINT_RADIUS;
   static List<String> filteredElements;
 
   @override
   void initState() {
+    super.initState();
     //asigno variable de icono a marcadores de ecopoints
     _setMarkerIcon();
-    getLocation();
-    print("ECOPOINT RADIUS VALUE: " + ECOPOINT_RADIUS.toString());
     filteredElements = List();
-    super.initState();
+    Cache.read("ECOPOINT_RADIUS").then((value) {
+      print("ECOPOINT_RADIUS LEVANTADO");
+      ECOPOINT_RADIUS = value['value'];
+      getLocation();
+    }).catchError((error) {
+      print("ECOPOINT_RADIUS BASE");
+      ECOPOINT_RADIUS = 16.0;
+      getLocation();
+    });
   }
 
   @override
@@ -96,6 +102,27 @@ class GMapState extends State<GMap> {
                       filteredElements.remove(residueName);
                   },
                 ),
+              Positioned(
+                bottom: 20,
+                right: 10,
+                child: MaterialButton(
+                  height: 55,
+                  elevation: 15,
+                  color: Colors.white,
+                  textColor: Colors.black,
+                  onPressed: () async {
+                    getLocation();
+                    final GoogleMapController controller = await _controller.future;
+                    controller.animateCamera(CameraUpdate.newLatLng(_initialPosition));
+                  },
+                  child: Icon(
+                    FontAwesomeIcons.crosshairs,
+                    size: 45,
+                  ),
+                  padding: EdgeInsets.all(10),
+                  shape: CircleBorder(),
+                ),
+              ),
               if (loadingPosition)
                 Center(
                   child: Container(
@@ -159,8 +186,6 @@ class GMapState extends State<GMap> {
         newLatitude.toString() + newLongitude.toString(), context, null));
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
-
-    print(filteredElements);
 
     await ecopointRepository
         .getEcopointsByRadius(ECOPOINT_RADIUS, newLatitude, newLongitude)

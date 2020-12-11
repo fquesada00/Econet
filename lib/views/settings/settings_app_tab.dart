@@ -1,4 +1,5 @@
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/cache.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +14,6 @@ class SwitchInformation {
 }
 
 class SettingsAppTab extends StatefulWidget {
-  double ecopoint_finder_radius =
-      16.0; //valor default TODO: DEBERIA SER UN LIVEDATA O ALGO ASI PARA QUE PERMANEZCA EN CONFIGURACION DEL USUARIO
   static final double SLIDER_MAX_VALUE = 200;
   static final double SLIDER_MIN_VALUE = 1;
 
@@ -24,7 +23,7 @@ class SettingsAppTab extends StatefulWidget {
 
 class _SettingsAppTabState extends State<SettingsAppTab> {
   int unitsFormat = 0; // 0 = metric, 1 = imperial
-
+  double _ECOPOINT_FINDER_RADIUS;
   List<SwitchInformation> switchList = [
     SwitchInformation("Reminder notifications", true),
     SwitchInformation("Ecopoint delivery requests", true),
@@ -32,6 +31,18 @@ class _SettingsAppTabState extends State<SettingsAppTab> {
     SwitchInformation("Ecopoint completion", true),
     //TODO: OBTENER VALOR DE LOS SWITCHS A PARTIR DE CONFIGURACION ANTERIOR DEL USUARIO
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Cache.read("ECOPOINT_RADIUS").catchError((error) {
+      print(error);
+      _ECOPOINT_FINDER_RADIUS = 16;
+    }).then((value) {
+      _ECOPOINT_FINDER_RADIUS = value['value'];
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,9 +137,7 @@ class _SettingsAppTabState extends State<SettingsAppTab> {
                       padding: EdgeInsets.only(left: 26),
                       child: Text(
                         "Ecopoint visibility radius: " +
-                            widget.ecopoint_finder_radius
-                                .truncate()
-                                .toString() +
+                            _ECOPOINT_FINDER_RADIUS.truncate().toString() +
                             " km",
                         textAlign: TextAlign.left,
                         style: TextStyle(
@@ -164,16 +173,15 @@ class _SettingsAppTabState extends State<SettingsAppTab> {
                       child: Slider(
                         onChanged: (double value) {
                           setState(() {
-                            widget.ecopoint_finder_radius = value;
+                            Cache.write("ECOPOINT_RADIUS", {'value': value});
+                            _ECOPOINT_FINDER_RADIUS = value;
                           });
                         },
-                        value: widget.ecopoint_finder_radius,
+                        value: _ECOPOINT_FINDER_RADIUS,
                         min: 0,
                         max: 200,
                         divisions: 40,
-                        label: widget.ecopoint_finder_radius
-                                .truncate()
-                                .toString() +
+                        label: _ECOPOINT_FINDER_RADIUS.truncate().toString() +
                             " km",
                         activeColor: Colors.white,
                         inactiveColor: Colors.white,
