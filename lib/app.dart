@@ -47,7 +47,9 @@ import 'package:econet/views/ecopoint/createEcopoint.dart';
 import 'model/bag.dart';
 import 'model/my_user.dart';
 import 'model/residue.dart';
-import 'model/user.dart';
+// import 'model/user.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -68,6 +70,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => MyHomePage(title: 'Econet is flying high'),
+          '/landing': (context) => LandingPage(),
           '/home_econet': (context) => Home(),
           '/signup_method': (context) => SignUpMethod(),
           '/loginsignup': (context) => LoginOrSignup(),
@@ -114,6 +117,31 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class LandingPage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return StreamBuilder<User>(
+      stream: Provider.of<AuthProvider>(context).onAuthStateChanged(),
+      builder: (context,snapshot){
+        if(snapshot.connectionState == ConnectionState.active){
+          User user = snapshot.data;
+          if(user == null){
+            return LoginOrSignup();
+          }else{
+            return Home();
+          }
+        }else{
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            )
+          );
+        }
+      }
+    );
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title = "p2"}) : super(key: key);
   final String title;
@@ -133,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final messagingRepository =
         Provider.of<MessagingProvider>(context, listen: false);
     final userRepository = Provider.of<AuthProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
