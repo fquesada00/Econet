@@ -52,12 +52,17 @@ class __LoginFormState extends State<_LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     List<_LoginServiceData> services = [
       _LoginServiceData(
           color: Color(0xFF4285F4),
           icon: CustomIcons.google,
-          onPressed: () async => await signInWithGoogle(context)),
+          onPressed: () async {
+            final credential = await auth.signInWithGoogle();
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home_econet', ModalRoute.withName('/'));
+            // Navigator.popUntil(context, ModalRoute.withName('/'));
+          }),
     ];
     return Column(
       children: [

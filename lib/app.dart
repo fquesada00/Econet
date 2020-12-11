@@ -135,10 +135,8 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void didChangeDependencies() {
     //we don't have to close or unsubscribe SB
-    Provider.of<AuthProvider>(context, listen: false)
-        .onAuthStateChanged()
-        .listen((user) {
-          print(user);
+    Provider.of<AuthProvider>(context).onAuthStateChanged().listen((user) {
+      print(user);
       if (user == null) {
         Navigator.pushReplacementNamed(context, '/loginsignup');
       } else {
@@ -180,8 +178,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-
-    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true);
+    FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(alert: true);
     //Widget para variar las configuraciones del status bar entre las views
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
