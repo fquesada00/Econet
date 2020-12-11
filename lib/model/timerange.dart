@@ -43,4 +43,12 @@ class TimeRange implements Comparable<TimeRange>{
     this.first = TimeOfDay(hour: map['firstHour'], minute: map['firstMinute']);
     this.last = TimeOfDay(hour: map['lastHour'], minute: map['lastMinute']);
   }
+
+  String getFirstString(){
+    return sprintf("%02d:%02d", [first.hour, first.minute]);
+  }
+
+  String getLastString(){
+    return sprintf("%02d:%02d", [last.hour, last.minute]);
+  }
 }

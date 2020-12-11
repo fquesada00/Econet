@@ -1,5 +1,7 @@
 import 'package:econet/model/residue.dart';
+import 'package:econet/model/timerange.dart';
 import 'package:econet/model/timeslot.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -30,36 +32,53 @@ class CreateEcopointModel {
   Ecopoint plant;
   DateTime deliveryDate;
   TimeOfDay deliveryTime;
-  List<TimeSlot> timeslotsWeekdays = List();
+  List<TimeSlot> timeslotsWeekdays;
   List<DateTime> chosenWeekdays = List();
   String additionalInfo;
+
+  void initializeTimeSlots() {
+    // print('im in initializetimeslot');
+    // print('${timeslotsWeekdays.toString()}');
+    // if (timeslotsWeekdays != null) {
+    //   print('ya hay timeslots');
+    //   return;
+    // }
+    timeslotsWeekdays = List();
+    for (int i = 0; i < 7; i++) {
+      timeslotsWeekdays.add(TimeSlot(i));
+      // print('printing timeslot + $i');
+      // print('${timeslotsWeekdays[i]}');
+    }
+  }
+
   List<bool> addTimeslot(
       int day, int fromHour, int fromMinute, int toHour, int toMinute) {
-    if (timeslotsWeekdays[day] == null) {
-      timeslotsWeekdays[day] = new TimeSlot(day);
-    }
+    // if(timeslotsWeekdays == null) initializeTimeSlots();
+    // if (timeslotsWeekdays[day] == null) {
+    //   timeslotsWeekdays[day] = new TimeSlot(day);
+    // }
     final from = fromHour.toString().padLeft(2, '0') +
         ":" +
         fromMinute.toString().padLeft(2, '0');
     final to = toHour.toString().padLeft(2, '0') +
         ":" +
         toMinute.toString().padLeft(2, '0');
+    print('day ${timeslotsWeekdays.length}');
+    print('from ${from} to ${to}');
     timeslotsWeekdays[day].addRange(from, to);
   }
 
-  List getRangesOfDay(int day) {
-    day = day % 6;
-    print("getRangesOfDays length");
-    print(timeslotsWeekdays.length);
-    print(day);
+  List<TimeRange> getRangesOfDay(int day) {
+    // day = day % 6;
+    // return timeslotsWeekdays[day].ranges;
     if (timeslotsWeekdays.length > 0) {
       if (timeslotsWeekdays[day] == null) {
-        return List(0);
+        return List();
       } else {
         return timeslotsWeekdays[day].ranges;
       }
     } else {
-      return List(0);
+      return List();
     }
   }
 
