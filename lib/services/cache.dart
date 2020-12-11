@@ -7,12 +7,12 @@ import 'package:path_provider/path_provider.dart';
 class Cache{
 
   static String _basePath;
-  static bool _initialized;
+  static bool _initialized = true;
   static Map<String,ChangeNotifier> _notifiers;
 
   static initialize() async {
     if(_initialized) {
-      _basePath = (await getApplicationDocumentsDirectory()).path;
+      _basePath = (await getApplicationDocumentsDirectory()).path + '/';
       _notifiers = new Map();
       _initialized = false;
     }

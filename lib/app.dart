@@ -128,12 +128,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    Cache.addListener("jerusa", () => print("listen"));
-    Cache.write("jerusa", {"name":"manaa"}).then((value) async {
-      print(await Cache.read("jerusa"));
-    });
-
-
     //Widget para variar las configuraciones del status bar entre las views
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
