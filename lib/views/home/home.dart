@@ -1,6 +1,7 @@
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/GMap/GMap.dart';
 import 'package:econet/views/my_recycling/my_recycling.dart';
+import 'package:econet/views/tutorials/tutorials.dart';
 import 'package:econet/views/widgets/drawer.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,8 @@ class _HomeState extends State<Home> {
         return GMap();
       case 1:
         return MyRecycling();
+      case 2:
+        return Tutorials();
       default:
         return GMap();
     }

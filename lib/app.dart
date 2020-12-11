@@ -27,6 +27,7 @@ import 'package:econet/views/my_ecopoint/request_details.dart';
 import 'package:econet/views/my_recycling/my_delivery_details.dart';
 import 'package:econet/views/my_recycling/my_recycling.dart';
 import 'package:econet/views/settings/settings.dart';
+import 'package:econet/views/tutorials/tutorial_picked.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart' as EcopointView;
@@ -87,6 +88,7 @@ class MyApp extends StatelessWidget {
           '/ecopoint_overview': (context) => EcopointOveriew(),
           '/pending_delivery_details': (context) => PendingDetails(),
           '/my_delivery_details': (context) => MyDeliveryDetails(),
+          '/tutorial_picked': (context) => TutorialPicked(),
           '/request_delivery_details': (context) => RequestDetails(),
           '/create_ecopoint_additional': (context) => CreateAdditionalDetails(),
           '/create_ecopoint_name': (context) => CreateEcopointName(),
@@ -192,10 +194,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text("Create ecopoint"),
                 onPressed: () {
                   final ecopoint = Ecopoint(
-                      MyUser.complete("ecopoint mbeh", "_email", "_phone", "", true),
-                      true,
-                      [Residue.paper, Residue.electronics,Residue.metal],
-
+                      MyUser.complete(
+                          "ecopoint mbeh2", "_email", "_phone", "", true),
+                      false,
+                      [Residue.metal, Residue.electronics, Residue.wood],
                       "",
                       new DateTime.utc(2021),
                       [new TimeSlot(5), new TimeSlot(3)],
