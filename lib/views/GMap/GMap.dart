@@ -110,8 +110,10 @@ class GMapState extends State<GMap> {
                   elevation: 15,
                   color: Colors.white,
                   textColor: Colors.black,
-                  onPressed: () {
+                  onPressed: () async {
                     getLocation();
+                    final GoogleMapController controller = await _controller.future;
+                    controller.animateCamera(CameraUpdate.newLatLng(_initialPosition));
                   },
                   child: Icon(
                     FontAwesomeIcons.crosshairs,
@@ -184,8 +186,6 @@ class GMapState extends State<GMap> {
         newLatitude.toString() + newLongitude.toString(), context, null));
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
-
-    print(filteredElements);
 
     await ecopointRepository
         .getEcopointsByRadius(ECOPOINT_RADIUS, newLatitude, newLongitude)
@@ -264,9 +264,6 @@ class GMapState extends State<GMap> {
     // posicion inicial del mapa
     _initialPosition =
         new LatLng(currentPosition.latitude, currentPosition.longitude);
-
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newLatLng(_initialPosition));
 
     await changeLocation(currentPosition.latitude, currentPosition.longitude);
 
