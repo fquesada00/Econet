@@ -71,8 +71,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         initialRoute: '/',
         routes: {
-          '/': (context) => MyHomePage(title: 'Econet is flying high'),
-          '/landing': (context) => LandingPage(),
+          '/': (context) => LandingPage(),
+          '/landing':  (context) => MyHomePage(title: 'Econet is flying high'),
           '/home_econet': (context) => Home(),
           '/signup_method': (context) => SignUpMethod(),
           '/loginsignup': (context) => LoginOrSignup(),
@@ -147,7 +147,6 @@ class LandingPage extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title = "p2"}) : super(key: key);
   final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -165,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final messagingRepository =
         Provider.of<MessagingProvider>(context, listen: false);
     final userRepository = Provider.of<AuthProvider>(context, listen: false);
-
+    // Navigator.pop(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
