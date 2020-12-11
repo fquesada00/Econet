@@ -160,6 +160,26 @@ class GMapState extends State<GMap> {
       var newAddress = addresses.first;
       print("NEW ADDRESS FROM NAVBAR: " +
           "${newAddress.featureName} : ${newAddress.addressLine}");
+      Cache.read("BUFFERED_SEARCHES").catchError((error) {
+        print('En error'+ newAddress.addressLine);
+        List<String> aux = [];
+        aux.add(newAddress.addressLine);
+        print(error);
+        Cache.write("BUFFERED_SEARCHES", {'value': aux });
+      }).then((value) {
+        List<String> aux = [];
+        value['value'].forEach((elem){
+          aux.add(elem);
+        });
+        print('En then de gmap '+ aux.toString() );
+        if(aux.length > 3){
+          aux.removeLast();
+        }
+        if(!aux.contains(newAddress.addressLine)) {
+          aux.add(newAddress.addressLine);
+          Cache.write("BUFFERED_SEARCHES", {'value': aux});
+        }
+      });
 
       final GoogleMapController controller = await _controller.future;
       // me muevo al nuevo punto

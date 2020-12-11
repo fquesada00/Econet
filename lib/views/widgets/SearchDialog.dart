@@ -1,5 +1,6 @@
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/services/cache.dart';
 import 'package:econet/views/widgets/searchFilters.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -134,8 +135,26 @@ class SearchHistory extends StatefulWidget {
 
 class _SearchHistoryState extends State<SearchHistory> {
   TextEditingController _controller;
+  List<String> _bufferedSearches = [];
 
   _SearchHistoryState(this._controller);
+
+  @override
+  void initState() {
+    Cache.read("BUFFERED_SEARCHES").then((value) {
+      // _bufferedSearches = value['value'].map<List<String>>((document){
+      //  _bufferedSearches = document;
+      // });
+      value['value'].forEach((elem){
+        _bufferedSearches.add(elem);
+      });
+      setState(() {});
+      print('----------------------EN THEN------------------' + _bufferedSearches.toString());
+    }).catchError((error) {
+      print(error);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +190,7 @@ class _SearchHistoryState extends State<SearchHistory> {
           ),
           SizedBox(height: 10),
           Column(
-            children: RECENT_SEARCHES_DATA
+            children: _bufferedSearches
                 .map(
                   (currentText) => Padding(
                     padding: EdgeInsets.only(bottom: 10),
