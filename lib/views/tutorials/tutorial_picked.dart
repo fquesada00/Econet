@@ -18,17 +18,17 @@ class TutorialPicked extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List texts = [
-      "How to prepare " +
+      "How to recycle " +
           residueToString(this.residue).toLowerCase() +
-          " for recycling",
-      "How to prepare **Other thing** for recycling",
+          " waste",
+      "Know your ${residueToString(this.residue).toLowerCase()}",
       "Which types of " +
           residueToString(this.residue).toLowerCase() +
           " are safe for recycling"
     ];
     List links = [
-      "https://www.youtube.com/watch?v=3hSQiqno9TQ",
-      "https://www.youtube.com/watch?v=kz_1s0QKbbM",
+      "https://www.youtube.com/watch?v=jgwH2BuHCr0",
+      "https://www.youtube.com/watch?v=_qTelxi3MjU",
       "https://www.youtube.com/watch?v=eymigN8tMoY"
     ];
 
