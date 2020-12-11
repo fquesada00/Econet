@@ -29,7 +29,7 @@ class GMap extends StatefulWidget {
 class GMapState extends State<GMap> {
   Completer<GoogleMapController> _controller = Completer();
   TextEditingController text_controller = new TextEditingController();
-  List<Marker> markers = List();
+  Set<Marker> markers = Set();
   BitmapDescriptor markerEcopointIcon;
   BitmapDescriptor markerPlantIcon;
   static bool searchingFlag = false, loadingPosition = false;
@@ -38,7 +38,7 @@ class GMapState extends State<GMap> {
   static List<String> filteredElements;
 
   @override
-  Future<void> initState() {
+  void initState() {
     //asigno variable de icono a marcadores de ecopoints
     _setMarkerIcon();
     getLocation();
@@ -64,10 +64,9 @@ class GMapState extends State<GMap> {
               GoogleMap(
                 //Con esto sacamos el logo de Google: Cuidado que si
                 //queremos subir esto al Play Store nos hacen quilombo
-                markers: markers.toSet(),
+                markers: markers,
                 zoomControlsEnabled: false,
                 initialCameraPosition: CameraPosition(
-                  // target: LatLng(-34.523644, -58.479677), HARDCODEADO
                   target: _initialPosition,
                   zoom: 15.4746,
                 ),
@@ -76,7 +75,6 @@ class GMapState extends State<GMap> {
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
-                onTap: handleTap,
               ),
               if (!searchingFlag) // Mientras el popup esta abierto, no se ve este boton
                 GMapNavBar(
@@ -99,16 +97,18 @@ class GMapState extends State<GMap> {
                 ),
               if (loadingPosition)
                 Center(
-                    child: Container(
-                        //la posicion actual tarda en cargar, sin este if se muestra un error
-                        color: Color.fromARGB(100, 0, 0, 0),
-                        alignment: Alignment.center,
-                        child: (!loadingPosition)
-                            ? Text("Please enable system location.")
-                            : CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.black),
-                              ))),
+                  child: Container(
+                    //la posicion actual tarda en cargar, sin este if se muestra un error
+                    color: Color.fromARGB(100, 0, 0, 0),
+                    alignment: Alignment.center,
+                    child: (!loadingPosition)
+                        ? Text("Please enable system location.")
+                        : CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black),
+                          ),
+                  ),
+                ),
             ],
           );
   }
@@ -160,49 +160,50 @@ class GMapState extends State<GMap> {
         Provider.of<EcopointProvider>(context, listen: false);
 
     print(filteredElements);
+
     await ecopointRepository
         .getEcopointsByRadius(ECOPOINT_RADIUS, newLatitude, newLongitude)
-        .then((value) {
-      value.forEach((element) {
-        bool isFinished = element.deadline.isBefore(DateTime.now());
+        .then((ecopointList) {
+      ecopointList.forEach((ecopoint) {
+        bool isFinished = ecopoint.deadline.isBefore(DateTime.now());
         //Si hay filtros, me fijo que el ecopoint los cumpla, si no hay filtros lo meto
         bool isFiltered = true;
         for (int i = 0; i < filteredElements.length; i++) {
           if (filteredElements[i] == 'Ecopoints Only') {
-            if (element.isPlant) {
+            if (ecopoint.isPlant) {
               isFiltered = false;
               break;
             }
           } else if (filteredElements[i] == 'Recycling Plants Only') {
-            if (!element.isPlant) {
+            if (!ecopoint.isPlant) {
               isFiltered = false;
               break;
             }
-          } else if (!element.residues
+          } else if (!ecopoint.residues
               .contains(residueFromString(filteredElements[i]))) {
             isFiltered = false;
             break;
           }
         }
 
-        print("MARKER INFO: " +
-            element.toJson().toString() +
+        print("MARKER NAME: " +
+            ((ecopoint.name != null) ? ecopoint.name : "null") +
             " IS PLANT? " +
-            ((element.isPlant) ? "YES" : "NO") +
+            ((ecopoint.isPlant) ? "YES" : "NO") +
             ", IS FINISHED? " +
             ((isFinished) ? "YES" : "NO") +
-            ", CONTAINS FILTER: " +
+            ", CONTAINED BY FILTER: " +
             ((isFiltered) ? "YES" : "NO"));
 
         if (!isFinished && isFiltered) {
           print("AGREGADO MARKER");
           markers.add(createMarker(
-              (element.isPlant) ? "plantMarker" : "ecopointMarker",
-              element.getLatitude(),
-              element.getLongitude(),
-              element.address,
+              (ecopoint.isPlant) ? "plantMarker" : "ecopointMarker",
+              ecopoint.getLatitude(),
+              ecopoint.getLongitude(),
+              ecopoint.address,
               context,
-              element));
+              ecopoint));
         }
       });
     });
@@ -250,11 +251,6 @@ class GMapState extends State<GMap> {
     changeLocation(_initialPosition.latitude, _initialPosition.longitude);
   }
 
-  void handleTap(LatLng tappedPoint) {
-    markers.clear();
-    changeLocation(tappedPoint.latitude, tappedPoint.longitude);
-  }
-
   _setMarkerIcon() async {
     markerEcopointIcon =
         await _iconToMarker(CustomIcons.recycle, 80, GREEN_DARK);
@@ -262,14 +258,16 @@ class GMapState extends State<GMap> {
         context, 'assets/icons/factory_icon.svg');
   }
 
-  Marker createMarker(String id, double latitude, double longitude,
+  Marker createMarker(String type, double latitude, double longitude,
       String adress, context, Ecopoint ecopoint) {
     LatLng latlng = LatLng(latitude, longitude);
     BitmapDescriptor icon = BitmapDescriptor.defaultMarker;
-    if (id == "ecopointMarker")
+    if (type == "ecopointMarker")
       icon = markerEcopointIcon; // icono de ecopoint
-    else if (id == "plantMarker") icon = markerPlantIcon;
+    else if (type == "plantMarker") icon = markerPlantIcon;
 
+
+    String id = (ecopoint != null)? ecopoint.toJson().toString() : type;
     return Marker(
       markerId: MarkerId(id),
       position: latlng,
@@ -278,7 +276,7 @@ class GMapState extends State<GMap> {
       zIndex: 1,
       //Calling the function that does the popup
       onTap: () {
-        if (id == "ecopointMarker" || id == "plantMarker")
+        if (type == "ecopointMarker" || type == "plantMarker")
           showModalBottomSheet(
             context: context,
             builder: (builder) {
