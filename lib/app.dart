@@ -124,6 +124,19 @@ class MyApp extends StatelessWidget {
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    Cache.delete("notifications_deliveries");
+    print("SETTING UP CACHE");
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true,sound: true);
+    FirebaseMessaging.onMessage.asBroadcastStream().listen((event) async {
+      List<dynamic> list;
+      try {
+        list = (await Cache.read("notifications_deliveries"))['data'];
+      }catch(e){ list = new List();}
+
+        list.add(event.data['delivery']);
+        await Cache.write("notifications_deliveries", {"data":list});
+    });
     return StreamBuilder<User>(
         stream: Provider.of<AuthProvider>(context).onAuthStateChanged(),
         builder: (context, snapshot) {
@@ -154,8 +167,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-
-    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true);
     //Widget para variar las configuraciones del status bar entre las views
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
