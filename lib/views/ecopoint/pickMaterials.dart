@@ -2,6 +2,7 @@ import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
+import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,21 @@ class _PickMaterialsState extends State<PickMaterials> {
   List<String> selectedChoices = List();
   Ecopoint ecopoint;
   bool alreadyCreated = false;
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+
+  displaySnackBar(BuildContext context) {
+    SnackBar snackBar = SnackBar(
+      content: Text('Please select at least one material', style: TextStyle(color: Colors.white),),
+      action: SnackBarAction(
+        label: 'Undo',
+        textColor: Colors.blue,
+        onPressed: () {
+          scaffoldKey.currentState.hideCurrentSnackBar();
+        },
+      ),
+    );
+    scaffoldKey.currentState.showSnackBar(snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +48,7 @@ class _PickMaterialsState extends State<PickMaterials> {
       alreadyCreated = !alreadyCreated;
     }
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: BROWN_LIGHT,
       appBar: NavBar(
         backgroundColor: BROWN_LIGHT,

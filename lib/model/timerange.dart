@@ -29,4 +29,12 @@ class TimeRange implements Comparable<TimeRange>{
     aux = from.difference(DateTime.now()).inMinutes;
     return aux.toString() + " minutes";
   }
+
+  String getFirstString(){
+    return sprintf("%02d:%02d", [first.hour, first.minute]);
+  }
+
+  String getLastString(){
+    return sprintf("%02d:%02d", [last.hour, last.minute]);
+  }
 }

@@ -235,6 +235,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.pushNamed(context, '/ecopoint_details');
                 },
               ),
+              RaisedButton(
+                child: Text('pick time create ecopoint'),
+                onPressed: () {
+                  List<bool> list = List();
+                  for(var i = 0 ; i < 7 ; i++) list.add(true);
+                  Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+                      arguments: {
+                        //"currentDay": this.isWeekdayAllowed.indexWhere((selected) => selected == true),
+                        "currentDay": 1,
+                        "daysAvailable": list,
+                      });
+                },
+              ),
             ],
           ),
         ),
