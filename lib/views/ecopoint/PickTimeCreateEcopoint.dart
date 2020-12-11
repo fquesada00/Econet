@@ -327,9 +327,6 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
                       Container(
                         decoration: BoxDecoration(
                             color: Colors.black,
@@ -543,7 +540,7 @@ class _TimeRangeItemState extends State<TimeRangeItem> {
                 ),
               ),
               SizedBox(
-                width: 10,
+                width: 5,
               ),
               Container(
                 decoration: BoxDecoration(
@@ -570,9 +567,6 @@ class _TimeRangeItemState extends State<TimeRangeItem> {
                         }
                       });
                     }),
-              ),
-              SizedBox(
-                width: 10,
               ),
               Container(
                 decoration: BoxDecoration(
