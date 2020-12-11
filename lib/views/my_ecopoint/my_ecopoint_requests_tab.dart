@@ -4,10 +4,12 @@ import 'package:econet/model/ecopoint_delivery.dart';
 import 'package:econet/services/delivery_repository.dart';
 import 'package:econet/views/widgets/delivery_card.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyEcopointRequestsTab extends StatefulWidget {
   Ecopoint ecopoint;
+
   MyEcopointRequestsTab(this.ecopoint);
 
   @override
@@ -16,7 +18,7 @@ class MyEcopointRequestsTab extends StatefulWidget {
 
 class _MyEcopointRequestsTabState extends State<MyEcopointRequestsTab> {
   DeliveryProvider deliveryRepository;
-
+  bool loading = true;
   List<EcopointDelivery> requestsList = [];
 
   Future<void> fillRequests() async {
@@ -29,6 +31,8 @@ class _MyEcopointRequestsTabState extends State<MyEcopointRequestsTab> {
           requestsList.add(delivery);
         }
       });
+      loading = false;
+      setState(() {});
     });
   }
 
@@ -41,13 +45,29 @@ class _MyEcopointRequestsTabState extends State<MyEcopointRequestsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(bottom: 15),
-      child: Column(
-          children: List.generate(
-              requestsList.length,
-              (index) => DeliveryCard(
-                  requestsList[index], "/request_delivery_details"))),
-    );
+    if (loading)
+      return Center(child: CircularProgressIndicator());
+    else if (requestsList.length == 0)
+      return Center(
+        child: Text(
+          "No requested deliveries available",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 28,
+            fontFamily: 'SFProDisplay',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    else
+      return SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: 15),
+        child: Column(
+            children: List.generate(
+                requestsList.length,
+                (index) => DeliveryCard(
+                    requestsList[index], "/request_delivery_details"))),
+      );
   }
 }

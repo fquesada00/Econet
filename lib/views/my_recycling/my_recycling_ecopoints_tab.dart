@@ -35,6 +35,7 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
   DeliveryProvider deliveryRepository;
   EcopointProvider ecopointRepository;
   String currentUserEmail;
+  int listSize;
 
   getUserInfo() async {
     AuthProvider provider =
@@ -52,8 +53,11 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
     ecopointRepository = Provider.of<EcopointProvider>(context, listen: false);
     deliveryRepository = Provider.of<DeliveryProvider>(context, listen: false);
 
-    await ecopointRepository.getEcopointsByUser(currentUserEmail).then((value) {
-      value.forEach((ecopoint) async {
+    await ecopointRepository
+        .getEcopointsByUser(currentUserEmail)
+        .then((auxListEcopoints) {
+          listSize = auxListEcopoints.length;
+      auxListEcopoints.forEach((ecopoint) async {
         // busco los ecopoints no terminados del user actual,
         // y busco los deliveries de cada uno para contarlos segun corresponda
         if (ecopoint.deadline.isAfter(DateTime.now())) {
@@ -75,13 +79,18 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
               }
             });
           });
+          print("LOADED ECOPOINT: " + ecopoint.name);
           ecopointList.add(EcopointDeliveryExtraInfo(
               ecopoint, pendingDeliveries, requestedDeliveries));
+          loadingEcopoints = false;
+          setState(() {});
         }
       });
+      if (auxListEcopoints.isEmpty) {
+        loadingEcopoints = false;
+        setState(() {});
+      }
     });
-    loadingEcopoints = false;
-    setState(() {});
   }
 
   @override
@@ -118,159 +127,153 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
             )
           : SingleChildScrollView(
               padding: EdgeInsets.only(bottom: 15),
-              child: (loadingEcopoints)
+              child: (loadingEcopoints || ecopointList.length < listSize || ecopointList.isEmpty)
                   ? Container(
                       height: 100,
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: (ecopointList.isEmpty)? Text(
+                          "No ecopoints available",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 28,
+                            fontFamily: 'SFProDisplay',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ) : CircularProgressIndicator(),
                       ),
                     )
                   : Column(
-                      children: List.generate(
-                        ecopointList.length,
-                        (index) => GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/my_ecopoint',
-                                arguments: ecopointList[index]);
-                          },
-                          child: Container(
-                            margin:
-                                EdgeInsets.only(top: 15, left: 15, right: 15),
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 5,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Expanded(
-                                            flex: 4,
-                                            child: Container(),
-                                          ),
-                                          Expanded(
-                                            flex: 3,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 8.0),
-                                              child: Text(
-                                                (ecopointList[index]
-                                                            .ecopoint
-                                                            .name !=
-                                                        null)
-                                                    ? ecopointList[index]
-                                                        .ecopoint
-                                                        .name
-                                                    : '',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: GREEN_DARK,
-                                                  fontSize: 22,
-                                                  fontFamily: 'SFProDisplay',
-                                                  fontWeight: FontWeight.w500,
+                      children: List.from(
+                        ecopointList.map(
+                          (e) => GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/my_ecopoint',
+                                  arguments: e.ecopoint);
+                            },
+                            child: Container(
+                              margin:
+                                  EdgeInsets.only(top: 15, left: 15, right: 15),
+                              padding: EdgeInsets.symmetric(vertical: 8),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30)),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 5,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              width: 34,
+                                            ),
+                                            Expanded(
+                                              flex: 5,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 8.0),
+                                                child: Text(
+                                                  (e.ecopoint.name != null)
+                                                      ? e.ecopoint.name
+                                                      : '',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: GREEN_DARK,
+                                                    fontSize: 22,
+                                                    fontFamily: 'SFProDisplay',
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Spacer(),
-                                          Expanded(
-                                            flex: 3,
-                                            child: Container(
-                                              height: 72,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 8.0),
-                                                    child: Text(
-                                                      "Due in",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 15,
-                                                        fontFamily:
-                                                            'SFProDisplay',
+                                          ],
+                                        ),
+                                        Row(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              width: 34,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                height: 72,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 8.0),
+                                                      child: Text(
+                                                        "Due in",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 15,
+                                                          fontFamily:
+                                                              'SFProDisplay',
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Chip(
-                                                    materialTapTargetSize:
-                                                        MaterialTapTargetSize
-                                                            .shrinkWrap,
-                                                    label: Text(
-                                                      TimeRange
-                                                          .getRemainingDeliverTime(
-                                                              ecopointList[
-                                                                      index]
-                                                                  .ecopoint
-                                                                  .deadline),
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15,
-                                                        fontFamily:
-                                                            'SFProDisplay',
-                                                        fontWeight:
-                                                            FontWeight.w700,
+                                                    Chip(
+                                                      materialTapTargetSize:
+                                                          MaterialTapTargetSize
+                                                              .shrinkWrap,
+                                                      label: Text(
+                                                        TimeRange
+                                                            .getRemainingDeliverTime(
+                                                                e.ecopoint
+                                                                    .deadline),
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15,
+                                                          fontFamily:
+                                                              'SFProDisplay',
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
                                                       ),
+                                                      backgroundColor:
+                                                          BROWN_DARK,
                                                     ),
-                                                    backgroundColor: BROWN_DARK,
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Spacer(),
-                                          Expanded(
-                                            flex: 2,
-                                            child: TextAboveNumberedCircle(
+                                            SizedBox(
+                                             width: 8,
+                                            ),
+                                            TextAboveNumberedCircle(
                                                 "Pending deliveries",
-                                                ecopointList[index]
-                                                    .pendingDeliveries,
+                                                e.pendingDeliveries,
                                                 GREEN_DARK),
-                                          ),
-                                          Spacer(),
-                                          Expanded(
-                                            flex: 2,
-                                            child: TextAboveNumberedCircle(
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            TextAboveNumberedCircle(
                                                 "Delivery requests",
-                                                ecopointList[index]
-                                                    .requestedDeliveries,
+                                                e.requestedDeliveries,
                                                 BROWN_MEDIUM),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
+                                  Container(
+                                    width: 34,
                                     alignment: Alignment.topCenter,
                                     child: Icon(
                                       Icons.chevron_right,
                                       size: 36,
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

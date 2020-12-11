@@ -9,11 +9,16 @@ import 'package:http/http.dart' as http;
 
 abstract class EcopointProvider implements ChangeNotifier {
   Future<Ecopoint> getEcopoint(String ecopointId);
+
   Future<List<Ecopoint>> getEcopointsByRadius(
       double radius, double lat, double long);
+
   Future<List<Ecopoint>> getEcopointsByMaterials(List<String> materials);
+
   Future<List<Ecopoint>> getEcopointsByUser(String email);
+
   Future createEcopoint(Ecopoint ecopoint);
+
   Future updateEcopoint(Ecopoint ecopoint);
 }
 
@@ -144,6 +149,7 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
+      body: jsonEncode(ecopoint),
     );
     print("RESPONSE ================ " + response.body.toString());
     return Ecopoint.fromJson(jsonDecode(response.body));
