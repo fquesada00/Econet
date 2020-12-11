@@ -20,6 +20,7 @@ class MyRecyclingEcopointsTab extends StatefulWidget {
       _MyRecyclingEcopointsTabState();
 }
 
+// Clase auxiliar solo utilizada en este .dart
 class EcopointDeliveryExtraInfo {
   Ecopoint ecopoint;
   int pendingDeliveries;
@@ -32,12 +33,15 @@ class EcopointDeliveryExtraInfo {
 class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
   List<EcopointDeliveryExtraInfo> ecopointList = [];
   bool isEcollector = false, loadingEcopoints = true;
-  DeliveryProvider deliveryRepository;
-  EcopointProvider ecopointRepository;
   String currentUserEmail;
-  int listSize;
 
-  getUserInfo() async {
+  @override
+  void initState() {
+    super.initState();
+    getInformation();
+  }
+
+  getInformation() async {
     AuthProvider provider =
         await Provider.of<AuthProvider>(context, listen: false);
 
@@ -50,13 +54,15 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
   }
 
   Future<void> fillDeliveries() async {
-    ecopointRepository = Provider.of<EcopointProvider>(context, listen: false);
-    deliveryRepository = Provider.of<DeliveryProvider>(context, listen: false);
+    EcopointProvider ecopointRepository =
+        Provider.of<EcopointProvider>(context, listen: false);
+    DeliveryProvider deliveryRepository =
+        Provider.of<DeliveryProvider>(context, listen: false);
 
     await ecopointRepository
         .getEcopointsByUser(currentUserEmail)
         .then((auxListEcopoints) {
-          listSize = auxListEcopoints.length;
+      int listSize = auxListEcopoints.length;
       auxListEcopoints.forEach((ecopoint) async {
         // busco los ecopoints no terminados del user actual,
         // y busco los deliveries de cada uno para contarlos segun corresponda
@@ -82,8 +88,10 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
           print("LOADED ECOPOINT: " + ecopoint.name);
           ecopointList.add(EcopointDeliveryExtraInfo(
               ecopoint, pendingDeliveries, requestedDeliveries));
-          loadingEcopoints = false;
-          setState(() {});
+          if (ecopointList.length == listSize) {
+            loadingEcopoints = false;
+            setState(() {});
+          }
         }
       });
       if (auxListEcopoints.isEmpty) {
@@ -91,12 +99,6 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
         setState(() {});
       }
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getUserInfo();
   }
 
   @override
@@ -127,20 +129,22 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
             )
           : SingleChildScrollView(
               padding: EdgeInsets.only(bottom: 15),
-              child: (loadingEcopoints || ecopointList.length < listSize || ecopointList.isEmpty)
+              child: (loadingEcopoints || ecopointList.isEmpty)
                   ? Container(
                       height: 100,
                       child: Center(
-                        child: (ecopointList.isEmpty)? Text(
-                          "No ecopoints available",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 28,
-                            fontFamily: 'SFProDisplay',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ) : CircularProgressIndicator(),
+                        child: (!loadingEcopoints)
+                            ? Text(
+                                "No ecopoints available",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 28,
+                                  fontFamily: 'SFProDisplay',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            : CircularProgressIndicator(),
                       ),
                     )
                   : Column(
@@ -246,7 +250,7 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                                               ),
                                             ),
                                             SizedBox(
-                                             width: 8,
+                                              width: 8,
                                             ),
                                             TextAboveNumberedCircle(
                                                 "Pending deliveries",

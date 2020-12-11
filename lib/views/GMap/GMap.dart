@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -96,6 +97,25 @@ class GMapState extends State<GMap> {
                       filteredElements.remove(residueName);
                   },
                 ),
+              Positioned(
+                bottom: 20,
+                right: 10,
+                child: MaterialButton(
+                  height: 55,
+                  elevation: 15,
+                  color: Colors.white,
+                  textColor: Colors.black,
+                  onPressed: () {
+                    getLocation();
+                  },
+                  child: Icon(
+                    FontAwesomeIcons.crosshairs,
+                    size: 45,
+                  ),
+                  padding: EdgeInsets.all(10),
+                  shape: CircleBorder(),
+                ),
+              ),
               if (loadingPosition)
                 Center(
                   child: Container(
@@ -239,6 +259,9 @@ class GMapState extends State<GMap> {
     // posicion inicial del mapa
     _initialPosition =
         new LatLng(currentPosition.latitude, currentPosition.longitude);
+
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newLatLng(_initialPosition));
 
     await changeLocation(currentPosition.latitude, currentPosition.longitude);
 
