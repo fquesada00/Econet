@@ -148,10 +148,8 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void didChangeDependencies() {
     //we don't have to close or unsubscribe SB
-    Provider.of<AuthProvider>(context, listen: false)
-        .onAuthStateChanged()
-        .listen((user) {
-          print(user);
+    Provider.of<AuthProvider>(context).onAuthStateChanged().listen((user) {
+      print(user);
       if (user == null) {
         Navigator.pushReplacementNamed(context, '/loginsignup');
       } else {
