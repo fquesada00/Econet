@@ -9,6 +9,7 @@ import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/services/ecopoint_repository.dart';
 import 'package:econet/views/GMap/EcopointInfo.dart';
+import 'package:econet/views/ecopoint/ecopoint_details.dart';
 import 'package:econet/views/settings/settings_app_tab.dart';
 import 'package:econet/views/widgets/EconetButton.dart';
 import 'package:econet/views/widgets/GMapNavBar.dart';
@@ -266,8 +267,7 @@ class GMapState extends State<GMap> {
       icon = markerEcopointIcon; // icono de ecopoint
     else if (type == "plantMarker") icon = markerPlantIcon;
 
-
-    String id = (ecopoint != null)? ecopoint.toJson().toString() : type;
+    String id = (ecopoint != null) ? ecopoint.toJson().toString() : type;
     return Marker(
       markerId: MarkerId(id),
       position: latlng,

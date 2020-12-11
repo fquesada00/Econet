@@ -30,23 +30,20 @@ class EcopointDeliveryExtraInfo {
 }
 
 class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
-  List<EcopointDeliveryExtraInfo> deliveriesList = [];
+  List<EcopointDeliveryExtraInfo> ecopointList = [];
   bool isEcollector = false, loadingEcopoints = true;
   DeliveryProvider deliveryRepository;
   EcopointProvider ecopointRepository;
   String currentUserEmail;
 
   getUserInfo() async {
-    print("GETTING USER");
     AuthProvider provider =
         await Provider.of<AuthProvider>(context, listen: false);
+
     await provider.getCurrentUser().then((value) {
       if (value.isEcollector) isEcollector = true;
       currentUserEmail = value.email;
-      setState(() {});
     });
-
-    print("USER RECEIVED");
 
     fillDeliveries();
   }
@@ -54,7 +51,6 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
   Future<void> fillDeliveries() async {
     ecopointRepository = Provider.of<EcopointProvider>(context, listen: false);
     deliveryRepository = Provider.of<DeliveryProvider>(context, listen: false);
-    print("MBEH");
 
     await ecopointRepository.getEcopointsByUser(currentUserEmail).then((value) {
       value.forEach((ecopoint) async {
@@ -65,28 +61,27 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
           int requestedDeliveries = 0;
           await deliveryRepository
               .getDeliveriesInEcopoint(ecopoint.id)
-              .then((value) {
-            value.forEach((element) {
-              print("ELEMENTO = " + element.toString());
-              if (!element.finished) {
-                if (!element.responseValue) {
+              .then((deliveries) {
+            deliveries.forEach((delivery) {
+              print("ELEMENTO = " + delivery.toString());
+              if (!delivery.finished) {
+                if (!delivery.responseValue) {
                   // si no termino y no le respondi es un request
                   requestedDeliveries++;
-                } else if (element.isConfirmed) {
+                } else if (delivery.isConfirmed) {
                   // si no termino, le respondi y lo confirme es un pending
                   pendingDeliveries++;
                 }
               }
             });
           });
-          deliveriesList.add(EcopointDeliveryExtraInfo(
+          ecopointList.add(EcopointDeliveryExtraInfo(
               ecopoint, pendingDeliveries, requestedDeliveries));
-
-          loadingEcopoints = false;
-          setState(() {});
         }
       });
     });
+    loadingEcopoints = false;
+    setState(() {});
   }
 
   @override
@@ -131,11 +126,12 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                       ),
                     )
                   : Column(
-                      children: List.generate(deliveriesList.length, (index) {
-                        return GestureDetector(
+                      children: List.generate(
+                        ecopointList.length,
+                        (index) => GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, '/my_ecopoint',
-                                arguments: deliveriesList[index]);
+                                arguments: ecopointList[index]);
                           },
                           child: Container(
                             margin:
@@ -164,11 +160,11 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                                               padding: const EdgeInsets.only(
                                                   bottom: 8.0),
                                               child: Text(
-                                                (deliveriesList[index]
+                                                (ecopointList[index]
                                                             .ecopoint
                                                             .name !=
                                                         null)
-                                                    ? deliveriesList[index]
+                                                    ? ecopointList[index]
                                                         .ecopoint
                                                         .name
                                                     : '',
@@ -222,7 +218,7 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                                                     label: Text(
                                                       TimeRange
                                                           .getRemainingDeliverTime(
-                                                              deliveriesList[
+                                                              ecopointList[
                                                                       index]
                                                                   .ecopoint
                                                                   .deadline),
@@ -246,7 +242,7 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                                             flex: 2,
                                             child: TextAboveNumberedCircle(
                                                 "Pending deliveries",
-                                                deliveriesList[index]
+                                                ecopointList[index]
                                                     .pendingDeliveries,
                                                 GREEN_DARK),
                                           ),
@@ -255,7 +251,7 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                                             flex: 2,
                                             child: TextAboveNumberedCircle(
                                                 "Delivery requests",
-                                                deliveriesList[index]
+                                                ecopointList[index]
                                                     .requestedDeliveries,
                                                 BROWN_MEDIUM),
                                           ),
@@ -277,8 +273,8 @@ class _MyRecyclingEcopointsTabState extends State<MyRecyclingEcopointsTab> {
                               ],
                             ),
                           ),
-                        );
-                      }),
+                        ),
+                      ),
                     ),
             ),
     );

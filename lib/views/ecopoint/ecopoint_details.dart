@@ -15,29 +15,9 @@ class EcopointDetails extends StatelessWidget {
   final TextEditingController _additionalInfoController =
       TextEditingController();
 
-  Ecopoint ecopoint = new Ecopoint(
-      new MyUser.complete("jerusa jerusalinsky", "", "0303456", "", true),
-      false,
-      [Residue.glass, Residue.electronics, Residue.paper, Residue.metal],
-      "",
-      DateTime.now(),
-      [],
-      "pere perere perepperep",
-      "nombre xd",
-      "calle Falsa 123",
-      new LatLng(0, 0)); //TODO: CONEXION A API
-
   @override
   Widget build(BuildContext context) {
-    //BORRAR LO SIGUIENTE CUANDO SE HAGA LA CONEXION A API
-    TimeSlot aux = new TimeSlot(3);
-    aux.addRange('09:00', '11:00');
-    aux.addRange('16:00', '19:00');
-    ecopoint.openHours.add(aux);
-    aux = TimeSlot(6);
-    aux.addRange('13:00', '17:00');
-    ecopoint.openHours.add(aux);
-    //----------------------------------------------------
+    final Ecopoint ecopoint = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -63,7 +43,8 @@ class EcopointDetails extends StatelessWidget {
                     width: 220,
                     child: EconetButton(
                       onPressed: () {
-                        print("HOLA");
+                        Navigator.pushNamed(context, '/ecopoint_expanded',
+                            arguments: ecopoint);
                       },
                       backgroundColor: GREEN_DARK,
                     ),

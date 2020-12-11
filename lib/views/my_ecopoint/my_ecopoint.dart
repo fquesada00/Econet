@@ -1,3 +1,4 @@
+import 'package:econet/model/ecopoint.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:econet/views/widgets/tab_slide_choose.dart';
@@ -14,6 +15,7 @@ class MyEcopoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Ecopoint ecopoint = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       resizeToAvoidBottomInset: true,
@@ -42,9 +44,9 @@ class MyEcopoint extends StatelessWidget {
                   Expanded(
                     child: TabBarView(
                       children: <Widget>[
-                        MyEcopointDetailsTab(),
-                        MyEcopointPendingTab(),
-                        MyEcopointRequestsTab()
+                        MyEcopointDetailsTab(ecopoint),
+                        MyEcopointPendingTab(ecopoint),
+                        MyEcopointRequestsTab(ecopoint)
                       ],
                     ),
                   ),

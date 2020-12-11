@@ -14,17 +14,8 @@ class MyEcopointDetailsTab extends StatelessWidget {
   final TextEditingController _additionalInfoController =
       TextEditingController();
 
-  Ecopoint ecopoint = new Ecopoint(
-      new MyUser.complete("jerusa jerusalinsky", "", "0303456", "", true),
-      false,
-      [Residue.glass, Residue.electronics],
-      "",
-      DateTime.now(),
-      [],
-      "pere perere perepperep",
-      "nombre xd",
-      "calle Falsa 123",
-      new LatLng(0, 0)); //TODO: CONEXION A API
+  Ecopoint ecopoint;
+  MyEcopointDetailsTab(this.ecopoint);
 
   @override
   Widget build(BuildContext context) {
