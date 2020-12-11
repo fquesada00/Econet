@@ -24,9 +24,7 @@ class EcopointExpanded extends StatelessWidget {
         backgroundColor: GREEN_LIGHT,
         withBack: true,
         textColor: GREEN_DARK,
-        text: (ecopoint.name != null)
-            ? ecopoint.name
-            : "NULL",
+        text: (ecopoint.name != null) ? ecopoint.name : "NULL",
       ),
       body: ListView(
         children: <Widget>[

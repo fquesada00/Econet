@@ -11,6 +11,7 @@ import 'package:econet/views/auth/ecollector_or_regular.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
 import 'package:econet/views/auth/signup_method.dart';
+import 'package:econet/views/ecollector/become_ecollector.dart';
 import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:econet/views/ecopoint/create_ecopoint_additional.dart';
@@ -97,6 +98,7 @@ class MyApp extends StatelessWidget {
           '/request_delivery_details': (context) => RequestDetails(),
           '/create_ecopoint_additional': (context) => CreateAdditionalDetails(),
           '/create_ecopoint_name': (context) => CreateEcopointName(),
+          '/become_ecollector': (context) => BecomeEcollector(),
         },
         title: 'Flutter Demo',
         theme: ThemeData(

@@ -1,14 +1,14 @@
+import 'package:econet/model/create_ecopoint_view_model.dart';
 import 'package:econet/model/ecopoint.dart';
 import 'package:econet/model/residue.dart';
 import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
+import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/econet_display_chip.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:econet/views/widgets/open_hours_list.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:econet/views/widgets/button1.dart';
-import 'package:econet/model/create_ecopoint_view_model.dart';
+import 'package:flutter/material.dart';
 
 class CreateEcopoint extends StatelessWidget {
   //Set the ecopoint to NULL when user clicks shedule trip!!!! Then everything else should work fine
@@ -89,13 +89,14 @@ class CreateEcopoint extends StatelessWidget {
                   isAlwaysShown: true,
                   controller: _controller1,
                   child: Container(
+                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                       height: 70,
                       color: Color(0xFFE5E2E2),
                       alignment: Alignment(0, 0),
                       child: SingleChildScrollView(
                           controller: _controller1,
                           child: Wrap(
-                            runSpacing: 5,
+                            runSpacing: -7,
                             spacing: 5,
                             alignment: WrapAlignment.center,
                             children: List<Widget>.from(plant.residues
