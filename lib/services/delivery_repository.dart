@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:econet/model/ecopoint_delivery.dart';
+import 'package:econet/services/messaging_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,8 @@ abstract class DeliveryProvider implements ChangeNotifier {
   Future<bool> createDelivery(EcopointDelivery delivery);
 
   Future<bool> updateDelivery(EcopointDelivery delivery);
+
+  Future<bool> deleteDelivery(String deliveryId);
 }
 
 final deliveryUrl =
@@ -36,7 +39,18 @@ class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(delivery));
-    return response.statusCode == 200;
+    if(response.statusCode == 200){
+      FirebaseMessagingProvider().sendMessage(delivery.ecopoint.ecollector.email, {
+        "notification": {
+          "title": "New Delivery!",
+          "body": "created by ${delivery.user.fullName} for delivering ${delivery.date.day}/${delivery.date.month}/${delivery.date.year}"
+        },
+        "data":{
+          "delivery":jsonEncode(delivery.toJson())
+        }
+      } );
+      return true;
+    }else return false;
   }
 
   @override
@@ -83,5 +97,20 @@ class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
         body: jsonEncode(delivery));
 
     return response.statusCode == 200;
+  }
+
+  @override
+  Future<bool> deleteDelivery(String deliveryId) async {
+
+    final user = FirebaseAuth.instance.currentUser;
+    final token = await user.getIdToken();
+    final email = user.email;
+    final response = await http.delete("$deliveryUrl?email=$email&?deliveryId=$deliveryId",
+        headers: {
+          'Authorization': 'Bearer $token',
+        });
+
+    return response.statusCode == 200;
+
   }
 }

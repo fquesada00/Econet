@@ -180,6 +180,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true);
     //Widget para variar las configuraciones del status bar entre las views
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);

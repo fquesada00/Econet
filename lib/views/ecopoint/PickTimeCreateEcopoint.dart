@@ -60,16 +60,21 @@ class PickTimeCreateEcopoint extends StatelessWidget {
                         createEcopointModel.chosenWeekdays.length > i &&
                             createEcopointModel.chosenWeekdays.length > 0;
                     print(createEcopointModel.chosenWeekdays.length);
+                    print("timerangelength ${createEcopointModel.getRangesOfDay(arguments["currentDay"]).length}");
+                    bool timeRangeExists = createEcopointModel.getRangesOfDay(arguments["currentDay"]).length > 0;
                     print(i);
                     print("hey");
-                    if (nextDay) {
+                    if (nextDay && timeRangeExists) {
                       Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
                           arguments: {
                             "currentDay": i,
                             "daysAvailable": arguments["daysAvailable"],
                           });
-                    } else {
+                    } else if(timeRangeExists) {
                       Navigator.pushNamed(context, '/pickLocation');
+                    }else{
+                      // TODO add snackbar
+                      print("YOU NEED TO PICK A RANGE");
                     }
                   },
                   backgroundColor: BROWN_MEDIUM,
