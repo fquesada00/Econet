@@ -93,27 +93,20 @@ class EcollectorCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Text('Ecollector',
+            Text('ECOLLECTOR',
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.white)),
+                    fontSize: 18,
+                    color: GREEN_LIGHT)),
             CircleAvatar(radius: 45, backgroundColor: Colors.white),
-            Button1(
-              btnData: ButtonData(
-                _ecollector.fullName != null ? _ecollector.fullName:'',
-                () {
-                  Navigator.pushNamed(context, '/');
-                },
-                backgroundColor: Colors.white,
-                textColor: GREEN_DARK,
-                fontSize: 23,
-                width: 80,
-                height: 35,
+            Text(
+              _ecollector.fullName != null ? _ecollector.fullName : '',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 19,
                 fontWeight: FontWeight.w600,
-                adjust: true,
               ),
-            ),
+            )
           ],
         ),
       ),

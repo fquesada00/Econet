@@ -23,14 +23,14 @@ class DeliveryInfoList extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 15),
           child: Button1(
             btnData: ButtonData(
-              'Contact Ecollector',
+              'CONTACT ECOLLECTOR',
               () {
                 print("no se que se deberia hacer aca");
               },
               backgroundColor: backgroundColor,
               adjust: true,
-              height: 60,
-              width: 190,
+              height: 50,
+              width: 220,
               fontSize: 28,
             ),
           ),

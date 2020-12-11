@@ -259,7 +259,6 @@ class _PickDeliveryDateState extends State<PickDeliveryDate> {
                                     }
                                   };
                                 }
-                                //TODO: Arreglar bug cuando elegis fecha, cancelas antes de elegir hora, elegis fecha y hora y no te deja continuar
                               });
                             });
                           });

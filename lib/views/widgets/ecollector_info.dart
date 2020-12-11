@@ -13,19 +13,19 @@ class EcollectorInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, bottom: 15),
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(30)),
         color: backgroundColor,
       ),
       child: Column(children: <Widget>[
         Text(
-          "Ecollector",
+          "ECOLLECTOR",
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontFamily: 'SFProDisplay',
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            color: GREEN_LIGHT,
           ),
         ),
         Padding(
@@ -34,18 +34,14 @@ class EcollectorInfo extends StatelessWidget {
             child: SvgPicture.asset('assets/artwork/profile-default.svg'),
           ),
         ),
-        Chip(
-          backgroundColor: Colors.white,
-          label: Text(
-            name,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: backgroundColor,
-              fontSize: 20,
-              fontFamily: 'SFProDisplay',
-            ),
+        Text(
+          name != null ? name : '',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 19,
+            fontWeight: FontWeight.w600,
           ),
-        ),
+        )
       ]),
     );
   }

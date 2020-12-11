@@ -14,11 +14,9 @@ class AddBags extends StatefulWidget {
 }
 
 class _AddBagsState extends State<AddBags> {
-  Bag bagData1 = new Bag(BagSize.small, BagWeight.light, 2);
-  Bag bagData2 = new Bag(BagSize.medium, BagWeight.veryHeavy, 2);
-  Bag bagData3 = new Bag(BagSize.extraLarge, BagWeight.veryHeavy, 5);
   final CreateDeliveryModel viewModel = CreateDeliveryModel.instance;
-  List<Bag> bagList;
+  final List<Bag> bagList = List<Bag>();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   BagSize bagSize;
   BagWeight bagWeight;
   int bagQty;
@@ -26,12 +24,12 @@ class _AddBagsState extends State<AddBags> {
   @override
   void initState() {
     super.initState();
-    bagList = [bagData1, bagData2, bagData3];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: BROWN_LIGHT,
       appBar: NavBar(
@@ -80,7 +78,7 @@ class _AddBagsState extends State<AddBags> {
             Button1(
                 btnData: ButtonData('CONTINUE', () {
               if (bagList.isEmpty) {
-                Scaffold.of(context).showSnackBar(SnackBar(
+                _scaffoldKey.currentState.showSnackBar(SnackBar(
                   content: Center(
                     heightFactor: 1,
                     child: Text(

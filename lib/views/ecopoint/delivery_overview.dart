@@ -1,65 +1,32 @@
-import 'package:econet/model/create_ecopoint_view_model.dart';
-import 'package:econet/model/ecopoint.dart';
+import 'package:econet/model/create_delivery_view_model.dart';
+import 'package:econet/model/ecopoint_delivery.dart';
 import 'package:econet/model/my_user.dart';
 import 'package:econet/presentation/constants.dart';
-import 'package:econet/services/ecopoint_repository.dart';
+import 'package:econet/services/delivery_repository.dart';
 import 'package:econet/services/user.dart';
-import 'package:econet/views/widgets/ecopoint_info_list.dart';
+import 'package:econet/views/widgets/delivery_info_list.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:econet/views/widgets/positive_negative_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class EcopointOveriew extends StatefulWidget {
+class DeliveryOverview extends StatefulWidget {
   @override
-  _EcopointOveriewState createState() => _EcopointOveriewState();
+  _DeliveryOverviewState createState() => _DeliveryOverviewState();
 }
 
-class _EcopointOveriewState extends State<EcopointOveriew> {
-  final CreateEcopointModel viewModel = CreateEcopointModel.instance;
-  Ecopoint ecopoint;
-  MyUser _ecollector;
-  bool _isLoading;
+class _DeliveryOverviewState extends State<DeliveryOverview> {
+  EcopointDelivery delivery;
+  final viewModel = CreateDeliveryModel.instance;
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _additionalInfoController =
-      TextEditingController();
+  bool _isLoading;
 
   @override
   void initState() {
     super.initState();
     _isLoading = true;
-    createEcopoint();
-  }
-
-  Future<void> createEcopoint() async {
-    AuthProvider provider =
-        await Provider.of<AuthProvider>(context, listen: false);
-    await provider.getCurrentUser().then((value) {
-      _ecollector = value;
-    });
-
-    DateTime deadline = new DateTime(
-        viewModel.deliveryDate.year,
-        viewModel.deliveryDate.month,
-        viewModel.deliveryDate.day,
-        viewModel.deliveryTime.hour,
-        viewModel.deliveryTime.minute);
-    ecopoint = new Ecopoint(
-        _ecollector,
-        false,
-        viewModel.selectedResidues,
-        viewModel.plant.id,
-        deadline,
-        viewModel.timeslotsWeekdays,
-        viewModel.additionalInfo,
-        viewModel.name,
-        viewModel.address,
-        viewModel.coordinates);
-
-    _isLoading = false;
-    setState(() {});
+    createDelivery();
   }
 
   @override
@@ -75,7 +42,7 @@ class _EcopointOveriewState extends State<EcopointOveriew> {
                 Container(
                   margin: EdgeInsets.only(bottom: 15),
                   child: NavBar(
-                    text: 'Ecopoint overview',
+                    text: 'Ecopoint delivery overview',
                     withBack: true,
                     backgroundColor: GREEN_LIGHT,
                     textColor: GREEN_DARK,
@@ -85,10 +52,7 @@ class _EcopointOveriewState extends State<EcopointOveriew> {
                   child: Stack(
                     children: <Widget>[
                       SingleChildScrollView(
-                        padding: EdgeInsets.only(bottom: 100),
-                        //tamanio del widget inferior
-                        child: EcopointInfoList(ecopoint, true, null,
-                            _nameController, _additionalInfoController),
+                        child: DeliveryInfoList(delivery, GREEN_DARK),
                       ),
                       Positioned(
                         bottom: 0,
@@ -97,14 +61,14 @@ class _EcopointOveriewState extends State<EcopointOveriew> {
                           _isLoading = true;
                           setState(() {});
 
-                          Provider.of<EcopointProvider>(context, listen: false)
-                              .createEcopoint(ecopoint)
+                          Provider.of<DeliveryProvider>(context, listen: false)
+                              .createDelivery(delivery)
                               .then((value) {
                             if (value) {
                               Navigator.pushNamedAndRemoveUntil(
                                   context,
                                   '/home_econet',
-                                  ModalRoute.withName('/createEcopoint'));
+                                  ModalRoute.withName('/ecopointExpanded'));
                             } else {
                               _isLoading = false;
                               setState(() {});
@@ -112,7 +76,7 @@ class _EcopointOveriewState extends State<EcopointOveriew> {
                                 content: Center(
                                   heightFactor: 1,
                                   child: Text(
-                                    "Error while creating Ecopoint. Make sure you have an internet connection",
+                                    "Error while creating delivery. Make sure you have an internet connection",
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -135,5 +99,28 @@ class _EcopointOveriewState extends State<EcopointOveriew> {
               ],
             ),
     );
+  }
+
+  Future<void> createDelivery() async {
+    MyUser user;
+
+    AuthProvider provider =
+        await Provider.of<AuthProvider>(context, listen: false);
+    await provider.getCurrentUser().then((value) {
+      user = value;
+    });
+
+    DateTime deadline = new DateTime(
+        viewModel.deliveryDate.year,
+        viewModel.deliveryDate.month,
+        viewModel.deliveryDate.day,
+        viewModel.deliveryTime.hour,
+        viewModel.deliveryTime.minute);
+
+    delivery = new EcopointDelivery(viewModel.ecopoint, deadline,
+        viewModel.bags, user, false, false, false);
+
+    _isLoading = false;
+    setState(() {});
   }
 }

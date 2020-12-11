@@ -16,9 +16,10 @@ import 'package:econet/views/ecopoint/PickTimeCreateEcopoint.dart';
 import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:econet/views/ecopoint/create_ecopoint_additional.dart';
 import 'package:econet/views/ecopoint/create_ecopoint_name.dart';
-import 'package:econet/views/ecopoint/ecopoint_details.dart';
+import 'package:econet/views/ecopoint/delivery_overview.dart';
 import 'package:econet/views/ecopoint/ecopoint_expanded.dart';
 import 'package:econet/views/ecopoint/ecopoint_overview.dart';
+import 'package:econet/views/ecopoint/pickDelivery.dart';
 import 'package:econet/views/ecopoint/pickDeliveryDate.dart';
 import 'package:econet/views/ecopoint/pickLocation.dart';
 import 'package:econet/views/ecopoint/pickMaterials.dart';
@@ -87,12 +88,13 @@ class MyApp extends StatelessWidget {
           '/ecopointExpanded': (context) => EcopointExpanded(),
           '/pickTimeCreateEcopoint': (context) => PickTimeCreateEcopoint(),
           '/pickDeliveryDate': (context) => PickDeliveryDate(),
+          '/pickDelivery': (context) => PickDelivery(),
           '/settings': (context) => Settings(),
           '/pickLocation': (context) => PickLocation(),
           '/my_recycling': (context) => MyRecycling(),
           '/add_bags': (context) => AddBags(),
           '/my_ecopoint': (context) => MyEcopoint(),
-          '/ecopoint_details': (context) => EcopointDetails(),
+          '/delivery_overview': (context) => DeliveryOverview(),
           '/ecopoint_overview': (context) => EcopointOveriew(),
           '/pending_delivery_details': (context) => PendingDetails(),
           '/my_delivery_details': (context) => MyDeliveryDetails(),
@@ -119,28 +121,26 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LandingPage extends StatelessWidget{
+class LandingPage extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return StreamBuilder<User>(
-      stream: Provider.of<AuthProvider>(context).onAuthStateChanged(),
-      builder: (context,snapshot){
-        if(snapshot.connectionState == ConnectionState.active){
-          User user = snapshot.data;
-          if(user == null){
-            return LoginOrSignup();
-          }else{
-            return Home();
-          }
-        }else{
-          return Scaffold(
-            body: Center(
+        stream: Provider.of<AuthProvider>(context).onAuthStateChanged(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            User user = snapshot.data;
+            if (user == null) {
+              return LoginOrSignup();
+            } else {
+              return Home();
+            }
+          } else {
+            return Scaffold(
+                body: Center(
               child: CircularProgressIndicator(),
-            )
-          );
-        }
-      }
-    );
+            ));
+          }
+        });
   }
 }
 
