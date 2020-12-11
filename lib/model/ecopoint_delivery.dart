@@ -14,6 +14,7 @@ class EcopointDelivery {
   bool _finished;
   bool
       _responseValue; // La respuesta del Ecollector (acepta=true, rechaza=false)
+  String _id;
 
   EcopointDelivery(
       ecopoint, date, bags, user, isConfirmed, response, finished) {
@@ -34,6 +35,7 @@ class EcopointDelivery {
     _isConfirmed = json['isConfirmed'];
     _finished = json['finished'];
     _responseValue = json['response'];
+    _id = json['id'];
   }
 
 
@@ -46,7 +48,8 @@ class EcopointDelivery {
       'user': _user.toJson(),
       'isConfirmed': _isConfirmed,
       'response': _responseValue,
-      'finished': _finished
+      'finished': _finished,
+      'id': _id
     };
   }
 
@@ -63,4 +66,6 @@ class EcopointDelivery {
   bool get finished => _finished;
 
   bool get responseValue => _responseValue;
+
+  String get id => _id;
 }

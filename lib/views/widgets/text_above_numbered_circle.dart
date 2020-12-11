@@ -10,39 +10,37 @@ class TextAboveNumberedCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 15,
-                fontFamily: 'SFProDisplay',
-              ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4.0),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 15,
+              fontFamily: 'SFProDisplay',
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            height: 33,
-            width: 33,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: circleColor,
-            ),
-            child: Text(
-              value.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16),
-            ),
+        ),
+        Container(
+          alignment: Alignment.center,
+          height: 33,
+          width: 33,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: circleColor,
           ),
-        ],
-      ),
+          child: Text(
+            value.toString(),
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }

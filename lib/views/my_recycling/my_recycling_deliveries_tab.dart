@@ -102,8 +102,7 @@ class _MyRecyclingDeliveriesTabState extends State<MyRecyclingDeliveriesTab> {
                             child: Column(
                               children: [
                                 Text(
-                                  deliveriesList[index].user.fullName +
-                                      "'s Ecopoint",
+                                  deliveriesList[index].ecopoint.name,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: GREEN_DARK,
