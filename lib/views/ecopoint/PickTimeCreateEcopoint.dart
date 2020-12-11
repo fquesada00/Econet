@@ -46,7 +46,7 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
   }
 
   int getNextPos(List<bool> selected, int init) {
-    init+=1;
+    init += 1;
     print('init: ${init} and ${selected.length}');
     for (int i = init; i < selected.length; i++) {
       if (selected[i]) return i;
@@ -54,13 +54,14 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
     return -1;
   }
 
-  int getWeekDayNumber(int init, int actualDay, List<bool> selected, int lastidx) {
+  int getWeekDayNumber(
+      int init, int actualDay, List<bool> selected, int lastidx) {
     // actualDay +=1;
-    print(init-lastidx);
+    print(init - lastidx);
     print(actualDay);
     print(lastidx);
     print('getweekdaynumber: ${selected.length}');
-    for(int i = (lastidx + 1), j=0 ; j < (init - lastidx) ; i++,j++){
+    for (int i = (lastidx + 1), j = 0; j < (init - lastidx); i++, j++) {
       actualDay = actualDay == 6 ? 0 : actualDay + 1;
       print("eee");
       print(i);
@@ -157,7 +158,7 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
                           },
                         ).then((value) {
                           print(value.toString());
-                          if(value == null) print('value is null');
+                          if (value == null) print('value is null');
                           if (value != null) {
                             // print('weekday ranges of day ${day}');
                             // print("${createEcopointModel.getRangesOfDay(day)}");
@@ -204,8 +205,12 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
                       print('TE MANDO AL MAPA');
                       print('${createEcopointModel.timeslotsWeekdays}');
                       List<TimeSlot> list = List();
-                      for(int i = 0 ; i < createEcopointModel.timeslotsWeekdays.length ; i ++){
-                        if(createEcopointModel.timeslotsWeekdays[i].ranges.length != 0){
+                      for (int i = 0;
+                          i < createEcopointModel.timeslotsWeekdays.length;
+                          i++) {
+                        if (createEcopointModel
+                                .timeslotsWeekdays[i].ranges.length !=
+                            0) {
                           list.add(createEcopointModel.timeslotsWeekdays[i]);
                           // if((i+1) == createEcopointModel.timeslotsWeekdays.length)
                           //   createEcopointModel.timeslotsWeekdays.removeAt(i);
@@ -219,13 +224,12 @@ class _PickTimeCreateEcopointState extends State<PickTimeCreateEcopoint> {
 
                       Navigator.pushNamed(context, '/pickLocation');
                     } else {
-
                       print('before: ${available.length}');
                       Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
                           arguments: {
                             "idx": idx,
-                            "currentDay":
-                                getWeekDayNumber(idx, day, available, arguments['idx']),
+                            "currentDay": getWeekDayNumber(
+                                idx, day, available, arguments['idx']),
                             "daysAvailable": available,
                           });
                     }
@@ -332,6 +336,8 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                             color: Colors.black,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100))),
+                        width: 40.0,
+                        height: 40.0,
                         child: IconButton(
                           icon: Icon(
                             Icons.edit,
@@ -387,17 +393,16 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                         )),
                         decoration: BoxDecoration(
                           color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),),
+
                       ),
                       Container(
                         decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100))),
+                        width: 40.0,
+                        height: 40.0,
                         child: IconButton(
                           icon: Icon(
                             Icons.edit,
@@ -457,15 +462,19 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
                     if (first != null && last != null) {
                       //TODO function to check timeRange is not present in the list and is valid
                       if (widget.timeRange != null) {
-                        int pos = createEcopointModel.getRangesOfDay(widget.weekday).indexOf(TimeRange(first: first, last: last));
+                        int pos = createEcopointModel
+                            .getRangesOfDay(widget.weekday)
+                            .indexOf(TimeRange(first: first, last: last));
                         createEcopointModel.removeTimeslot(widget.weekday, pos);
                         // widget.list.removeAt(idx);
                       }
-                      createEcopointModel.addTimeslot(widget.weekday, first.hour, first.minute, last.hour, last.minute);
+                      createEcopointModel.addTimeslot(widget.weekday,
+                          first.hour, first.minute, last.hour, last.minute);
                       // widget.list.add(TimeRange(first: first, last: last));
                       // widget.list.sort();
                       print("lista de ${widget.weekday}");
-                      print("${createEcopointModel.getRangesOfDay(widget.weekday)}");
+                      print(
+                          "${createEcopointModel.getRangesOfDay(widget.weekday)}");
                       Navigator.of(context).pop('ok');
                     } else {
                       //TODO show snackbar not all fields are fill w data
@@ -492,6 +501,7 @@ class _TimeRangePickerState extends State<TimeRangePicker> {
 class TimeRangeItem extends StatefulWidget {
   List<TimeRange> timeRanges;
   int weekday;
+
   TimeRangeItem({this.timeRanges, this.weekday});
 
   @override
@@ -499,9 +509,7 @@ class TimeRangeItem extends StatefulWidget {
 }
 
 class _TimeRangeItemState extends State<TimeRangeItem> {
-
   final createEcopointModel = CreateEcopointModel.instance;
-
 
   String parseTimeRange(TimeRange timeRange) {
     return timeRange.getFirstString() +
@@ -546,6 +554,8 @@ class _TimeRangeItemState extends State<TimeRangeItem> {
                 decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.all(Radius.circular(100))),
+                width: 40.0,
+                height: 40.0,
                 child: IconButton(
                     icon: Icon(
                       Icons.edit,
@@ -558,7 +568,8 @@ class _TimeRangeItemState extends State<TimeRangeItem> {
                           return TimeRangePicker(
                             weekday: widget.weekday,
                             timeRange: element,
-                            list: createEcopointModel.getRangesOfDay(widget.weekday),
+                            list: createEcopointModel
+                                .getRangesOfDay(widget.weekday),
                           );
                         },
                       ).then((value) {
@@ -572,13 +583,17 @@ class _TimeRangeItemState extends State<TimeRangeItem> {
                 decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.all(Radius.circular(100))),
+                width: 40.0,
+                height: 40.0,
                 child: IconButton(
                   icon: Icon(
                     Icons.delete,
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    int pos = createEcopointModel.getRangesOfDay(widget.weekday).indexOf(element);
+                    int pos = createEcopointModel
+                        .getRangesOfDay(widget.weekday)
+                        .indexOf(element);
                     createEcopointModel.removeTimeslot(widget.weekday, pos);
                     // widget.timeRanges.remove(element);
                     setState(() {});
