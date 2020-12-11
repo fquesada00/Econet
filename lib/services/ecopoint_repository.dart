@@ -20,6 +20,8 @@ abstract class EcopointProvider implements ChangeNotifier {
   Future createEcopoint(Ecopoint ecopoint);
 
   Future updateEcopoint(Ecopoint ecopoint);
+
+  Future deleteEcopoint(String ecopointId);
 }
 
 class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
@@ -163,5 +165,17 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
 
     // Create authorization header
     // final header = { "authorization": 'Bearer $token' };
+  }
+
+  @override
+  Future deleteEcopoint(String ecopointId) async {
+    final user = await getCurrentUser();
+    final token = await user.getIdToken();
+    final response = await http.get(
+      _ecopointUrl + "?email=${user.email}&?deliveryId=$ecopointId",
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
   }
 }
