@@ -7,6 +7,8 @@ import 'package:econet/views/widgets/tab_slide_choose.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tinycolor/tinycolor.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class TutorialPicked extends StatelessWidget {
   Residue residue;
@@ -15,7 +17,7 @@ class TutorialPicked extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List list = [
+    List texts = [
       "How to prepare " +
           residueToString(this.residue).toLowerCase() +
           " for recycling",
@@ -24,6 +26,12 @@ class TutorialPicked extends StatelessWidget {
           residueToString(this.residue).toLowerCase() +
           " are safe for recycling"
     ];
+    List links = [
+      "https://www.youtube.com/watch?v=3hSQiqno9TQ",
+      "https://www.youtube.com/watch?v=kz_1s0QKbbM",
+      "https://www.youtube.com/watch?v=eymigN8tMoY"
+    ];
+
 
     return Scaffold(
       body: Container(
@@ -46,7 +54,7 @@ class TutorialPicked extends StatelessWidget {
                   ),
                   child: SingleChildScrollView(
                     child: Column(
-                        children: List.generate(list.length, (index) {
+                        children: List.generate(texts.length, (index) {
                       return Container(
                           height: 100,
                           margin: EdgeInsets.only(top: 15, left: 15, right: 15),
@@ -64,16 +72,17 @@ class TutorialPicked extends StatelessWidget {
                               Container(
                                   width: 250,
                                   child: Center(
-                                      child: Text(list[index],
+                                      child: Text(texts[index],
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: GREEN_DARK,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
                                           )))),
-                              Icon(
-                                Icons.chevron_right,
-                                size: 36,
+                              IconButton(
+                                icon: Icon(Icons.chevron_right),
+                                iconSize: 36,
+                                onPressed: (){_launchURL(links[index]);print("pressed");}
                               )
                             ],
                           ));
@@ -82,5 +91,15 @@ class TutorialPicked extends StatelessWidget {
             )
           ])),
     );
+  }
+}
+_launchURL(inputURL) async {
+  String url = inputURL;
+  print("in launch url");
+  if (await canLaunch(url)) {
+    print("Launch url");
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }
