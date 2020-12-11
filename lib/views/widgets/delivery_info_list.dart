@@ -26,7 +26,27 @@ class DeliveryInfoList extends StatelessWidget {
             btnData: ButtonData(
               'CONTACT ECOLLECTOR',
               () {
-                print("no se que se deberia hacer aca");
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text("PHONE NUMBER"),
+                    content: Text(
+                      ecopointDelivery.ecopoint.ecollector.phone,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'SFProDisplay',
+                      ),
+                    ),
+                    actions: [
+                      FlatButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("Ok"),
+                      ),
+                    ],
+                  ),
+                );
               },
               backgroundColor: backgroundColor,
               adjust: true,
