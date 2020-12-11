@@ -87,8 +87,14 @@ class _EcopointOveriewState extends State<EcopointOveriew> {
                       SingleChildScrollView(
                         padding: EdgeInsets.only(bottom: 100),
                         //tamanio del widget inferior
-                        child: EcopointInfoList(ecopoint, true, null,
-                            _nameController, _additionalInfoController),
+                        child: EcopointInfoList(
+                          ecopoint,
+                          true,
+                          null,
+                          _nameController,
+                          _additionalInfoController,
+                          editable: true,
+                        ),
                       ),
                       Positioned(
                         bottom: 0,

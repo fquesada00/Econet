@@ -21,7 +21,7 @@ class MyDeliveryDetails extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(bottom: 15),
             child: NavBar(
-              text: ecopointDelivery.user.fullName,
+              text: ecopointDelivery.ecopoint.name,
               withBack: true,
               backgroundColor: GREEN_LIGHT,
               textColor: GREEN_DARK,

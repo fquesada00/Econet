@@ -1,5 +1,4 @@
 import 'package:econet/model/ecopoint_delivery.dart';
-import 'package:econet/presentation/constants.dart';
 import 'package:econet/views/ecopoint/add_bags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +10,10 @@ import 'ecollector_info.dart';
 class DeliveryInfoList extends StatelessWidget {
   final EcopointDelivery ecopointDelivery;
   final Color backgroundColor;
+  final bool editable;
 
-  DeliveryInfoList(this.ecopointDelivery, this.backgroundColor);
+  DeliveryInfoList(this.ecopointDelivery, this.backgroundColor,
+      {this.editable = true});
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +41,7 @@ class DeliveryInfoList extends StatelessWidget {
           name: "Ecopoint address",
           nameColor: backgroundColor,
           content: Text(
-            "Avenida siempreviva 1234",
-            //TODO: DEBERIA BUSCAR EL ECOPOINT CON EL ID Y SACAR EL ADDRESS
+            ecopointDelivery.ecopoint.address,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
@@ -49,6 +49,7 @@ class DeliveryInfoList extends StatelessWidget {
               fontFamily: 'SFProDisplay',
             ),
           ),
+          editable: false,
         ),
         InformationCard(
           icon: Icons.calendar_today,
@@ -64,28 +65,26 @@ class DeliveryInfoList extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          editable: true,
-          //TODO: EDICION DE FECHA DE ENTREGA
+          editable: editable,
         ),
         if (ecopointDelivery.bags != null)
           InformationCard(
-              name: "Bags/Objects",
-              nameColor: backgroundColor,
-              content: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 330),
-                child: ListView.separated(
-                  padding: EdgeInsets.all(15),
-                  itemCount: ecopointDelivery.bags.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return BagInfoRow(ecopointDelivery.bags, index, true);
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      SizedBox(height: 8),
-                ),
+            name: "Bags/Objects",
+            nameColor: backgroundColor,
+            content: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 330),
+              child: ListView.separated(
+                padding: EdgeInsets.all(15),
+                itemCount: ecopointDelivery.bags.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return BagInfoRow(ecopointDelivery.bags, index, true);
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    SizedBox(height: 8),
               ),
-              editable: true
-              //TODO: EDICION DE BOLSAS A ENTREGAR
-              ),
+            ),
+            editable: editable,
+          ),
       ],
     );
   }

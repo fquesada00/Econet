@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 class EcopointExpanded extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _additionalInfoController =
-  TextEditingController();
+      TextEditingController();
   final CreateDeliveryModel viewModel = CreateDeliveryModel.instance;
 
   @override
@@ -37,32 +37,32 @@ class EcopointExpanded extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: EcopointInfoList(
-                  ecopoint,
-                  false,
-                  SizedBox(
-                    height: 60,
-                    width: 220,
-                    child:
-                    Button1(
-                      btnData: ButtonData(
-                        'RECYCLE',
-                            () {
-                          viewModel.reset();
-                          viewModel.ecopoint = ecopoint;
-                          Navigator.pushNamed(context, '/add_bags');
-                          //TODO: DEBERIA MANDARLO A ARRANCAR A ARMAR DELIVERY
-                        },
-                        backgroundColor: GREEN_DARK,
-                        fontSize: 24,
-                        svgUrl: 'assets/icons/econet-circle.svg',
-                        adjust: true,
-                        width: 200,
-                        height: 50,
-                      ),
+                ecopoint,
+                false,
+                SizedBox(
+                  height: 60,
+                  width: 220,
+                  child: Button1(
+                    btnData: ButtonData(
+                      'RECYCLE',
+                      () {
+                        viewModel.reset();
+                        viewModel.ecopoint = ecopoint;
+                        Navigator.pushNamed(context, '/add_bags');
+                      },
+                      backgroundColor: GREEN_DARK,
+                      fontSize: 24,
+                      svgUrl: 'assets/icons/econet-circle.svg',
+                      adjust: true,
+                      width: 200,
+                      height: 50,
                     ),
                   ),
-                  _nameController,
-                  _additionalInfoController),
+                ),
+                _nameController,
+                _additionalInfoController,
+                editable: false,
+              ),
             ),
           ),
         ],
