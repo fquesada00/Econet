@@ -11,6 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class EcopointDetails extends StatelessWidget {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _additionalInfoController =
+      TextEditingController();
+
   Ecopoint ecopoint = new Ecopoint(
       new MyUser.complete("jerusa jerusalinsky", "", "0303456", "", true),
       false,
@@ -52,19 +56,20 @@ class EcopointDetails extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: EcopointInfoList(
-                ecopoint,
-                false,
-                SizedBox(
-                  height: 60,
-                  width: 220,
-                  child: EconetButton(
-                    onPressed: () {
-                      print("HOLA");
-                    },
-                    backgroundColor: GREEN_DARK,
+                  ecopoint,
+                  false,
+                  SizedBox(
+                    height: 60,
+                    width: 220,
+                    child: EconetButton(
+                      onPressed: () {
+                        print("HOLA");
+                      },
+                      backgroundColor: GREEN_DARK,
+                    ),
                   ),
-                ),
-              ),
+                  _nameController,
+                  _additionalInfoController),
             ),
           ),
         ],

@@ -34,20 +34,23 @@ class CreateEcopoint extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Button1(
-              btnData: ButtonData(
-                'CREATE ECOPOINT',
-                () {
-                  createEcopointModel.reset();
-                  createEcopointModel.plant = plant;
-                  Navigator.pushNamed(context, '/pickDeliveryMaterials');
-                },
-                backgroundColor: GREEN_DARK,
-                fontSize: 24,
-                svgUrl: 'assets/icons/econet-circle.svg',
-                adjust: true,
-                width: 200,
-                height: 50,
+            Hero(
+              tag: 'CreateButton',
+              child: Button1(
+                btnData: ButtonData(
+                  'CREATE ECOPOINT',
+                  () {
+                    createEcopointModel.reset();
+                    createEcopointModel.plant = plant;
+                    Navigator.pushNamed(context, '/pickDeliveryMaterials');
+                  },
+                  backgroundColor: GREEN_DARK,
+                  fontSize: 24,
+                  svgUrl: 'assets/icons/econet-circle.svg',
+                  adjust: true,
+                  width: 230,
+                  height: 50,
+                ),
               ),
             ),
           ],

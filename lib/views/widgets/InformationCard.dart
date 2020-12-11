@@ -97,7 +97,7 @@ class InformationCard extends StatelessWidget {
                     ),
                   ),
                 Expanded(
-                  flex: 5,
+                  flex: 8,
                   child: Container(
                     margin: EdgeInsets.only(left: 10, right: 10, top: 5),
                     width: double.infinity,

@@ -26,7 +26,7 @@ class GMap extends StatefulWidget {
   State<GMap> createState() => GMapState();
 }
 
-class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
+class GMapState extends State<GMap> {
   Completer<GoogleMapController> _controller = Completer();
   TextEditingController text_controller = new TextEditingController();
   List<Marker> markers = List();
@@ -99,8 +99,16 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
                 ),
               if (loadingPosition)
                 Center(
-                  child: CircularProgressIndicator(),
-                ),
+                    child: Container(
+                        //la posicion actual tarda en cargar, sin este if se muestra un error
+                        color: Color.fromARGB(100, 0, 0, 0),
+                        alignment: Alignment.center,
+                        child: (!loadingPosition)
+                            ? Text("Please enable system location.")
+                            : CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.black),
+                              ))),
             ],
           );
   }
@@ -287,9 +295,6 @@ class GMapState extends State<GMap> with AutomaticKeepAliveClientMixin<GMap> {
       },
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 Future<BitmapDescriptor> _iconToMarker(

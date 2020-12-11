@@ -23,7 +23,6 @@ class EcopointInfoState extends State<EcopointInfo> {
 
   @override
   Widget build(BuildContext context) {
-
     return new Container(
         height: 340,
         decoration: BoxDecoration(
@@ -161,25 +160,31 @@ class EcopointInfoState extends State<EcopointInfo> {
               ),
             ),
             SizedBox(height: 10),
-            Button1(
-              btnData: ButtonData(
-                (widget.ecopoint.isPlant) ? 'CREATE ECOPOINT' : 'OPEN ECOPOINT',
-                () {
-                  if (widget.ecopoint.isPlant) {
-                    Navigator.pushNamed(context, '/createEcopoint', arguments: {
-                      'distance': widget.distance,
-                      'plant' : widget.ecopoint,
-                    });
-                  } else {
-                    Navigator.pushNamed(context, '/ecopoint_expanded',
-                        arguments: widget.ecopoint);
-                  }
-                },
-                backgroundColor:
-                    (widget.ecopoint.isPlant) ? BROWN_MEDIUM : GREEN_MEDIUM,
-                width: 200,
-                height: 50,
-                fontSize: 50,
+            Hero(
+              tag: 'CreateButton',
+              child: Button1(
+                btnData: ButtonData(
+                  (widget.ecopoint.isPlant)
+                      ? 'CREATE ECOPOINT'
+                      : 'OPEN ECOPOINT',
+                  () {
+                    if (widget.ecopoint.isPlant) {
+                      Navigator.pushNamed(context, '/createEcopoint',
+                          arguments: {
+                            'distance': widget.distance,
+                            'plant': widget.ecopoint,
+                          });
+                    } else {
+                      Navigator.pushNamed(context, '/ecopoint_expanded',
+                          arguments: widget.ecopoint);
+                    }
+                  },
+                  backgroundColor:
+                      (widget.ecopoint.isPlant) ? BROWN_MEDIUM : GREEN_MEDIUM,
+                  width: 200,
+                  height: 50,
+                  fontSize: 50,
+                ),
               ),
             ),
             SizedBox(height: 30),

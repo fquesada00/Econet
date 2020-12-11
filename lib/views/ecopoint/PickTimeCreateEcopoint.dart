@@ -36,7 +36,6 @@ class PickTimeCreateEcopoint extends StatelessWidget {
         text: "Add your desired timeslots for the day",
       ),
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        SizedBox(height: 30),
         Column(children: [
           Center(
             child: Padding(
@@ -50,28 +49,31 @@ class PickTimeCreateEcopoint extends StatelessWidget {
         Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Button1(
-              btnData: ButtonData(
-                'CONTINUE',
-                () {
-                  int i = arguments["currentDay"] + 1;
-                  bool nextDay =
-                      createEcopointModel.chosenWeekdays.length > i &&
-                          createEcopointModel.chosenWeekdays.length > 0;
-                  print(createEcopointModel.chosenWeekdays.length);
-                  print(i);
-                  print("hey");
-                  if (nextDay) {
-                    Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
-                        arguments: {
-                          "currentDay": i,
-                          "daysAvailable": arguments["daysAvailable"],
-                        });
-                  } else {
-                    Navigator.pushNamed(context, '/pickLocation');
-                  }
-                },
-                backgroundColor: BROWN_MEDIUM,
+            child: Hero(
+              tag: 'ContinueButton',
+              child: Button1(
+                btnData: ButtonData(
+                  'CONTINUE',
+                  () {
+                    int i = arguments["currentDay"] + 1;
+                    bool nextDay =
+                        createEcopointModel.chosenWeekdays.length > i &&
+                            createEcopointModel.chosenWeekdays.length > 0;
+                    print(createEcopointModel.chosenWeekdays.length);
+                    print(i);
+                    print("hey");
+                    if (nextDay) {
+                      Navigator.pushNamed(context, '/pickTimeCreateEcopoint',
+                          arguments: {
+                            "currentDay": i,
+                            "daysAvailable": arguments["daysAvailable"],
+                          });
+                    } else {
+                      Navigator.pushNamed(context, '/pickLocation');
+                    }
+                  },
+                  backgroundColor: BROWN_MEDIUM,
+                ),
               ),
             ),
           ),
@@ -248,7 +250,7 @@ class TimeslotCardState extends State<TimeslotCard> {
                             }
                           });
                         },
-                        backgroundColor: GREEN_LIGHT,
+                        backgroundColor: GREEN_MEDIUM,
                       ),
                     ),
                   ))),

@@ -24,9 +24,10 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
   FirebaseEcopointProvider() {}
 
   @override
-  Future createEcopoint(Ecopoint ecopoint) async {
+  Future<bool> createEcopoint(Ecopoint ecopoint) async {
     if (ecopoint == null) {
       print("ECOPOINT ES NULL");
+      return false;
     } else {
       try {
         final user = await getCurrentUser();
@@ -40,8 +41,9 @@ class FirebaseEcopointProvider extends EcopointProvider with ChangeNotifier {
           },
         );
         print("RESPONSE = " + response.body.toString());
+        return response.statusCode == 200;
       } catch (e) {
-        print(e.toString()); // TODO ver si podemos manejar mejor el error
+        return false; // TODO ver si podemos manejar mejor el error
       }
     }
   }

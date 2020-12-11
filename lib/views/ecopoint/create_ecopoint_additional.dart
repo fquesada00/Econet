@@ -5,10 +5,10 @@ import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 
 class CreateAdditionalDetails extends StatelessWidget {
+  TextEditingController _controller = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController _controller = new TextEditingController();
-
     return Scaffold(
       appBar: NavBar(
         text: 'Additional details (optional)',
@@ -37,38 +37,48 @@ class CreateAdditionalDetails extends StatelessWidget {
             SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: TextField(
-                controller: _controller,
-                keyboardType: TextInputType.multiline,
-                minLines: 12,
-                maxLines: 12,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'SFProText',
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide.none,
+              child: Hero(
+                tag: 'EcopointInput',
+                child: Material(
+                  color: Colors.transparent,
+                  child: TextField(
+                    controller: _controller,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.done,
+                    minLines: 12,
+                    maxLines: 12,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'SFProText',
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: 'Insert additional details',
+                      hintStyle: TextStyle(
+                        fontFamily: 'SFProText',
+                        fontSize: 18,
+                      ),
+                      contentPadding: EdgeInsets.all(20),
+                    ),
                   ),
-                  hintText: 'Insert additional details',
-                  hintStyle: TextStyle(
-                    fontFamily: 'SFProText',
-                    fontSize: 18,
-                  ),
-                  contentPadding: EdgeInsets.all(20),
                 ),
               ),
             ),
             SizedBox(height: 50),
-            Button1(
-              btnData: ButtonData('CONTINUE', () {
-                CreateEcopointModel.instance.additionalInfo =
-                    _controller.text.trim();
-                Navigator.pushNamed(context, '/create_ecopoint_name');
-              }, backgroundColor: BROWN_MEDIUM),
+            Hero(
+              tag: 'ContinueButton',
+              child: Button1(
+                btnData: ButtonData('CONTINUE', () {
+                  CreateEcopointModel.instance.additionalInfo =
+                      _controller.text.trim();
+                  Navigator.pushNamed(context, '/create_ecopoint_name');
+                }, backgroundColor: BROWN_MEDIUM),
+              ),
             )
           ],
         ),

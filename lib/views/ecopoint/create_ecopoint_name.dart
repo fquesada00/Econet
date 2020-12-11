@@ -7,15 +7,16 @@ import 'package:flutter/material.dart';
 
 class CreateEcopointName extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _controller = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    TextEditingController _controller = new TextEditingController();
 
     return Scaffold(
       appBar: NavBar(
-        text: 'Additional details (optional)',
+        text: 'Choose a name for your Ecopoint',
+        textColor: GREEN_DARK,
         withBack: true,
         backgroundColor: GREEN_LIGHT,
       ),
@@ -24,51 +25,60 @@ class CreateEcopointName extends StatelessWidget {
         physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: <Widget>[
-            SizedBox(height: size.height * 0.25),
+            SizedBox(height: size.height * 0.3),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Form(
                 key: _formKey,
-                child: TextFormField(
-                  controller: _controller,
-                  keyboardType: TextInputType.text,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'SFProText',
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide.none,
+                child: Hero(
+                  tag: 'EcopointInput',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: TextFormField(
+                      controller: _controller,
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'SFProText',
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: 'Insert Ecopoint name',
+                        hintStyle: TextStyle(
+                          fontFamily: 'SFProText',
+                          fontSize: 18,
+                        ),
+                        errorStyle:
+                            TextStyle(fontFamily: 'SFProText', fontSize: 16),
+                        contentPadding: EdgeInsets.all(20),
+                      ),
+                      validator: (value) {
+                        if (value.trim().isEmpty) {
+                          return 'Field is required';
+                        }
+                        return null;
+                      },
                     ),
-                    hintText: 'Insert Ecopoint name',
-                    hintStyle: TextStyle(
-                      fontFamily: 'SFProText',
-                      fontSize: 18,
-                    ),
-                    errorStyle:
-                        TextStyle(fontFamily: 'SFProText', fontSize: 16),
-                    contentPadding: EdgeInsets.all(20),
                   ),
-                  validator: (value) {
-                    if (value.trim().isEmpty) {
-                      return 'Field is required';
-                    }
-                    return null;
-                  },
                 ),
               ),
             ),
-            SizedBox(height: size.height * 0.25),
-            Button1(
-              btnData: ButtonData('CONTINUE', () {
-                if (_formKey.currentState.validate()) {
-                  CreateEcopointModel.instance.name = _controller.text;
-                  Navigator.pushNamed(context, '/ecopoint_overview');
-                }
-              }, backgroundColor: GREEN_DARK),
+            SizedBox(height: size.height * 0.27),
+            Hero(
+              tag: 'ContinueButton',
+              child: Button1(
+                btnData: ButtonData('CONTINUE', () {
+                  if (_formKey.currentState.validate()) {
+                    CreateEcopointModel.instance.name = _controller.text;
+                    Navigator.pushNamed(context, '/ecopoint_overview');
+                  }
+                }, backgroundColor: GREEN_DARK),
+              ),
             )
           ],
         ),

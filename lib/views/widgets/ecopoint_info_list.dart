@@ -5,42 +5,40 @@ import 'package:econet/views/widgets/ecollector_info.dart';
 import 'package:econet/views/widgets/open_hours_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'InformationCard.dart';
 import 'econet_display_chip.dart';
-import 'econet_filter_chip.dart';
 
 class EcopointInfoList extends StatefulWidget {
   final Ecopoint ecopoint;
   final bool withoutPicture;
   final Widget button;
+  final TextEditingController nameController;
+  final TextEditingController additionalInfoController;
 
-  EcopointInfoList(this.ecopoint, this.withoutPicture, this.button);
+  EcopointInfoList(this.ecopoint, this.withoutPicture, this.button,
+      this.nameController, this.additionalInfoController);
 
   @override
   _EcopointInfoListState createState() => _EcopointInfoListState();
 }
 
 class _EcopointInfoListState extends State<EcopointInfoList> {
-  TextEditingController name_controller = new TextEditingController();
-  FocusNode name_focus_node = FocusNode();
-  TextEditingController additional_info_controller =
-      new TextEditingController();
-  FocusNode additional_info_focus_node = FocusNode();
+  FocusNode nameFocusNode = FocusNode();
+  FocusNode additionalInfoFocusNode = FocusNode();
 
   @override
   void dispose() {
-    name_focus_node.dispose();
-    additional_info_focus_node.dispose();
+    nameFocusNode.dispose();
+    additionalInfoFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    name_controller.text = widget.ecopoint.name;
-    additional_info_controller.text = widget.ecopoint.additionalInfo;
+    widget.nameController.text = widget.ecopoint.name;
+    widget.additionalInfoController.text = widget.ecopoint.additionalInfo;
     return Column(
       children: <Widget>[
         if (widget.withoutPicture)
@@ -52,8 +50,8 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
               height: 28,
               child: TextField(
                 maxLength: 20,
-                controller: name_controller,
-                focusNode: name_focus_node,
+                controller: widget.nameController,
+                focusNode: nameFocusNode,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
@@ -71,7 +69,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
             ),
             editable: widget.withoutPicture,
             edit: () {
-              name_focus_node.requestFocus();
+              nameFocusNode.requestFocus();
             },
           ),
         if (!widget.withoutPicture)
@@ -130,8 +128,7 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
           ),
           editable: widget.withoutPicture,
           edit: () {
-            Navigator.pushNamed(context, '/pickDeliveryMaterials',
-                arguments: widget.ecopoint);
+            _editChoices(context);
           },
         ),
         InformationCard(
@@ -155,18 +152,21 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
           },
         ),
         InformationCard(
-            name: "Available at",
-            nameColor: GREEN_DARK,
-            content: OpenHoursList(
-              timeSlots: widget.ecopoint.openHours,
-            ),
-            editable: widget.withoutPicture),
+          name: "Available on",
+          nameColor: GREEN_DARK,
+          content: OpenHoursList(
+            timeSlots: widget.ecopoint.openHours,
+          ),
+          editable: widget.withoutPicture,
+          edit: () {},
+        ),
         InformationCard(
           name: "Additional information",
           nameColor: GREEN_DARK,
           content: TextField(
-            controller: additional_info_controller,
-            focusNode: additional_info_focus_node,
+            controller: widget.additionalInfoController,
+            focusNode: additionalInfoFocusNode,
+            maxLines: 5,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
@@ -180,10 +180,24 @@ class _EcopointInfoListState extends State<EcopointInfoList> {
           ),
           editable: widget.withoutPicture,
           edit: () {
-            additional_info_focus_node.requestFocus();
+            additionalInfoFocusNode.requestFocus();
           },
         ),
       ],
     );
   }
+
+  _editChoices(BuildContext context) async {
+    final newChoices = await Navigator.pushNamed(
+        context, '/pickDeliveryMaterials',
+        arguments: widget.ecopoint);
+
+    widget.ecopoint.residues = newChoices;
+    setState(() {});
+  }
+
+// _editTimeslot(BuildContext context) async {
+//
+//   setState(() {});
+// }
 }

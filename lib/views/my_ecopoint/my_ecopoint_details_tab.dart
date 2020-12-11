@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MyEcopointDetailsTab extends StatelessWidget {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _additionalInfoController =
+      TextEditingController();
+
   Ecopoint ecopoint = new Ecopoint(
       new MyUser.complete("jerusa jerusalinsky", "", "0303456", "", true),
       false,
@@ -46,7 +50,8 @@ class MyEcopointDetailsTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: 25),
-          EcopointInfoList(ecopoint, true, null),
+          EcopointInfoList(
+              ecopoint, true, null, _nameController, _additionalInfoController),
         ],
       ),
     );

@@ -20,7 +20,6 @@ class ButtonData {
 
   //Propiedad para hacer que el boton se ajuste al width
   bool adjust;
-  bool enabled;
 
   ButtonData(
     this.text,
@@ -34,7 +33,6 @@ class ButtonData {
     this.fontSize = 20,
     this.fontWeight = FontWeight.w500,
     this.adjust = false,
-    this.enabled = true,
   });
 }
 
@@ -89,22 +87,7 @@ class _Button1State extends State<Button1> {
         highlightColor: data.backgroundColor,
         splashColor: Colors.white.withOpacity(0.4),
         textColor: data.textColor,
-        onPressed: data.enabled
-            ? data.onPressed
-            : () {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Center(
-                    heightFactor: 1,
-                    child: Text(
-                      'Please select a value',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ));
-              },
+        onPressed: data.onPressed,
         child: Container(
           width: data.width,
           child: Row(

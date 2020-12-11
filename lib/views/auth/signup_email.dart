@@ -16,19 +16,21 @@ class _SignupEmailState extends State<SignupEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: Column(
-        children: <Widget>[
-          NavBar(
-            text: 'Sign Up',
-            withBack: true,
-            backgroundColor: Colors.white,
-            textColor: GREEN_MEDIUM,
-            height: 120,
-          ),
-          Expanded(child: _EmailRegisterForm()),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            NavBar(
+              text: 'Sign Up',
+              withBack: true,
+              backgroundColor: Colors.white,
+              textColor: GREEN_MEDIUM,
+              height: 120,
+            ),
+            SizedBox(height: 100),
+            _EmailRegisterForm(),
+          ],
+        ),
       ),
     );
   }

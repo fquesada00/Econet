@@ -24,7 +24,7 @@ class _PickMaterialsState extends State<PickMaterials> {
   Future<void> getResiduesFromEcopoint() async {
     final ecopointRepository =
         Provider.of<EcopointProvider>(context, listen: false);
-    Ecopoint aux = await ecopointRepository.getEcopoint(ecopoint.id);
+    Ecopoint aux = await ecopointRepository.getEcopoint(ecopoint.plantId);
     posibleChoices = aux.residues;
     setState(() {});
   }
@@ -53,81 +53,87 @@ class _PickMaterialsState extends State<PickMaterials> {
       ),
       body: Builder(
         builder: (BuildContext context) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Center(
-                child: Container(
-                  width: size.width * 0.8,
-                  height: 430 /*arguments['materialsList'].length * 110*/,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: Center(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ResiduesChip(
-                          onSelectedItem: (newList) {
-                            setState(() {
-                              selectedChoices = newList;
-                            });
-                          },
-                          selectedChoices: selectedChoices,
-                          posibleChoices: posibleChoices,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
+          if (posibleChoices.isEmpty)
+            return Center(child: CircularProgressIndicator());
+          else
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Center(
+                  child: Container(
+                    width: size.width * 0.8,
+                    height: 430 /*arguments['materialsList'].length * 110*/,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          ResiduesChip(
+                            onSelectedItem: (newList) {
+                              setState(() {
+                                selectedChoices = newList;
+                              });
+                            },
+                            selectedChoices: selectedChoices,
+                            posibleChoices: posibleChoices,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Button1(
-                  btnData: ButtonData(
-                    "CONTINUE",
-                    () {
-                      if (selectedChoices.length == 0) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Center(
-                            heightFactor: 1,
-                            child: Text(
-                              'Please select a residue type',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Hero(
+                    tag: 'ContinueButton',
+                    child: Button1(
+                      btnData: ButtonData(
+                        "CONTINUE",
+                        () {
+                          if (selectedChoices.length == 0) {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Center(
+                                heightFactor: 1,
+                                child: Text(
+                                  'Please select a residue type',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ));
-                      } else {
-                        if (ecopoint != null) {
-                          //TODO: POST A API CON NUEVOS RESIDUOS Y CAMBIO VIEWMODEL
-                          // la informacion del ecopoint a actualizar esta en ecopoint y los residuos seleccionados en selectedChoices
+                            ));
+                          } else {
+                            if (ecopoint != null) {
+                              //TODO: POST A API CON NUEVOS RESIDUOS Y CAMBIO VIEWMODEL
+                              // la informacion del ecopoint a actualizar esta en ecopoint y los residuos seleccionados en selectedChoices
 
-                          Navigator.pop(context);
-                        } else {
-                          final createEcopointModel =
-                              CreateEcopointModel.instance;
-                          createEcopointModel.selectedResidues =
-                              selectedChoices;
-                          Navigator.pushNamed(context, '/pickDeliveryDate');
-                        }
-                      }
-                    },
-                    backgroundColor: BROWN_MEDIUM,
-                    textColor: Colors.white,
+                              Navigator.pop(context, selectedChoices);
+                            } else {
+                              final createEcopointModel =
+                                  CreateEcopointModel.instance;
+                              createEcopointModel.selectedResidues =
+                                  selectedChoices;
+                              Navigator.pushNamed(context, '/pickDeliveryDate');
+                            }
+                          }
+                        },
+                        backgroundColor: BROWN_MEDIUM,
+                        textColor: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          );
+              ],
+            );
         },
       ),
     );
