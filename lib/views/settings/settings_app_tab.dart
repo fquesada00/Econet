@@ -23,7 +23,7 @@ class SettingsAppTab extends StatefulWidget {
 
 class _SettingsAppTabState extends State<SettingsAppTab> {
   int unitsFormat = 0; // 0 = metric, 1 = imperial
-  double _ECOPOINT_FINDER_RADIUS;
+  double _ECOPOINT_FINDER_RADIUS = 16;
   List<SwitchInformation> switchList = [
     SwitchInformation("Reminder notifications", true),
     SwitchInformation("Ecopoint delivery requests", true),
@@ -37,7 +37,6 @@ class _SettingsAppTabState extends State<SettingsAppTab> {
     super.initState();
     Cache.read("ECOPOINT_RADIUS").catchError((error) {
       print(error);
-      _ECOPOINT_FINDER_RADIUS = 16;
     }).then((value) {
       _ECOPOINT_FINDER_RADIUS = value['value'];
       setState(() {});

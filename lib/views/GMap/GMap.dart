@@ -44,7 +44,7 @@ class GMapState extends State<GMap> {
     _setMarkerIcon();
     filteredElements = List();
     Cache.read("ECOPOINT_RADIUS").then((value) {
-      print("ECOPOINT_RADIUS LEVANTADO");
+      print("ECOPOINT_RADIUS LEVANTADO: " + value['value']);
       ECOPOINT_RADIUS = value['value'];
       getLocation();
     }).catchError((error) {

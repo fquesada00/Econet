@@ -6,138 +6,63 @@ import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/views/widgets/econet_display_chip.dart';
+import 'package:econet/views/widgets/ecopoint_info_list.dart';
 import 'package:econet/views/widgets/navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EcopointExpanded extends StatelessWidget {
-  final ScrollController _controller1 = new ScrollController();
-  final ScrollController _controller2 = new ScrollController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _additionalInfoController =
+  TextEditingController();
   final CreateDeliveryModel viewModel = CreateDeliveryModel.instance;
 
   @override
   Widget build(BuildContext context) {
     Ecopoint ecopoint = ModalRoute.of(context).settings.arguments;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: GREEN_LIGHT,
-      appBar: NavBar(
-        backgroundColor: GREEN_LIGHT,
-        withBack: true,
-        textColor: GREEN_DARK,
-        text: (ecopoint.name != null) ? ecopoint.name : "NULL",
-      ),
-      body: ListView(
+      body: Column(
         children: <Widget>[
-          SizedBox(height: 30),
-          Center(
-            child: EcollectorCard(ecopoint.ecollector),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Button1(
-                btnData: ButtonData(
-                  'RECYCLE',
-                  () {
-                    viewModel.reset();
-                    viewModel.ecopoint = ecopoint;
-                    Navigator.pushNamed(context, '/add_bags');
-                    //TODO: DEBERIA MANDARLO A ARRANCAR A ARMAR DELIVERY
-                  },
-                  backgroundColor: GREEN_DARK,
-                  fontSize: 24,
-                  svgUrl: 'assets/icons/econet-circle.svg',
-                  adjust: true,
-                  width: 200,
-                  height: 50,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: InfoCardContainer(
-              header: 'Address',
-              icon: Icons.place,
-              content: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                child: Container(
-                  height: 50,
-                  color: Color(0xFFE5E2E2),
-                  alignment: Alignment.center,
-                  child: Text(
-                    ecopoint.address,
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
+          Container(
+            margin: EdgeInsets.only(bottom: 15),
+            child: NavBar(
+              text: ecopoint.name,
+              withBack: true,
+              backgroundColor: GREEN_LIGHT,
+              textColor: GREEN_DARK,
             ),
           ),
-          SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: InfoCardContainer(
-              header: 'Collects',
-              icon: CustomIcons.recycle,
-              content: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                child: CupertinoScrollbar(
-                  isAlwaysShown: true,
-                  controller: _controller1,
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                    height: 70,
-                    color: Color(0xFFE5E2E2),
-                    alignment: Alignment(0, 0),
-                    child: SingleChildScrollView(
-                      controller: _controller1,
-                      child: Wrap(
-                        runSpacing: -7,
-                        spacing: 5,
-                        alignment: WrapAlignment.center,
-                        children: ecopoint.residues
-                            .map((residue) => EconetDisplayChip(
-                                residueToString(residue),
-                                CHIP_DATA[residueToString(residue)]))
-                            .toList(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: EcopointInfoList(
+                  ecopoint,
+                  false,
+                  SizedBox(
+                    height: 60,
+                    width: 220,
+                    child:
+                    Button1(
+                      btnData: ButtonData(
+                        'RECYCLE',
+                            () {
+                          viewModel.reset();
+                          viewModel.ecopoint = ecopoint;
+                          Navigator.pushNamed(context, '/add_bags');
+                          //TODO: DEBERIA MANDARLO A ARRANCAR A ARMAR DELIVERY
+                        },
+                        backgroundColor: GREEN_DARK,
+                        fontSize: 24,
+                        svgUrl: 'assets/icons/econet-circle.svg',
+                        adjust: true,
+                        width: 200,
+                        height: 50,
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: InfoCardContainer(
-              header: 'Delivers on',
-              icon: CupertinoIcons.clock,
-              content: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                  height: 70,
-                  color: Color(0xFFE5E2E2),
-                  alignment: Alignment(0, 0),
-                  child: Text(
-                    ecopoint.deadline.toIso8601String().substring(0, 10),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'SFProDisplay',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
+                  _nameController,
+                  _additionalInfoController),
             ),
           ),
         ],
