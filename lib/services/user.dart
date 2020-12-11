@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:econet/model/my_user.dart';
+import 'package:econet/services/messaging_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+
 
 class AppUrl {
   static const String baseUrl =
@@ -54,6 +56,7 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
   //         );
   // }
 
+
   @override
   Stream<User> onAuthStateChanged() {
     return _firebaseAuth.authStateChanges()
@@ -80,6 +83,7 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
       _loggedInStatus = AuthStatus.LoggedIn;
       notifyListeners();
       //print("TOKEN ====" + _token);
+      FirebaseMessagingProvider().createDevice();
       return "successfully logged in";
     } on FirebaseAuthException catch (e) {
       _loggedInStatus = AuthStatus.NotLoggedIn;
@@ -114,6 +118,7 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
       _loggedInStatus = AuthStatus.LoggedIn;
       // notifyListeners();
       // print("TOKEN ====" + _token);
+      FirebaseMessagingProvider().createDevice();
       return "successfully logged in";
     } on FirebaseAuthException catch (e) {
       print("HOLIS 2");
@@ -151,7 +156,9 @@ class FirebaseAuthProvider with ChangeNotifier implements AuthProvider {
     );
 
     // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    Future<UserCredential> userCredential = FirebaseAuth.instance.signInWithCredential(credential);
+    userCredential.then((value) => FirebaseMessagingProvider().createDevice());
+    return await userCredential;
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:econet/model/residue.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'ecopoint.dart';
 
@@ -21,16 +22,17 @@ class CreateEcopointModel {
   DateTime deadline;
   //List<TimeSlot> openHours;
   String additionalInfo;
-  LatLng coordinates;
 */
   String name;
   String address;
+  LatLng coordinates;
   List<Residue> selectedResidues;
   Ecopoint plant;
   DateTime deliveryDate;
   TimeOfDay deliveryTime;
   List<TimeSlot> timeslotsWeekdays = List();
   List<DateTime> chosenWeekdays = List();
+  String additionalInfo;
   List<bool> addTimeslot(
       int day, int fromHour, int fromMinute, int toHour, int toMinute) {
     if (timeslotsWeekdays[day] == null) {
@@ -70,6 +72,7 @@ class CreateEcopointModel {
     selectedResidues = null;
     name = null;
     address = null;
+    coordinates = null;
     selectedResidues = null;
     deliveryDate = null;
     deliveryTime = null;

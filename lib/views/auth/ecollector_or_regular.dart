@@ -17,23 +17,25 @@ class EcollectorOrRegular extends StatelessWidget {
     print("ARGUMENTS RECEIVED === " + user.toString());
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: <Widget>[
-          NavBar(
-            text: 'Choose type of user',
-            withBack: true,
-            backgroundColor: Colors.white,
-            textColor: GREEN_MEDIUM,
-            height: 120,
-          ),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: _BuildEcollector(user, auth)),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: _BuildRegular(user, auth),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            NavBar(
+              text: 'Choose type of user',
+              withBack: true,
+              backgroundColor: Colors.white,
+              textColor: GREEN_MEDIUM,
+              height: 120,
+            ),
+            Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: _BuildEcollector(user, auth)),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: _BuildRegular(user, auth),
+            ),
+          ],
+        ),
       ),
     );
   }

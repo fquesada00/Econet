@@ -26,123 +26,119 @@ class EcopointExpanded extends StatelessWidget {
             ? ecopoint.ecollector.fullName
             : "NULL",
       ),
-      body: ListView(children: <Widget>[
-        SizedBox(height: 30),
-        Center(
-          child: EcollectorCard(),
-        ),
-        SizedBox(
-          height: 30,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Button1(
-              btnData: ButtonData(
-                'RECYCLE',
-                () {
-                  //TODO: DEBERIA MANDARLO A ARRANCAR A ARMAR DELIVERY
-                },
-                backgroundColor: GREEN_DARK,
-                fontSize: 24,
-                svgUrl: 'assets/icons/econet-circle.svg',
-                adjust: true,
-                width: 200,
-                height: 50,
+      body: ListView(
+        children: <Widget>[
+          SizedBox(height: 30),
+          Center(
+            child: EcollectorCard(),
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Button1(
+                btnData: ButtonData(
+                  'RECYCLE',
+                  () {
+                    //TODO: DEBERIA MANDARLO A ARRANCAR A ARMAR DELIVERY
+                  },
+                  backgroundColor: GREEN_DARK,
+                  fontSize: 24,
+                  svgUrl: 'assets/icons/econet-circle.svg',
+                  adjust: true,
+                  width: 200,
+                  height: 50,
+                ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 30),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: InfoCardContainer(
-            header: 'Address',
-            icon: Icons.place,
-            content: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: Container(
-                height: 50,
-                color: Color(0xFFE5E2E2),
-                alignment: Alignment.center,
-                child: Text(
-                  ecopoint.address,
-                  style: TextStyle(
-                    fontSize: 18,
+            ],
+          ),
+          SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: InfoCardContainer(
+              header: 'Address',
+              icon: Icons.place,
+              content: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: Container(
+                  height: 50,
+                  color: Color(0xFFE5E2E2),
+                  alignment: Alignment.center,
+                  child: Text(
+                    ecopoint.address,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        SizedBox(height: 15),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: InfoCardContainer(
-            header: 'Collects',
-            icon: CustomIcons.recycle,
-            content: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: CupertinoScrollbar(
-                isAlwaysShown: true,
-                controller: _controller1,
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: InfoCardContainer(
+              header: 'Collects',
+              icon: CustomIcons.recycle,
+              content: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: CupertinoScrollbar(
+                  isAlwaysShown: true,
+                  controller: _controller1,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    height: 70,
+                    color: Color(0xFFE5E2E2),
+                    alignment: Alignment(0, 0),
+                    child: SingleChildScrollView(
+                      controller: _controller1,
+                      child: Wrap(
+                        runSpacing: -7,
+                        spacing: 5,
+                        alignment: WrapAlignment.center,
+                        children: ecopoint.residues
+                            .map((residue) => EconetDisplayChip(
+                                residueToString(residue),
+                                CHIP_DATA[residueToString(residue)]))
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: InfoCardContainer(
+              header: 'Delivers on',
+              icon: CupertinoIcons.clock,
+              content: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: Container(
                   padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                   height: 70,
                   color: Color(0xFFE5E2E2),
                   alignment: Alignment(0, 0),
-                  child: SingleChildScrollView(
-                    controller: _controller1,
-                    child: Wrap(
-                      runSpacing: -7,
-                      spacing: 5,
-                      alignment: WrapAlignment.center,
-                      children: ecopoint.residues
-                          .map((residue) => EconetDisplayChip(
-                              residueToString(residue),
-                              CHIP_DATA[residueToString(residue)]))
-                          .toList(),
+                  child: Text(
+                    ecopoint.deadline.toIso8601String().substring(0, 10),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontFamily: 'SFProDisplay',
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        SizedBox(height: 15),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: InfoCardContainer(
-            header: 'Delivers on',
-            icon: CupertinoIcons.car,
-            content: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: CupertinoScrollbar(
-                isAlwaysShown: true,
-                controller: _controller2,
-                child: Container(
-                  height: 70,
-                  color: Color(0xFFE5E2E2),
-                  alignment: Alignment(0, 0),
-                  child: SingleChildScrollView(
-                    controller: _controller2,
-                    child: Wrap(
-                      runSpacing: 5,
-                      spacing: 5,
-                      alignment: WrapAlignment.center,
-                      children: ecopoint.residues
-                          .map((residue) => EconetDisplayChip(
-                              residueToString(residue),
-                              CHIP_DATA[residueToString(residue)]))
-                          .toList(),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }

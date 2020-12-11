@@ -1,10 +1,10 @@
-import 'package:econet/views/widgets/navbar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:econet/presentation/constants.dart';
-import 'package:econet/views/widgets/button1.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/services/user.dart';
+import 'package:econet/views/widgets/button1.dart';
+import 'package:econet/views/widgets/navbar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
@@ -71,6 +71,9 @@ class __LoginFormState extends State<_LoginForm> {
                 child: TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     labelStyle: TextStyle(
@@ -93,6 +96,9 @@ class __LoginFormState extends State<_LoginForm> {
                   keyboardType: TextInputType.visiblePassword,
                   controller: passwordController,
                   obscureText: !_passwordVisible,
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(
@@ -146,20 +152,25 @@ class __LoginFormState extends State<_LoginForm> {
         auth.onAuthStateChanged() != null
             ? Padding(
                 padding: const EdgeInsets.only(top: 30.0),
-                child: Button1(
-                  btnData: ButtonData(
-                    'LOG IN',
-                    () async {
-                      if (_formKey.currentState.validate()) {
-                        signInWithEmailAndPassword(context);
-                        // Navigator.pushNamed(context, '/GMap');
-                      }
-                    },
-                    backgroundColor: BROWN_MEDIUM,
+                child: Hero(
+                  tag: 'LoginButton',
+                  child: Button1(
+                    btnData: ButtonData(
+                      'LOG IN',
+                      () async {
+                        if (_formKey.currentState.validate()) {
+                          signInWithEmailAndPassword(context);
+                          // Navigator.pushNamed(context, '/GMap');
+                        }
+                      },
+                      backgroundColor: BROWN_MEDIUM,
+                    ),
                   ),
                 ),
               )
-            : CircularProgressIndicator(),
+            : CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(GREEN_MEDIUM),
+              ),
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'package:econet/presentation/constants.dart';
 import 'package:econet/presentation/custom_icons_icons.dart';
 import 'package:econet/views/widgets/econet_display_chip.dart';
 import 'package:econet/views/widgets/navbar.dart';
+import 'package:econet/views/widgets/open_hours_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/widgets/button1.dart';
@@ -26,9 +27,7 @@ class CreateEcopoint extends StatelessWidget {
         backgroundColor: GREEN_LIGHT,
         withBack: true,
         textColor: GREEN_DARK,
-        text: (plant.ecollector.fullName != null)
-            ? plant.ecollector.fullName
-            : "NULL",
+        text: (plant.name != null) ? plant.name : "NULL",
       ),
       body: ListView(children: <Widget>[
         SizedBox(height: 30),
@@ -113,25 +112,14 @@ class CreateEcopoint extends StatelessWidget {
             icon: CupertinoIcons.clock,
             content: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              child: CupertinoScrollbar(
-                  isAlwaysShown: true,
-                  controller: _controller2,
-                  child: Container(
-                      height: 70,
-                      color: Color(0xFFE5E2E2),
-                      alignment: Alignment(0, 0),
-                      child: SingleChildScrollView(
-                          controller: _controller2,
-                          child: Wrap(
-                            runSpacing: 5,
-                            spacing: 5,
-                            alignment: WrapAlignment.center,
-                            children: List<Widget>.from(plant.residues
-                                .map((residue) => EconetDisplayChip(
-                                    residueToString(residue),
-                                    CHIP_DATA[residueToString(residue)]))
-                                .toList()),
-                          )))),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                color: Color(0xFFE5E2E2),
+                alignment: Alignment(0, 0),
+                child: OpenHoursList(
+                  timeSlots: plant.openHours,
+                ),
+              ),
             ),
           ),
         ),

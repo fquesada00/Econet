@@ -29,6 +29,7 @@ class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
     final user = FirebaseAuth.instance.currentUser;
     final token = await user.getIdToken();
     final email = user.email;
+    print(delivery.toJson());
     final response = await http.post("$deliveryUrl?email=$email",
         headers: {
           'Content-Type': 'application/json',
@@ -56,17 +57,17 @@ class FirebaseDeliveryProvider extends DeliveryProvider with ChangeNotifier {
 
   @override
   Future<List<EcopointDelivery>> getDeliveriesInEcopoint(String ecopointId) {
-    return getDeliveriesCustomFilter({ecopointId: ecopointId});
+    return getDeliveriesCustomFilter({'ecopointId': ecopointId});
   }
 
   @override
   Future<List<EcopointDelivery>> getDeliveriesOfUser(String email) {
-    return getDeliveriesCustomFilter({email: email});
+    return getDeliveriesCustomFilter({'email': email});
   }
 
   @override
   Future<EcopointDelivery> getDelivery(String id) {
-    return getDeliveriesCustomFilter({id: id}).then((value) => value.first);
+    return getDeliveriesCustomFilter({'id': id}).then((value) => value.first);
   }
 
   @override

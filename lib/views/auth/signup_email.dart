@@ -179,56 +179,59 @@ class __EmailRegisterFormState extends State<_EmailRegisterForm> {
         SizedBox(height: 80),
         Padding(
           padding: const EdgeInsets.only(left: 45, right: 45, bottom: 30),
-          child: Button1(
-              btnData: ButtonData(
-            'SIGN UP',
-            () async {
-              if (_formKey.currentState.validate()) {
-                print('FORM: OK');
-                errorMessage = await auth.registerWithEmailAndPassword(
-                    emailController.text, passwordController.text) as String;
-                print(errorMessage);
-                if (errorMessage.trim() == "successfully logged in") {
-                  print("DID IT");
-                  //Navigator.popUntil(context, ModalRoute.withName('/auth'));
-                  Navigator.pushReplacementNamed(
-                      context, '/ecollector_or_regular',
-                      arguments: MyUser.partial(
-                          nameController.text + lastNameController.text,
-                          emailController.text));
-                } else {
-                  String snackMessage = errorMessage;
+          child: Hero(
+            tag: 'SignupButton',
+            child: Button1(
+                btnData: ButtonData(
+              'SIGN UP',
+              () async {
+                if (_formKey.currentState.validate()) {
+                  print('FORM: OK');
+                  errorMessage = await auth.registerWithEmailAndPassword(
+                      emailController.text, passwordController.text) as String;
+                  print(errorMessage);
+                  if (errorMessage.trim() == "successfully logged in") {
+                    print("DID IT");
+                    //Navigator.popUntil(context, ModalRoute.withName('/auth'));
+                    Navigator.pushReplacementNamed(
+                        context, '/ecollector_or_regular',
+                        arguments: MyUser.partial(
+                            nameController.text + lastNameController.text,
+                            emailController.text));
+                  } else {
+                    String snackMessage = errorMessage;
 
-                  switch (errorMessage) {
-                    case 'weak-password':
-                      snackMessage =
-                          'Password should be at least 6 characters long';
-                      break;
-                    case 'invalid-email':
-                      snackMessage = 'Please enter a valid email address';
-                      break;
-                  }
+                    switch (errorMessage) {
+                      case 'weak-password':
+                        snackMessage =
+                            'Password should be at least 6 characters long';
+                        break;
+                      case 'invalid-email':
+                        snackMessage = 'Please enter a valid email address';
+                        break;
+                    }
 
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Center(
-                      heightFactor: 1,
-                      child: Text(
-                        snackMessage,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Center(
+                        heightFactor: 1,
+                        child: Text(
+                          snackMessage,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                  ));
+                    ));
+                  }
+                  print(errorMessage);
+                  setState(() {});
                 }
-                print(errorMessage);
-                setState(() {});
-              }
-            },
-            backgroundColor: GREEN_MEDIUM,
-          )),
+              },
+              backgroundColor: GREEN_MEDIUM,
+            )),
+          ),
         ),
       ],
     );

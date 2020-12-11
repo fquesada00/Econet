@@ -39,10 +39,10 @@ class AlwaysVisibleScrollbarPainter extends ScrollbarPainter {
 }
 
 class SearchFilters extends StatefulWidget {
-  final List<Residue> filterResidues;
+  final List<String> filterElements;
   final Function(String chipName, bool add) updateFilterResidues;
 
-  const SearchFilters({Key key, this.filterResidues, this.updateFilterResidues})
+  const SearchFilters({Key key, this.filterElements, this.updateFilterResidues})
       : super(key: key);
 
   @override
@@ -72,110 +72,115 @@ class _SearchFiltersState extends State<SearchFilters> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(10),
-        height: 190,
-        width: 340,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            )
-          ],
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: 20),
-                child: Text(
-                  'Filters',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontFamily: 'SFProDisplay',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+      padding: EdgeInsets.all(10),
+      height: 190,
+      width: 340,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          )
+        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              'Filters',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+                fontFamily: 'SFProDisplay',
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(height: 10),
-              Container(
-                width: 290,
-                height: 110,
-                decoration: BoxDecoration(
-                  color: Color(0xFFE5E2E2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: 30,
-                        child: ListView(
-                          padding: EdgeInsets.only(left: 15, right: 100),
-                          shrinkWrap: true,
-                          controller: _controller1,
-                          scrollDirection: Axis.horizontal,
-                          children: List.from(
-                            CHIP_DATA.keys
-                                .take(((CHIP_DATA.keys.length + 1) / 2).round())
-                                .map(
-                                  (k) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2),
-                                    child: EconetFilterChip(k, CHIP_DATA[k],
-                                        widget.filterResidues.contains(residueFromString(k)),
-                                        (String chipName) {
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            width: 290,
+            height: 110,
+            decoration: BoxDecoration(
+              color: Color(0xFFE5E2E2),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 30,
+                    child: ListView(
+                      padding: EdgeInsets.only(left: 15, right: 100),
+                      shrinkWrap: true,
+                      controller: _controller1,
+                      scrollDirection: Axis.horizontal,
+                      children: List.from(
+                        CHIP_DATA.keys
+                            .take(((CHIP_DATA.keys.length + 1) / 2).round())
+                            .map(
+                              (k) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                                child: EconetFilterChip(k, CHIP_DATA[k],
+                                    widget.filterElements.contains(k),
+                                    (String chipName) {
+                                  widget.updateFilterResidues(chipName,
+                                      !widget.filterElements.contains(k));
+                                  // si lo contiene lo tiene que borrar, sino agregarlo
+                                }),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 50,
+                    child: CupertinoScrollbar(
+                      isAlwaysShown: true,
+                      controller: _controller2,
+                      child: ListView(
+                        padding: EdgeInsets.only(left: 15),
+                        shrinkWrap: true,
+                        controller: _controller2,
+                        scrollDirection: Axis.horizontal,
+                        children: List.from(
+                          CHIP_DATA.keys
+                              .skip(((CHIP_DATA.keys.length) / 2).round())
+                              .map(
+                                (k) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 2),
+                                  child: EconetFilterChip(
+                                    k,
+                                    CHIP_DATA[k],
+                                    widget.filterElements.contains(k),
+                                    (String chipName) {
                                       widget.updateFilterResidues(chipName,
-                                          !widget.filterResidues.contains(residueFromString(k)));
-                                      // si lo contiene lo tiene que borrar, sino agregarlo
-                                    }),
+                                          !widget.filterElements.contains(k));
+                                    },
                                   ),
-                                )
-                                .toList(),
-                          ),
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
-                      Container(
-                        height: 50,
-                        child: CupertinoScrollbar(
-                          isAlwaysShown: true,
-                          controller: _controller2,
-                          child: ListView(
-                            padding: EdgeInsets.only(left: 15),
-                            shrinkWrap: true,
-                            controller: _controller2,
-                            scrollDirection: Axis.horizontal,
-                            children: List.from(
-                              CHIP_DATA.keys
-                                  .skip(((CHIP_DATA.keys.length) / 2).round())
-                                  .map(
-                                    (k) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 2),
-                                      child: EconetFilterChip(k, CHIP_DATA[k],
-                                          widget.filterResidues.contains(residueFromString(k)),
-                                          (String chipName) {
-                                        widget.updateFilterResidues(chipName,
-                                            !widget.filterResidues.contains(k));
-                                      }),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                    ),
+                  )
+                ],
               ),
-            ]));
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

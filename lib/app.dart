@@ -5,6 +5,7 @@ import 'package:econet/model/ecopoint_delivery.dart';
 import 'package:econet/model/timeslot.dart';
 import 'package:econet/services/delivery_repository.dart';
 import 'package:econet/services/ecopoint_repository.dart';
+import 'package:econet/services/messaging_repository.dart';
 import 'package:econet/views/auth/ecollector_or_regular.dart';
 import 'package:econet/views/auth/login_or_signup.dart';
 import 'package:econet/views/auth/signup_email.dart';
@@ -29,6 +30,7 @@ import 'package:econet/views/my_recycling/my_recycling.dart';
 import 'package:econet/views/settings/settings.dart';
 import 'package:econet/views/tutorials/tutorial_picked.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:econet/views/GMap/Ecopoint.dart' as EcopointView;
 import 'package:flutter/material.dart';
@@ -57,6 +59,8 @@ class MyApp extends StatelessWidget {
             create: (_) => FirebaseAuthProvider()),
         ChangeNotifierProvider<DeliveryProvider>(
             create: (_) => FirebaseDeliveryProvider()),
+        ChangeNotifierProvider<MessagingProvider>(
+            create: (_) => FirebaseMessagingProvider()),
         ChangeNotifierProvider<EcopointProvider>(
             create: (_) => FirebaseEcopointProvider()),
       ],
@@ -126,6 +130,8 @@ class _MyHomePageState extends State<MyHomePage> {
         Provider.of<EcopointProvider>(context, listen: false);
     final deliveryRepository =
         Provider.of<DeliveryProvider>(context, listen: false);
+    final messagingRepository =
+    Provider.of<MessagingProvider>(context, listen: false);
     final userRepository = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -142,8 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 child: Text("create deliveries"),
                 onPressed: () async {
+                  //FirebaseMessaging.onBackgroundMessage((message) => print(message));
                   Ecopoint ecopoint = await ecopointRepository
-                      .getEcopoint("7InbYpB082TVYczzoZeH");
+                      .getEcopoint("0HLurrwNhlU32EAVGnsx");
                   DateTime date = DateTime.now();
                   List<Bag> bags = new List();
                   bags.add(new Bag(BagSize.large, BagWeight.light, 2));
@@ -153,6 +160,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   EcopointDelivery delivery = new EcopointDelivery(
                       ecopoint, date, bags, user, false, false, false);
                   deliveryRepository.createDelivery(delivery);
+                  messagingRepository.sendMessage("aj2@econet.com",{
+                    "notification":{
+                      "title":"New Delivery!",
+                      "body":"created by aj"
+                    }
+                  });
                 },
               ),
               RaisedButton(
@@ -170,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   print("HOLAAAAAAAAAAAAAAAA 1");
 
                   final Ecopoint aux = await ecopointRepository
-                      .getEcopoint("eTFWTvfjSnszbcs9k1Cb");
+                      .getEcopoint("0HLurrwNhlU32EAVGnsx");
                   print(aux.toString());
                 },
               ),
@@ -251,11 +264,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text("settings"),
                   onPressed: () {
                     Navigator.pushNamed(context, '/settings');
-                  }),
-              RaisedButton(
-                  child: Text("my recycling"),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/my_recycling');
                   }),
               RaisedButton(
                 child: Text("Add Bags"),
